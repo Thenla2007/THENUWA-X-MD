@@ -208,7 +208,6 @@ const port = process.env.PORT || 8000;
   const args = body.trim().split(/ +/).slice(1);
   const q = args.join(' ');
   var budy = typeof body == 'string' ? body : false;
-  const q = args.join(' ')
   const text = args.join(' ')
   const isGroup = from.endsWith('@g.us')
   const sender = mek.key.fromMe ? (conn.user.id.split(':')[0]+'@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid)
