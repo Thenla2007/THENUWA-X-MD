@@ -174,7 +174,6 @@ const port = process.env.PORT || 8000;
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
   // 1. මුලින්ම body එක වෙනස් කරන්න පුළුවන් විදියට let එකකින් define කරන්න
   // 1. මැසේජ් එකේ වර්ගය හඳුනාගෙන body එක වෙන් කරගැනීම
-  type = Object.keys(mek.message)[0] || Object.keys(mek.message);
     if (type === 'conversation') {
       body = mek.message.conversation;
   } else if (type === 'extendedTextMessage') {
