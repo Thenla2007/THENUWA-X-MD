@@ -35,7 +35,7 @@ const prefix = config.PREFIX;
 })();
 
 
-const ownerNumber = config.OWNER_NUM;
+const ownerNumber = ['94783747285']
 
 //===================SESSION-AUTH============================
 if (!fs.existsSync(__dirname + "/sessions/creds.json")) {
