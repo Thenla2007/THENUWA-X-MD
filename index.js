@@ -173,7 +173,6 @@ const port = process.env.PORT || 8000;
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
     // 1. මැසේජ් එකේ වර්ගය (Type) නිවැරදිව තනි අගයක් ලෙස ලබා ගැනීම
-  type = Object.keys(mek.message)[0];
   let body = "";
 
   // 2. මැසේජ් වර්ගය අනුව body එක වෙන් කරගැනීම
