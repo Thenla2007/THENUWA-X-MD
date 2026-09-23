@@ -172,40 +172,13 @@ const port = process.env.PORT || 8000;
   const content = JSON.stringify(mek.message)
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
-  // 1. මුලින්ම body එක වෙනස් කරන්න පුළුවන් විදියට let එකකින් define කරන්න
-  // 1. මැසේජ් එකේ වර්ගය හඳුනාගෙන body එක වෙන් කරගැනීම
-    if (type === 'conversation') {
-      body = mek.message.conversation;
-  } else if (type === 'extendedTextMessage') {
-      body = mek.message.extendedTextMessage.text;
-  } else if (type === 'imageMessage') {
-      body = mek.message.imageMessage.caption;
-  } else if (type === 'videoMessage') {
-      body = mek.message.videoMessage.caption;
-  } else if (type === 'buttonsResponseMessage') {
-      body = mek.message.buttonsResponseMessage.selectedButtonId;
-  } else if (type === 'templateButtonReplyMessage') {
-      body = mek.message.templateButtonReplyMessage.selectedId;
-  } else if (type === 'interactiveResponseMessage') {
-      // 🆕 Interactive (Native Flow) බටන් එකේ "id" එක කියවීම
-      const nativeFlowReply = mek.message.interactiveResponseMessage.nativeFlowResponseBody;
-      if (nativeFlowReply) {
-          const parsedBody = JSON.parse(nativeFlowReply);
-          body = parsedBody.id || "";
-      }
-  }
-
-  // 🛡️ Safe Check: body එක undefined හෝ null නම් හිස් Text එකක් බවට පත් කරයි (trim error එක වළක්වයි)
-  body = body || ""; 
-
-  // 2. විධානයන් (Commands) සහ ආගියුමන්ට්ස් (Args) වෙන් කරගැනීම
-  const prefix = "."; // ඔබේ බොට්ගේ ප්‍රීෆික්ස් එක (. හෝ ඔබේ කැමැත්තක්)
-  const isCmd = body.startsWith(prefix);
-  const command = isCmd ? body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase() : "";
-  const args = body.trim().split(/ +/).slice(1);
-  const q = args.join(' ');
-  var budy = typeof body == 'string' ? body : false;
-
+  const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
+  const isCmd = body.startsWith(prefix)
+  var budy = typeof mek.text == 'string' ? mek.text : false;
+  const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ''
+  const args = body.trim().split(/ +/).slice(1)
+  const q = args.join(' ')
+  const text = args.join(' ')
   const isGroup = from.endsWith('@g.us')
   const sender = mek.key.fromMe ? (conn.user.id.split(':')[0]+'@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid)
   const senderNumber = sender.split('@')[0]
