@@ -172,9 +172,42 @@ const port = process.env.PORT || 8000;
   const content = JSON.stringify(mek.message)
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
-  const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
-  const isCmd = body.startsWith(prefix)
-  var budy = typeof mek.text == 'string' ? mek.text : false;
+    // 1. මැසේජ් එකේ වර්ගය (Type) නිවැරදිව තනි අගයක් ලෙස ලබා ගැනීම
+  const type = Object.keys(mek.message)[0];
+  let body = "";
+
+  // 2. මැසේජ් වර්ගය අනුව body එක වෙන් කරගැනීම
+  if (type === 'conversation') {
+      body = mek.message.conversation;
+  } else if (type === 'extendedTextMessage') {
+      body = mek.message.extendedTextMessage.text;
+  } else if (type === 'imageMessage') {
+      body = mek.message.imageMessage.caption;
+  } else if (type === 'videoMessage') {
+      body = mek.message.videoMessage.caption;
+  } else if (type === 'buttonsResponseMessage') {
+      body = mek.message.buttonsResponseMessage.selectedButtonId;
+  } else if (type === 'templateButtonReplyMessage') {
+      body = mek.message.templateButtonReplyMessage.selectedId;
+  } else if (type === 'interactiveResponseMessage') {
+      // 🆕 Interactive (Native Flow) බටන් එකක් එබූ විට එන දත්ත කියවීම
+      const nativeFlowReply = mek.message.interactiveResponseMessage.nativeFlowResponseBody;
+      if (nativeFlowReply) {
+          const parsedBody = JSON.parse(nativeFlowReply);
+          body = parsedBody.id || ""; // බටන් එකේ id එක (.menu, .ping, .alive, .owner) body එකට ගනී
+      }
+  }
+
+  // 🛡️ Safe Check: body එක undefined හෝ null නම් හිස් text එකක් කරයි (trim error වැළැක්වීමට)
+  body = body || ""; 
+
+  // 3. විධානයන් (Commands), ආගියුමන්ට්ස් (Args) සහ Prefix වෙන් කරගැනීම
+  const prefix = "."; // ඔබේ බොට්ගේ prefix එක
+  const isCmd = body.startsWith(prefix);
+  const command = isCmd ? body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase() : "";
+  const args = body.trim().split(/ +/).slice(1);
+  const q = args.join(' ');
+  var budy = typeof body == 'string' ? body : false;
   const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ''
   const args = body.trim().split(/ +/).slice(1)
   const q = args.join(' ')
