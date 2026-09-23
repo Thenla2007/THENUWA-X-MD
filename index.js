@@ -205,7 +205,6 @@ if (mek.message) {
 // 4. ඉන්පසු ඔබේ බොට් එකේ දැනටමත් තියෙන prefix සහ command වෙන් කරගන්නා කෝඩ් එක (උදාහරණයක්):
 const isCmd = body ? body.startsWith('.') : false;
 const command = isCmd ? body.slice(1).trim().split(/ +/).shift().toLowerCase() : '';
-  const isCmd = body.startsWith(prefix)
   var budy = typeof mek.text == 'string' ? mek.text : false;
   const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ''
   const args = body.trim().split(/ +/).slice(1)
