@@ -208,7 +208,6 @@ const port = process.env.PORT || 8000;
   const args = body.trim().split(/ +/).slice(1);
   const q = args.join(' ');
   var budy = typeof body == 'string' ? body : false;
-  const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ''
   const args = body.trim().split(/ +/).slice(1)
   const q = args.join(' ')
   const text = args.join(' ')
