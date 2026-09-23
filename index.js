@@ -208,7 +208,6 @@ const port = process.env.PORT || 8000;
   const args = body.trim().split(/ +/).slice(1);
   const q = args.join(' ');
   var budy = typeof body == 'string' ? body : false;
-  const args = body.trim().split(/ +/).slice(1)
   const q = args.join(' ')
   const text = args.join(' ')
   const isGroup = from.endsWith('@g.us')
