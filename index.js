@@ -173,42 +173,42 @@ const port = process.env.PORT || 8000;
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
   // 1. මුලින්ම body එක වෙනස් කරන්න පුළුවන් විදියට let එකකින් define කරන්න
-let body;
+  // 1. මැසේජ් එකේ වර්ගය හඳුනාගෙන body එක වෙන් කරගැනීම
+  const type = Object.keys(mek.message)[0];
+  let body = "";
 
-if (mek.message) {
-    const type = Object.keys(mek.message)[0]; // මැසේජ් එකේ වර්ගය ගන්නවා
+  if (type === 'conversation') {
+      body = mek.message.conversation;
+  } else if (type === 'extendedTextMessage') {
+      body = mek.message.extendedTextMessage.text;
+  } else if (type === 'imageMessage') {
+      body = mek.message.imageMessage.caption;
+  } else if (type === 'videoMessage') {
+      body = mek.message.videoMessage.caption;
+  } else if (type === 'buttonsResponseMessage') {
+      body = mek.message.buttonsResponseMessage.selectedButtonId;
+  } else if (type === 'templateButtonReplyMessage') {
+      body = mek.message.templateButtonReplyMessage.selectedId;
+  } else if (type === 'interactiveResponseMessage') {
+      // 🆕 Interactive (Native Flow) බටන් එකේ "id" එක කියවීම
+      const nativeFlowReply = mek.message.interactiveResponseMessage.nativeFlowResponseBody;
+      if (nativeFlowReply) {
+          const parsedBody = JSON.parse(nativeFlowReply);
+          body = parsedBody.id || "";
+      }
+  }
 
-    // 2. දැනට ඔබේ index එකේ තියෙන සාමාන්‍ය body ටික මේ විදියට values assign කරන්න
-    if (type === 'conversation') {
-        body = mek.message.conversation;
-    } else if (type === 'extendedTextMessage') {
-        body = mek.message.extendedTextMessage.text;
-    } else if (type === 'imageMessage') {
-        body = mek.message.imageMessage.caption;
-    } else if (type === 'videoMessage') {
-        body = mek.message.videoMessage.caption;
-    } else if (type === 'buttonsResponseMessage') {
-        body = mek.message.buttonsResponseMessage.selectedButtonId;
-    } else if (type === 'templateButtonReplyMessage') {
-        body = mek.message.templateButtonReplyMessage.selectedId;
-        
-    // 3. 🆕 මෙන්න මේ කෑල්ල තමයි අලුතින්ම ඇතුලත් කරන්න ඕනේ (Interactive Button එකට)
-    } else if (type === 'interactiveResponseMessage') {
-        const nativeFlowReply = mek.message.interactiveResponseMessage.nativeFlowResponseBody;
-        if (nativeFlowReply) {
-            const parsedBody = JSON.parse(nativeFlowReply);
-            body = parsedBody.id; // අර බටන් එකේ දුන්න .menu හෝ .ping අගය මෙතනට එනවා
-        }
-    }
-}
+  // 🛡️ Safe Check: body එක undefined හෝ null නම් හිස් Text එකක් බවට පත් කරයි (trim error එක වළක්වයි)
+  body = body || ""; 
 
-// 4. ඉන්පසු ඔබේ බොට් එකේ දැනටමත් තියෙන prefix සහ command වෙන් කරගන්නා කෝඩ් එක (උදාහරණයක්):
-const isCmd = body ? body.startsWith('.') : false;
-const command = isCmd ? body.slice(1).trim().split(/ +/).shift().toLowerCase() : '';
-  var budy = typeof mek.text == 'string' ? mek.text : false;
-  const args = body.trim().split(/ +/).slice(1)
-  const q = args.join(' ')
-  const text = args.join(' ')
+  // 2. විධානයන් (Commands) සහ ආගියුමන්ට්ස් (Args) වෙන් කරගැනීම
+  const prefix = "."; // ඔබේ බොට්ගේ ප්‍රීෆික්ස් එක (. හෝ ඔබේ කැමැත්තක්)
+  const isCmd = body.startsWith(prefix);
+  const command = isCmd ? body.slice(prefix.length).trim().split(/ +/).shift().toLowerCase() : "";
+  const args = body.trim().split(/ +/).slice(1);
+  const q = args.join(' ');
+  var budy = typeof body == 'string' ? body : false;
+
   const isGroup = from.endsWith('@g.us')
   const sender = mek.key.fromMe ? (conn.user.id.split(':')[0]+'@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid)
   const senderNumber = sender.split('@')[0]
