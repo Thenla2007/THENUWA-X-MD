@@ -206,7 +206,6 @@ if (mek.message) {
 const isCmd = body ? body.startsWith('.') : false;
 const command = isCmd ? body.slice(1).trim().split(/ +/).shift().toLowerCase() : '';
   var budy = typeof mek.text == 'string' ? mek.text : false;
-  const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ''
   const args = body.trim().split(/ +/).slice(1)
   const q = args.join(' ')
   const text = args.join(' ')
