@@ -66,13 +66,13 @@ ${menu.main || '*┋* No Commands Available\n'}*╰─────────�
 ${menu.group || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 
-👨‍💻 *ᴏᴡ穩ɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs*👨‍💻 
+👨‍💻 *ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs*👨‍💻 
 
 *╭──────────●●►*
 ${menu.owner || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 
-🎡*幕ᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs*🎡
+🎡*cᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs*🎡
 
 *╭──────────●●►*
 ${menu.convert || '*┋* No Commands Available\n'}*╰──────────●●►*
