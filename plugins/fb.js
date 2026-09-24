@@ -27,7 +27,7 @@ cmd(
 
       // 2. දත්ත ලබා ගන්නා තෙක් 'Loading' පණිවිඩය යැවීම
       const loadingMsg = await danuwa.sendMessage(targetJid, { 
-        text: `⏳ *Fetching data from Facebook... Please wait.*` 
+        text: `⚡ *CYBER THENUVA FETCHING DATA...*` 
       }, { quoted: mek });
 
       // 3. API මඟින් වීඩියෝ තොරතුරු ලබා ගැනීම
@@ -41,14 +41,17 @@ cmd(
 
       const { title, sd, hd } = videoData;
       
-      // වීඩියෝ විස්තරය ලස්සනට සකස් කිරීම
-      let detailsText = `╔════════════════════════╗\n`;
-      detailsText += `   *📥CYBER THENUVA FB DOWNLOADER📥* \n`;
-      detailsText += `╚════════════════════════╝\n\n`;
-      detailsText += `📝 *Title:* ${title || "Facebook Video"}\n`;
-      detailsText += `🌐 *URL:* ${q}\n\n`;
-      detailsText += `✨ *Available Qualities:* ${hd ? "✅ HD [High]" : ""} ${sd ? "✅ SD [Standard]" : ""}\n\n`;
-      detailsText += `> *Sending the best quality video file...* 🚀`;
+      //Alive ස්ටයිල් එකට වීඩියෝ විස්තරය ලස්සනට සකස් කිරීම
+      let detailsText = `╭━━━〔 *CYBER-THENUVA-MD* 〕━━━┈⊷\n`;
+      detailsText += `┃\n`;
+      detailsText += `┃ 📥 *𝗙𝗔𝗖𝗘𝗕𝗢𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗥* 📥\n`;
+      detailsText += `┃\n`;
+      detailsText += `┃ 📝 *𝗧𝗶𝘁𝗹𝗲:* ${title || "Facebook Video"}\n`;
+      detailsText += `┃ 🌐 *𝗨𝗥𝗟:* ${q}\n`;
+      detailsText += `┃ ✨ *𝗤𝘂𝗮𝗹𝗶𝘁𝗶𝗲𝘀:* ${hd ? "✅ HD [High]" : ""} ${sd ? "✅ SD [Standard]" : ""}\n`;
+      detailsText += `┃\n`;
+      detailsText += `┃ > ® 📥 DOWNLOADING VIDEO FILE 📥 ⏳\n`;
+      detailsText += `╰━━━━━━━━━━━━━━━━━━━━━━┈⊷`;
 
       // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (ලෝඩින් මැසේජ් එක වෙනුවට)
       await danuwa.sendMessage(targetJid, { 
@@ -58,14 +61,22 @@ cmd(
 
       // 4. තත්ත්වයෙන් උසස්ම වීඩියෝ ලින්ක් එක තෝරා ගැනීම
       const downloadUrl = hd || sd;
-      const finalQuality = hd ? "HD Quality" : "SD Quality";
+      const finalQuality = hd ? "HD Quality (High)" : "SD Quality (Standard)";
 
       // 5. වීඩියෝ ෆයිල් එක සෘජුවම WhatsApp වෙත අප්ලෝඩ් කිරීම
+      let videoCaption = `╭━━━〔 *DOWNLOAD SUCCESS* 〕━━━┈⊷\n`;
+      videoCaption += `┃\n`;
+      videoCaption += `┃ ✨ *𝗦𝘁𝗮𝘁𝘂𝘀:* Successfully Downloaded!\n`;
+      videoCaption += `┃ 🖼️ *𝗤𝘂𝗮𝗹𝗶𝘁𝘆:* ${finalQuality}\n`;
+      videoCaption += `┃\n`;
+      videoCaption += `┃  *©⚡ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗯𝘆 𝗖𝗬𝗕𝗘𝗥 𝗧𝗛𝗘𝗡𝗨𝗩𝗔* 🚀\n`;
+      videoCaption += `╰━━━━━━━━━━━━━━━━━━━━━━┈⊷`;
+
       await danuwa.sendMessage(
         targetJid,
         {
           video: { url: downloadUrl },
-          caption: `*✨ Successfuly Downloaded!* \n🖼️ *Quality:* ${finalQuality}\n\n> *©⚡ POWERED by CYBER THENUVA* 🚀`,
+          caption: videoCaption,
         },
         { quoted: mek }
       );
