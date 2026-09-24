@@ -48,7 +48,7 @@ END:VCARD
         // ඔයා එවපු අලුත් real image එක සහ විස්තර යැවීම
         await conn.sendMessage(from, {
             image: {
-                url: 'https://catbox.moe' // ඔයා එවපු Logo Image එකට යාවත්කාලීන කරන ලදි
+                url: 'https://i.ibb.co/7JWk0d08/11625411f042.jpg' // ඔයා එවපු Logo Image එකට යාවත්කාලීන කරන ලදි
             },
             caption: `👋 HELLOW...*${pushname}* ❤️ I am owner NOW CYBER X THENULA
             
