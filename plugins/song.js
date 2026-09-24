@@ -21,7 +21,7 @@ cmd(
 
       // 2. දත්ත ලබා ගන්නා තෙක් 'Loading' පණිවිඩය යැවීම
       const loadingMsg = await danuwa.sendMessage(targetJid, { 
-        text: `⚡ *CYBER THENUWA SEARCHING SONG...*` 
+        text: `⚡ *CYBER THENUVA SEARCHING SONG...*` 
       }, { quoted: mek });
 
       const search = await yts(q);
@@ -38,7 +38,7 @@ cmd(
       // CYBER X THENULA ස්ටයිල් එකට සකස් කළ විස්තර පත්‍රිකාව (Image Caption)
       let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
-      detailsText += `✅THENUWA X MD✅\n`;
+      detailsText += `✅CYBER THENULA X MD✅\n`;
       detailsText += `╭───────────────────.★*\n`;
       detailsText += `│  ◦ 📝 *Title :* ${data.title}\n`;
       detailsText += `│  ◦ ⏱️ *Duration :* ${data.timestamp}\n`;
@@ -82,7 +82,7 @@ cmd(
           : durationParts[0] * 60 + durationParts[1];
 
       if (totalSeconds > 1800) {
-        return reply("⏳ *කණගාටුයි, විනාඩි 30 කට වඩා දිගು ශ්‍රව්‍ය ගොනු සඳහා සහය නොදක්වයි.*");
+        return reply("⏳ *කණගාටුයි, විනාඩි 30 කට වඩා දිගු ශ්‍රව්‍ය ගොනු සඳහා සහය නොදක්වයි.*");
       }
 
       // 4. යූටියුබ් වෙතින් සින්දුව ඩවුන්ලෝඩ් කර ගැනීම
@@ -103,8 +103,8 @@ cmd(
             forwardingScore: 999,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
-                newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                newsletterJid: '120363403804248705@newsletter',
+                newsletterName: 'THENUWA XMD',
                 serverMessageId: -1
             }
           }
@@ -120,7 +120,7 @@ cmd(
       docCaption += `│  ◦ 🎞 *Status :* Audio Document Sent\n`;
       docCaption += `╰───────────────────.★*\n\n`;
       docCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
-      docCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      docCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       // වට්සැප් එකට Document එකක් ලෙස සෘජුවම යැවීම
       await danuwa.sendMessage(
@@ -134,8 +134,8 @@ cmd(
             forwardingScore: 999,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
-                newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                newsletterJid: '120363403804248705@newsletter',
+                newsletterName: 'THENUWA XMD',
                 serverMessageId: -1
             }
           }
