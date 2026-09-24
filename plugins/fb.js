@@ -45,7 +45,7 @@ cmd(
 
       // API එකෙන් ලැබෙන දත්ත වෙන් කරගැනීම
       const result = response.data.result;
-      const title = result.title || "DANUWA-MD FB Video";
+      const title = result.title || "THENUWA X MD FB Video";
       const sd = result.sd;
       const hd = result.hd;
       const bestQualityUrl = hd || sd;
@@ -56,7 +56,7 @@ cmd(
       }
 
       const desc = `
-*DANUWA-MD FB DOWNLOADER* 📥
+*THENUWA X MD FB DOWNLOADER* 📥
 
 👻 *Title*: ${title}
 👻 *Quality*: ${qualityText}
@@ -84,7 +84,7 @@ cmd(
         { quoted: mek || m }
       );
 
-      return reply("Thank you for using DANUWA-MD");
+      return reply("Thank you for using THENUWA X MD");
     } catch (e) {
       console.error("FB DOWNLOAD ERROR:", e);
       
