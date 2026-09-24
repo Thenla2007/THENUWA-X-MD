@@ -13,7 +13,7 @@ cmd({
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
         // Generate system status message
-        const status = `👋 HELLOW...*${pushname || 'User'}* ❤️ I am ALIVE NOW CYBER X THENUVA
+        const status = `👋 HELLOW...*${pushname || 'User'}* 🟢 I am ALIVE NOW CYBER X THENUVA...
 
 
 ✅CYBER THENULA X MD✅
