@@ -41,17 +41,22 @@ cmd(
 
       const { title, sd, hd } = videoData;
       
-      //Alive ස්ටයිල් එකට වීඩියෝ විස්තරය ලස්සනට සකස් කිරීම
-      let detailsText = `╭━━━〔 *CYBER-THENUVA-MD* 〕━━━┈⊷\n`;
-      detailsText += `┃\n`;
-      detailsText += `┃ 📥 *𝗙𝗔𝗖𝗘𝗕𝗢𝗢𝗞 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗥* 📥\n`;
-      detailsText += `┃\n`;
-      detailsText += `┃ 📝 *𝗧𝗶𝘁𝗹𝗲:* ${title || "Facebook Video"}\n`;
-      detailsText += `┃ 🌐 *𝗨𝗥𝗟:* ${q}\n`;
-      detailsText += `┃ ✨ *𝗤𝘂𝗮𝗹𝗶𝘁𝗶𝗲𝘀:* ${hd ? "✅ HD [High]" : ""} ${sd ? "✅ SD [Standard]" : ""}\n`;
-      detailsText += `┃\n`;
-      detailsText += `┃ > ® 📥 DOWNLOADING VIDEO FILE 📥 ⏳\n`;
-      detailsText += `╰━━━━━━━━━━━━━━━━━━━━━━┈⊷`;
+      // ඔබ එවූ Image එකේ ඇති ආකාරයටම නිවැරදිව නිමවා ඇති විස්තර පත්‍රිකාව
+      let detailsText = `👋 HELLOW...No ❤️ Welcome to\n`;
+      detailsText += `CYBER X THENULA\n\n`;
+      detailsText += `✅CYBER THENULA X MD✅\n`;
+      detailsText += `╭───────────────────.★*\n`;
+      detailsText += `│  ◦ 📝 *Title :* ${title || "Facebook Video"}\n`;
+      detailsText += `│  ◦ 🌐 *Url :* ${q}\n`;
+      detailsText += `│  ◦ 🎬 *Quality :* ${hd ? "HD Available" : "SD Only"}\n`;
+      detailsText += `│  ◦ ✨ *HD [High] :* ${hd ? "✅" : "❌"}\n`;
+      detailsText += `│  ◦ 🖼️ *SD [Standard] :* ${sd ? "✅" : "❌"}\n`;
+      detailsText += `╰───────────────────.★*\n\n`;
+      detailsText += `╭───────────────╼\n`;
+      detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
+      detailsText += `╰───────────────╼\n\n`;
+      detailsText += `📥 *DOWNLOADING VIDEO FILE* 📥\n`;
+      detailsText += `─── ── ─●●●─ ── ───`;
 
       // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (ලෝඩින් මැසේජ් එක වෙනුවට)
       await danuwa.sendMessage(targetJid, { 
@@ -61,16 +66,15 @@ cmd(
 
       // 4. තත්ත්වයෙන් උසස්ම වීඩියෝ ලින්ක් එක තෝරා ගැනීම
       const downloadUrl = hd || sd;
-      const finalQuality = hd ? "HD Quality (High)" : "SD Quality (Standard)";
+      const finalQuality = hd ? "HD Quality" : "SD Quality";
 
-      // 5. වීඩියෝ ෆයිල් එක සෘජුවම WhatsApp වෙත අප්ලෝඩ් කිරීම
-      let videoCaption = `╭━━━〔 *DOWNLOAD SUCCESS* 〕━━━┈⊷\n`;
-      videoCaption += `┃\n`;
-      videoCaption += `┃ ✨ *𝗦𝘁𝗮𝘁𝘂𝘀:* Successfully Downloaded!\n`;
-      videoCaption += `┃ 🖼️ *𝗤𝘂𝗮𝗹𝗶𝘁𝘆:* ${finalQuality}\n`;
-      videoCaption += `┃\n`;
-      videoCaption += `┃  *©⚡ 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗯𝘆 𝗖𝗬𝗕𝗘𝗥 𝗧𝗛𝗘𝗡𝗨𝗩𝗔* 🚀\n`;
-      videoCaption += `╰━━━━━━━━━━━━━━━━━━━━━━┈⊷`;
+      // 5. වීඩියෝ ෆයිල් එක සෘජුවම WhatsApp වෙත අප්ලෝඩ් කිරීමේ Caption එක
+      let videoCaption = `✅ *DOWNLOAD SUCCESS* ✅\n`;
+      videoCaption += `╭───────────────────.★*\n`;
+      videoCaption += `│  ◦ 🎞️ *Status :* Successfully Sent\n`;
+      videoCaption += `│  ◦ 🖼️ *Quality :* ${finalQuality}\n`;
+      videoCaption += `╰───────────────────.★*\n\n`;
+      videoCaption += `*©⚡ POWERED by CYBER THENUVA* 🚀`;
 
       await danuwa.sendMessage(
         targetJid,
