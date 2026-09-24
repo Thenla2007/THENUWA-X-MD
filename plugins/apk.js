@@ -49,12 +49,21 @@ cmd(
       detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
       detailsText += `╰───────────────╼\n\n`;
       detailsText += `📥 *DOWNLOADING APK FILE* 📥\n`;
-      detailsText += `─── ── ─●●●─ ── ───\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      detailsText += `─── ── ─●●●─ ── ───\n\n\n`;
 
-      // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (ලෝඩින් මැසේජ් එක වෙනුවට)
+      // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (Newsletter Context සමඟ)
       await danuwa.sendMessage(targetJid, { 
         text: detailsText,
-        edit: loadingMsg.key
+        edit: loadingMsg.key,
+        contextInfo: {
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: "120363403804248705@newsletter", // ඔබේ Newsletter JID එක
+            newsletterName: "CYBER X THENULA", // Newsletter එකේ නම
+            serverMessageId: 143
+          }
+        }
       });
 
       // 3. වට්සැප් එකට APK Document එක සමඟ යන Caption එක
@@ -64,9 +73,9 @@ cmd(
       apkCaption += `│  ◦ 📦 *App :* ${appName}.apk\n`;
       apkCaption += `│  ◦ 🎞 *Status :* Successfully Sent\n`;
       apkCaption += `╰───────────────────.★*\n\n`;
-      apkCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      apkCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`;
 
-      // වට්සැප් එකට APK එක Document එකක් ලෙස සෘජුවම යැවීම
+      // වට්සැප් එකට APK එක Document එකක් ලෙස සෘජුවම යැවීම (Newsletter Context සමඟ)
       await danuwa.sendMessage(
         targetJid,
         {
@@ -74,6 +83,15 @@ cmd(
           mimetype: "application/vnd.android.package-archive",
           fileName: `${appName}.apk`,
           caption: apkCaption,
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+              newsletterJid: "120363403804248705@newsletter", // ඔබේ Newsletter JID එක
+              newsletterName: "CYBER X THENULA", // Newsletter එකේ නම
+              serverMessageId: 143
+            }
+          }
         },
         { quoted: mek }
       );
