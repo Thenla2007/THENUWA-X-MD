@@ -47,9 +47,9 @@ let madeMenu = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X 
 *│* *🧑‍💻CYBER-TEAM🧑‍💻*
 *┕───────────────❒*
 
-*
-* * *❂ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴍᴀɴᴅs❂*
-*
+
+   📥*❂ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴍᴀɴᴅs❂*📥
+
 *╭──────────●●►*
 ${menu.download || '*┋* No Commands Available\n'}*╰──────────●●►*
 
@@ -87,7 +87,7 @@ ${menu.search || '*┋* No Commands Available\n'}*╰─────────
 
 > *<b>💥 POWERED 💥</b> BY CYBER X MD⁴³²*
 
-______________________________`;
+___________________________________`;
 
 await conn.sendMessage(
     from,
