@@ -34,7 +34,7 @@ let madeMenu = `👋 HELLOW...*${pushname || 'User'}*
 │  ◦ ⚡ *mode* :  *[${config.MODE}]*
 │  ◦ ⚙️ *prefix* : *[${config.PREFIX}]*
 │  ◦ 💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
+│  ◦ 🤖 *Name Bot* : *THENUWA X MD*
 │  ◦ 👤 *creater* : *Thenula/Dilshan*
 │  ◦ 📌 *version* : *ᴠ.2.0.0*
 │  ◦ 📜 *Menu Cmd* : *menu list*
