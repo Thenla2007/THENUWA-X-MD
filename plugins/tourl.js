@@ -60,7 +60,7 @@ cmd({
       'isForwarded': true,
       'forwardedNewsletterMessageInfo': {
         'newsletterJid': '120363403804248705@newsletter',
-        'newsletterName': "THENUVA XMD",
+        'newsletterName': "THENUWA XMD",
         'serverMessageId': 143
       }
     };
@@ -75,7 +75,7 @@ cmd({
 │  ◦ 🖇️ *URL* : ${uploadedUrl}
 ╰┈───────────────•* 🎉
 
-> © ⚡POWERED by CYBER THENUVA`;
+> © ⚡POWERED by CYBER THENUWA`;
 
     // 4. ඔයා එවපු අලුත්ම DENETH-MD Logo එක සමඟ සෙන්ඩ් කිරීම
     await conn.sendMessage(from, {
