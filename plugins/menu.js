@@ -86,7 +86,7 @@ ${menu.search || '*┋* No Commands Available\n'}*╰─────────
 > © 🌟POWERED BY CYBER THENUVA🌟
 `
 
-await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
+await conn.sendMessage(from,{image:{url: 'https://i.ibb.co/N68698yW/5df1e9c651fd.jpg'
 
 }catch(e){
 console.log(e)
