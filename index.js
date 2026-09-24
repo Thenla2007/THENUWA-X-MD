@@ -234,28 +234,24 @@ for (let i = 0; i < commands.length; i++) {
             }
         }
 
-    if (isCreator && mek.text.startsWith('$')) {
-					let code = budy.slice(2);
-					if (!code) {
-						reply(
-							`Provide me with a query to run Master!`,
-						);
-						return;
-					}
-					try {
-						let resultTest = await eval(
-							'const a = async()=>{\n' + code + '\n}\na()',
-						);
-						let h = util.format(resultTest);
-						if (h === undefined) return console.log(h);
-						else reply(h);
-					} catch (err) {
-						if (err === undefined)
-							return console.log('error');
-						else reply(util.format(err));
-					}
-					return;
-				}
+            if (isCreator && mek.text.startsWith('$')) {
+            let code = budy.slice(2);
+            if (!code) {
+                reply('Provide me with a query');
+                return;
+            }
+            try {
+                let resultTest = eval(code);
+                if (typeof resultTest === 'object') {
+                    reply(util.format(resultTest));
+                } else {
+                    reply(util.format(resultTest));
+                }
+            } catch (err) {
+                reply(util.format(err));
+            }
+        }
+
  //================ownerreact==============
     
   if(senderNumber.includes("94761068032")){
