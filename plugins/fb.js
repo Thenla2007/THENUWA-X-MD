@@ -50,15 +50,15 @@ cmd(
       detailsText += `│  ◦ 🌐 *Url :* ${q}\n`;
       detailsText += `│  ◦ 🎬 *Quality :* ${hd ? "HD Available" : "SD Only"}\n`;
       detailsText += `│  ◦ ⚡ *HD [High] :* ${hd ? "✅" : "❌"}\n`;
-      detailsText += `│  ◦ 🖼️ *SD [Standard] :* ${sd ? "✅" : "❌"}\n`;
+      detailsText += `│  ◦ 🖼️ *Standard [Standard] :* ${sd ? "✅" : "❌"}\n`;
       detailsText += `╰───────────────────.★*\n\n`;
       detailsText += `╭───────────────╼\n`;
       detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
       detailsText += `╰───────────────╼\n\n`;
       detailsText += `📥 *DOWNLOADING VIDEO FILE* 📥\n`;
-      detailsText += `─── ── ─●●●─ ── ───`;
+      detailsText += `─── ── ─●●●─ ── ───\n\n\n`; // මෙතැනට හිස් පේළි එකතු කර ඇත
 
-      // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (ලෝඩින් මැසේජ් එක වෙනුවට)
+      // විස්තර පණිවිඩය යාවත්කාලීന කිරීම (ලෝඩින් මැසේජ් එක වෙනුවට)
       await danuwa.sendMessage(targetJid, { 
         text: detailsText,
         edit: loadingMsg.key
@@ -75,7 +75,7 @@ cmd(
       videoCaption += `│  ◦ 🎞️ *Status :* Successfully Sent\n`;
       videoCaption += `│  ◦ 🖼️ *Quality :* ${finalQuality}\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀`;
+      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමට පේළි 3ක් පහළට දමා ඇත
 
       await danuwa.sendMessage(
         targetJid,
