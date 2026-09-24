@@ -2,36 +2,38 @@ const axios = require("axios");
 const { cmd } = require("../command");
 
 cmd({
-  'pattern': "tourl",
-  'alias': ["imgtourl", "img2url", "url"],
-  'react': '🖇',
-  'desc': "Convert an image to a URL using imgbb.",
-  'category': "utility",
-  'use': ".tourl",
-  'filename': __filename
-}, async (_0x2a615f, _0x296ebb, _0x131287, _0x46c0dd) => {
-  const { from: _0x462e92, quoted: _0x38fbf1, reply: _0x74c833, sender: _0x5931e7 } = _0x46c0dd;
+  pattern: "tourl",
+  alias: ["imgtourl", "img2url", "url"],
+  react: "🖇️",
+  desc: "Convert an image to a URL using imgbb.",
+  category: "utility",
+  use: ".tourl",
+  filename: __filename
+}, async (conn, mek, m, { from, quoted, reply, sender, pushname }) => {
   try {
-    const _0x2fc0f4 = _0x296ebb.quoted ? _0x296ebb.quoted : _0x296ebb;
-    const _0x4dd0ec = (_0x2fc0f4.msg || _0x2fc0f4).mimetype || '';
+    // pushname එක parameter එකක් විදිහට ඉහත දී ඇති නිසා කෙලින්ම ලබාගත හැක
+    const activePushname = pushname || m.pushName || 'User';
     
-    console.log("Image mime type: ", _0x4dd0ec);
+    const targetMessage = m.quoted ? m.quoted : m;
+    const mimeType = (targetMessage.msg || targetMessage).mimetype || '';
+    
+    console.log("Image mime type: ", mimeType);
 
-    if (!_0x4dd0ec || !_0x4dd0ec.startsWith("image")) {
+    if (!mimeType || !mimeType.startsWith("image")) {
       throw "🌻 Please reply to an image.";
     }
 
     // 1. පින්තූරය Buffer එකක් ලෙස බාගත කරගැනීම
-    const _0x227cf8 = await _0x2fc0f4.download();
+    const imageBuffer = await targetMessage.download();
     
-    // 2. එය ImgBB වෙත යැවීමට සුදුසු Base64 කේතයක් බවට හැරවීම
-    const base64Image = _0x227cf8.toString('base64');
+    // 2. එය ImgBB වෙත යැවීමට Base64 බවට හැරවීම
+    const base64Image = imageBuffer.toString('base64');
 
     const apiKey = "039d17094c870b8147d2688d957c4b56"; 
     const targetUrl = "https://api.imgbb.com/1/upload?key=" + apiKey;
     
     // 3. ImgBB වෙත පින්තූරය යැවීම
-    const _0x338f64 = await axios({
+    const response = await axios({
       method: 'post',
       url: targetUrl,
       data: {
@@ -45,33 +47,45 @@ cmd({
       }]
     });
 
-    if (!_0x338f64.data || !_0x338f64.data.data || !_0x338f64.data.data.url) {
+    if (!response.data || !response.data.data || !response.data.data.url) {
       throw "❌ Failed to upload the file.";
     }
 
-    const _0x2b12b1 = _0x338f64.data.data.url;
+    const uploadedUrl = response.data.data.url;
 
-    // DENETH-MD Newsletter Context එක
-    const _0x273817 = {
-      'mentionedJid': [_0x5931e7],
-      'forwardingScore': 0x3e7,
+    // DENETH-MD Newsletter Context එක සහ මෙන්ෂන් කිරීම්
+    const contextSettings = {
+      'mentionedJid': [sender, m.sender],
+      'forwardingScore': 999,
       'isForwarded': true,
       'forwardedNewsletterMessageInfo': {
         'newsletterJid': '120363292876277898@newsletter',
         'newsletterName': "DENETH-𝐌𝐃",
-        'serverMessageId': 0x8f
+        'serverMessageId': 143
       }
     };
 
-    // 4. 💡 මෙන්න මේ 94 වන පේළියේ 'url': වෙනුවට ඔබේ ස්ථිර ලෝගෝ ලින්ක් එක ඇතුළත් කළා!
-    await _0x2a615f.sendMessage(_0x462e92, {
-      'image': { url: "https://i.ibb.co/0pk0Lrb1/6a6496529e1b.jpg" },
-      'caption': `*Image Uploaded Successfully 📸*\n\n*Size:* ${_0x227cf8.length} Byte(s)\n*URL:* ${_0x2b12b1}\n\n> 🏻 Uploaded via DENETH-𝐌𝐃`,
-      'contextInfo': _0x273817
-    }, { quoted: _0x296ebb });
+    // ලස්සන මෙනු කැප්ෂන් එකක් සෑදීම
+    let captionText = `👋 *👋 HELLOW ${activePushname}*
 
-  } catch (_0x5db687) {
-    _0x74c833("Error: " + _0x5db687);
-    console.error("Error occurred:", _0x5db687);
+*Image Uploaded Successfully! 📸*
+
+╭┈───────────────•* ⚡
+│  ◦ 📂 *File Size* : ${(imageBuffer.length / 1024).toFixed(2)} KB
+│  ◦ 🖇️ *URL* : ${uploadedUrl}
+╰┈───────────────•* 🎉
+
+> 🛠️ Uploaded via DENETH-𝐌𝐃`;
+
+    // 4. ඔයා එවපු අලුත්ම DENETH-MD Logo එක සමඟ සෙන්ඩ් කිරීම
+    await conn.sendMessage(from, {
+      'image': { url: "https://catbox.moe" }, // ඔයා එවපු ලෝගෝවට යාවත්කාලීන කරන ලදි
+      'caption': captionText,
+      'contextInfo': contextSettings
+    }, { quoted: mek });
+
+  } catch (error) {
+    reply("Error: " + error);
+    console.error("Error occurred:", error);
   }
 });
