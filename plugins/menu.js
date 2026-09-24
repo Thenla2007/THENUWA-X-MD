@@ -44,7 +44,7 @@ let madeMenu = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X 
 
 
 *╭───────────────❒⁠⁠⁠⁠*
-*│* *_https://github.com_*
+*│* *🧑‍💻CYBER-TEAM🧑‍💻*
 *┕───────────────❒*
 
 *╭───────────────❒⁠⁠⁠⁠*
