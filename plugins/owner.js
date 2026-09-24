@@ -69,7 +69,7 @@ END:VCARD
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363429118791328@newsletter',
+                    newsletterJid: '120363403804248705@newsletter',
                     newsletterName: "THENUWA X MD",
                     serverMessageId: 143
                 }
