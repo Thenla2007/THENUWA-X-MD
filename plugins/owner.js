@@ -1,3 +1,4 @@
+const pushname = m.pushName || 'User';
 const { cmd } = require('../command');
 const config = require('../config');
 const path = require('path');
