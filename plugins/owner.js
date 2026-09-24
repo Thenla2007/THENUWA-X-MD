@@ -42,7 +42,7 @@ END:VCARD
 
         await conn.sendMessage(from, {
             image: {
-                url: 'https://i.ibb.co/6JrfGTrG/temp-image.jpg'
+                url: 'https://i.ibb.co/N68698yW/5df1e9c651fd.jpg'
             },
             caption: `╭━━〔 THENUWA X MD 〕━━┈⊷
 ┃◈╭─────────────·๏
