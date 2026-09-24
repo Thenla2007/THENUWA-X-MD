@@ -21,7 +21,7 @@ cmd(
 
       // 2. දත්ත ලබා ගන්නා තෙක් 'Loading' පණිවිඩය යැවීම
       const loadingMsg = await danuwa.sendMessage(targetJid, { 
-        text: `⚡ *CYBER THENUVA SEARCHING SONG...*` 
+        text: `⚡ *CYBER THENUWA SEARCHING SONG...*` 
       }, { quoted: mek });
 
       const search = await yts(q);
@@ -38,7 +38,7 @@ cmd(
       // CYBER X THENULA ස්ටයිල් එකට සකස් කළ විස්තර පත්‍රිකාව (Image Caption)
       let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
-      detailsText += `✅CYBER THENULA X MD✅\n`;
+      detailsText += `✅THENUWA X MD✅\n`;
       detailsText += `╭───────────────────.★*\n`;
       detailsText += `│  ◦ 📝 *Title :* ${data.title}\n`;
       detailsText += `│  ◦ ⏱️ *Duration :* ${data.timestamp}\n`;
@@ -120,7 +120,7 @@ cmd(
       docCaption += `│  ◦ 🎞 *Status :* Audio Document Sent\n`;
       docCaption += `╰───────────────────.★*\n\n`;
       docCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
-      docCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      docCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       // වට්සැප් එකට Document එකක් ලෙස සෘජුවම යැවීම
       await danuwa.sendMessage(
