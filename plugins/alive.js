@@ -13,16 +13,23 @@ cmd({
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
         // Generate system status message
-        const status = `┏━❮  𝗧𝗛𝗘𝗡𝗨𝗟𝗪𝗔 𝗫𝗠𝗗 〽️𝗗 ❯━
-┃◈┃🤖 ʙᴏᴛ ɴᴀᴍᴇ :𝚃𝙷𝙴𝙽𝚄𝚆𝙰 𝚇𝙼𝙳 𝚅1
-┃◈┃🔖 ᴠᴇʀsɪᴏɴ : 1.0.0 𝙱𝙴𝚃𝙰
-┃◈┃📟 ᴘʟᴀᴛғᴏʀᴍ : 𝚁𝙴𝙿𝙻𝙸𝚃
-┃◈┃👨‍💻ᴏᴡɴᴇʀ: 𝙲𝚈𝙱𝙴𝚁 𝚇 𝚃𝙷𝙴𝙽𝚄𝙻𝙰
-┃◈┃📆 ʀᴜɴᴛɪᴍᴇ : ${runtime(process.uptime())} 
-┃◈┃📈ʀᴀᴍ ᴜsᴀɢᴇ: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-┃◈┗━━━━━━━━━━━━━━𖣔𖣔
-╰──────────────┈⊷
-> © 𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗧𝗛𝗘𝗡𝗨𝗪𝗔 𝗫𝗠𝗗 〽️𝗗`;
+        const status = `👋 HELLOW...*${pushname || 'User'}* ❤️ I am ALIVE NOW CYBER X THENUVA
+
+
+✅CYBER THENULA X MD✅
+╭┈───────────────•* 
+│  ◦ 🕒 *Runtime* :  ${runtime(process.uptime())}
+│  ◦ ⚡ *mode* :  *[${config.MODE}]*
+│  ◦ ⚙️ *prefix* : *[${config.PREFIX}]*
+│  ◦ 💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
+│  ◦ 👤 *creater* : *Thenula/Dilshan*
+│  ◦ 📌 *version* : *ᴠ.2.0.0*
+│  ◦ 📜 *Menu Cmd* : *menu list*
+╰┈───────────────•*
+
+
+> © ⚡POWERED by CYBER THENUVA`;
 
         // Send the status message with an image
         await conn.sendMessage(from, { 
@@ -34,7 +41,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363420387793916@newsletter',
-                    newsletterName: '𝗧𝗛𝗘𝗡𝗨𝗪𝗔 𝗫𝗠𝗗 〽️𝗗',
+                    newsletterName: 'THENUVA XMD',
                     serverMessageId: 143
                 }
             }
