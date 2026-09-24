@@ -57,7 +57,7 @@ END:VCARD
 │  ◦ 🕒 *Runtime* :  ${runtime(process.uptime())}
 │  ◦ ⚡ *Mode* :  *[${config.MODE}]*
 │  ◦ ⚙️ *Prefix* : *[${config.PREFIX}]*
-│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
+│  ◦ 🤖 *Name Bot* : *THENUWA XMD*
 │  ◦ 👤 *Owner* : *Thenula/Dilshan*
 │  ◦ 📌 *Version* : *ᴠ.2.0.0*
 ╰┈───────────────•*
