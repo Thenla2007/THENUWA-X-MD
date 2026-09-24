@@ -216,24 +216,24 @@ for (let i = 0; i < commands.length; i++) {
 					.map(v => v.replace(/[^0-9]/g) + '@s.whatsapp.net')
 					.includes(mek.sender);
 
-    if (isCreator && mek.text.startsWith('%')) {
-					let code = budy.slice(2);
-					if (!code) {
-						reply(
-							`Provide me with a query to run Master!`,
-						);
-						return;
-					}
-					try {
-						let resultTest = eval(code);
-						if (typeof resultTest === 'object')
-							reply(util.format(resultTest));
-						else reply(util.format(resultTest));
-					} catch (err) {
-						reply(util.format(err));
-					}
-					return;
-				}
+            if (isCreator && mek.text.startsWith('%')) {
+            let code = budy.slice(2);
+            if (!code) {
+                reply('Provide me with a query');
+                return;
+            }
+            try {
+                let resultTest = eval(code);
+                if (typeof resultTest === 'object') {
+                    reply(util.format(resultTest));
+                } else {
+                    reply(util.format(resultTest));
+                }
+            } catch (err) {
+                reply(util.format(err));
+            }
+        }
+
     if (isCreator && mek.text.startsWith('$')) {
 					let code = budy.slice(2);
 					if (!code) {
