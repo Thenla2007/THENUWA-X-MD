@@ -1,6 +1,9 @@
 const { cmd, commands } = require("../command");
 const config = require("../config");
 
+// ==========================================
+// 1. ප්‍රධාන MENU විධානය (OPEN MENU බටන් එක සහිතව)
+// ==========================================
 cmd(
   {
     pattern: "menu",
@@ -11,31 +14,19 @@ cmd(
     filename: __filename,
   },
 
-  async (
-    robin,
-    mek,
-    m,
-    {
-      from,
-      sender,
-      reply,
-    }
-  ) => {
+  async (robin, mek, m, { from, sender, reply }) => {
     try {
-      // ==========================================
-      // NATIVE FLOW INTERACTIVE SELECT MENU
-      // ==========================================
       const { generateWAMessageFromContent, proto, prepareWAMessageMedia } = require("@whiskeysockets/baileys");
 
-      // 🔘 මෙන්න ඔයා ඉල්ලපු විදියට OPEN MENU බටන් එක සහ Categories ටික
+      // 🔘 OPEN MENU බටන් එක සහ ලිස්ට් එක
       const buttons = [
         {
           "name": "single_select_reply",
           "buttonParamsJson": JSON.stringify({
-            "title": "OPEN MENU 📜", // යටින් පෙනෙන ප්‍රධාන බටන් එක
+            "title": "OPEN MENU 📜", 
             "sections": [
               {
-                "title": "🤖 BOT MAIN CATEGORIES", // ලිස්ට් එකේ උඩින්ම වැටෙන මාතෘකාව
+                "title": "🤖 BOT MAIN CATEGORIES", 
                 "rows": [
                   {
                     "title": "ALL COMMANDS 📊",
@@ -69,7 +60,7 @@ cmd(
         }
       ];
 
-      // ඔයාගේ මුල් ලින්ක් එකෙන්ම ඉමේජ් එක සකස් කිරීම
+      // නිවැරදි Direct Image Link එකක් භාවිතා කර ඇත
       const mediaMessage = await prepareWAMessageMedia(
         { image: { url: "https://ibb.co" } }, 
         { upload: robin.waUploadToServer }
@@ -111,7 +102,6 @@ cmd(
         }
       }, { userJid: robin.user.jid, quoted: mek });
 
-      // මැසේජ් එක වට්ස්ඇප් වෙත යැවීම
       await robin.relayMessage(from, msg.message, { messageId: msg.key.id });
 
     } catch (e) {
@@ -120,3 +110,87 @@ cmd(
     }
   }
 );
+
+// ==========================================
+// 2. SELECT කළ විට වැඩ කරන SUB-COMMANDS කොටස
+// ==========================================
+
+// 📊 ALL COMMANDS
+cmd({
+    pattern: "allmenu",
+    dontAddCommandList: true,
+    filename: __filename
+}, async (robin, mek, m, { from, reply }) => {
+    let menuText = `📊 *DENETH-MD ALL COMMANDS LIST* 📊\n\n`;
+    commands.map((cmd) => {
+        if (!cmd.dontAddCommandList && cmd.pattern) {
+            menuText += `▪️ *Command:* .${cmd.pattern}\n▪️ *Desc:* ${cmd.desc || 'No description'}\n\n`;
+        }
+    });
+    return await robin.sendMessage(from, { text: menuText }, { quoted: mek });
+});
+
+// ⬇️ DOWNLOAD MENU
+cmd({
+    pattern: "downmenu",
+    dontAddCommandList: true,
+    filename: __filename
+}, async (robin, mek, m, { from, reply }) => {
+    let downText = `⬇️ *DENETH-MD DOWNLOAD MENU* ⬇️\n\n` +
+                   `▪️ .song (Audio Download)\n` +
+                   `▪️ .video (Video Download)\n` +
+                   `▪️ .ytmp3 (YouTube Audio)\n` +
+                   `▪️ .ytmp4 (YouTube Video)\n` +
+                   `▪️ .fb (Facebook Video Download)\n` +
+                   `▪️ .tiktok (TikTok Video Download)\n\n` +
+                   `> *Powered by DENETH-MD*`;
+    return await robin.sendMessage(from, { text: downText }, { quoted: mek });
+});
+
+// 👥 GROUP MENU
+cmd({
+    pattern: "groupmenu",
+    dontAddCommandList: true,
+    filename: __filename
+}, async (robin, mek, m, { from, reply }) => {
+    let groupText = `👥 *DENETH-MD GROUP MENU* 👥\n\n` +
+                    `▪️ .kick (Remove Member)\n` +
+                    `▪️ .add (Add Member)\n` +
+                    `▪️ .promote (Make Admin)\n` +
+                    `▪️ .demote (Remove Admin)\n` +
+                    `▪️ .mute (Close Group)\n` +
+                    `▪️ .unmute (Open Group)\n\n` +
+                    `> *Powered by DENETH-MD*`;
+    return await robin.sendMessage(from, { text: groupText }, { quoted: mek });
+});
+
+// 👑 OWNER MENU
+cmd({
+    pattern: "ownermenu",
+    dontAddCommandList: true,
+    filename: __filename
+}, async (robin, mek, m, { from, reply }) => {
+    let ownerText = `👑 *DENETH-MD OWNER MENU* 👑\n\n` +
+                    `▪️ .restart (Restart Bot)\n` +
+                    `▪️ .shutdown (Turn off Bot)\n` +
+                    `▪️ .broadcast (Send msg to all groups)\n` +
+                    `▪️ .block (Block User)\n` +
+                    `▪️ .unblock (Unblock User)\n\n` +
+                    `> *Authorized personnel only*`;
+    return await robin.sendMessage(from, { text: ownerText }, { quoted: mek });
+});
+
+// 🎨 CONVERT MENU
+cmd({
+    pattern: "convertmenu",
+    dontAddCommandList: true,
+    filename: __filename
+}, async (robin, mek, m, { from, reply }) => {
+    let convertText = `🎨 *DENETH-MD CONVERT MENU* 🎨\n\n` +
+                      `▪️ .sticker (Image to Sticker)\n` +
+                      `▪️ .convert (Sticker to Image)\n` +
+                      `▪️ .attp (Text to Sticker)\n` +
+                      `▪️ .logo (Create Cool Logos)\n\n` +
+                      `> *Powered by DENETH-MD*`;
+    return await robin.sendMessage(from, { text: convertText }, { quoted: mek });
+});
