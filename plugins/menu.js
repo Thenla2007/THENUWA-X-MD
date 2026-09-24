@@ -83,9 +83,7 @@ ${menu.search || '*┋* No Commands Available\n'}*╰─────────
 
 *❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
 
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪ<b>💥 𝗟𝗢𝗩𝗘𝗥 💥</b>⁴³²*
-
-╰━❁ ═══ ❃•⇆•❃ ═══ ❁━╯
+> © 🌟POWERED BY CYBER THENUVA🌟
 `
 
 await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
