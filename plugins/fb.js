@@ -27,7 +27,7 @@ cmd(
 
       // 2. දත්ත ලබා ගන්නා තෙක් 'Loading' පණිවිඩය යැවීම
       const loadingMsg = await danuwa.sendMessage(targetJid, { 
-        text: `⚡ *CYBER THENUVA FETCHING DATA...*` 
+        text: `⚡ *CYBER THENUWA FETCHING DATA...*` 
       }, { quoted: mek });
 
       // 3. API මඟින් වීඩියෝ තොරතුරු ලබා ගැනීම
@@ -44,7 +44,7 @@ cmd(
       // pushname එක Welcome සෙක්ෂන් එකට එකතු කර සකස් කළ විස්තර පත්‍රිකාව
       let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
-      detailsText += `✅CYBER THENULA X MD✅\n`;
+      detailsText += `✅THENUWA X MD✅\n`;
       detailsText += `╭───────────────────.★*\n`;
       detailsText += `│  ◦ 📝 *Title :* ${title || "Facebook Video"}\n`;
       detailsText += `│  ◦ 🌐 *Url :* ${q}\n`;
@@ -84,7 +84,7 @@ cmd(
       videoCaption += `│  ◦ 🎞️ *Status :* Successfully Sent\n`;
       videoCaption += `│  ◦ 🖼️ *Quality :* ${finalQuality}\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`;
+      videoCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`;
 
       // වීඩියෝ එක යවන විට Newsletter එක පෙන්වීම
       await danuwa.sendMessage(
