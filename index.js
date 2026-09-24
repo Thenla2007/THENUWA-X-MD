@@ -248,7 +248,7 @@ const port = process.env.PORT || 8000;
 	    // ---- EVAL CREATOR CHECKS START ----
     const udp = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
 
-    if (body.startsWith('%') || body.startsWith('\$')) {
+    
         let isCreator = ['94783747285', '94761068032', config.DEV].map(v => v ? v.replace(/[^0-9]/g, '') : '').includes(senderNumber);
         
         if (isCreator) {
