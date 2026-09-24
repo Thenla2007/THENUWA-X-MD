@@ -56,9 +56,9 @@ cmd(
       detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
       detailsText += `╰───────────────╼\n\n`;
       detailsText += `📥 *DOWNLOADING VIDEO FILE* 📥\n`;
-      detailsText += `─── ── ─●●●─ ── ───\n\n\n`; // මෙතැනට හිස් පේළි එකතු කර ඇත
+      detailsText += `─── ── ─●●●─ ── ───\n\n\n`;
 
-      // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (Newsletter Context සමඟ)
+      // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (Baileys නිවැරදි ව්‍යුහය)
       await danuwa.sendMessage(targetJid, { 
         text: detailsText,
         edit: loadingMsg.key,
@@ -66,9 +66,9 @@ cmd(
           forwardingScore: 999,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterJid: "120363403804248705@newsletter", // ඔබේ Newsletter JID එක
-            newsletterName: "CYBER X THENULA", // Newsletter එකේ නම
-            serverMessageId: 143
+            newsletterJid: "120363403804248705@newsletter",
+            newsletterName: "CYBER XMD",
+            serverMessageId: 1
           }
         }
       });
@@ -84,9 +84,9 @@ cmd(
       videoCaption += `│  ◦ 🎞️ *Status :* Successfully Sent\n`;
       videoCaption += `│  ◦ 🖼️ *Quality :* ${finalQuality}\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමට පේළි 3ක් පහළට දමා ඇත
+      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`;
 
-      // වට්සැප් එකට වීඩියෝ එක සෘජුවම යැවීම (Newsletter Context සමඟ)
+      // වීඩියෝ එක යවන විට Newsletter එක පෙන්වීම
       await danuwa.sendMessage(
         targetJid,
         {
@@ -96,9 +96,9 @@ cmd(
             forwardingScore: 999,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-              newsletterJid: "120363403804248705@newsletter", // ඔබේ Newsletter JID එක
-              newsletterName: "CYBER X THENULA", // Newsletter එකේ නම
-              serverMessageId: 143
+              newsletterJid: "120363403804248705@newsletter",
+              newsletterName: "CYBER XMD",
+              serverMessageId: 1
             }
           }
         },
