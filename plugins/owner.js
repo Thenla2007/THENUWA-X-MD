@@ -15,8 +15,8 @@ cmd({
 },
 async (conn, mek, m, { from }) => {
     try {
-        const ownerNumber = "94772194789";
-        const ownerName = "DILA MD";
+        const ownerNumber = "94783747285";
+        const ownerName = "CYBER X THENULA";
         const ownerEmail = config.OWNER_EMAIL || "dilamd@gmail.com";
 
         const cleanNumber = ownerNumber.replace(/[^0-9]/g, '');
@@ -25,11 +25,11 @@ async (conn, mek, m, { from }) => {
 VERSION:3.0
 FN:${ownerName}
 N:${ownerName};;;
-ORG:DILA MD
+ORG:THENUWA X MD
 TITLE:Founder & Developer
 TEL;TYPE=CELL,VOICE;waid=${cleanNumber}:${ownerNumber}
 EMAIL:${ownerEmail}
-NOTE:Official contact card of DILA MD
+NOTE:Official contact card of THENUWA X MD
 END:VCARD
 `;
 
@@ -44,7 +44,7 @@ END:VCARD
             image: {
                 url: 'https://i.ibb.co/6JrfGTrG/temp-image.jpg'
             },
-            caption: `╭━━〔 DILA MD 〕━━┈⊷
+            caption: `╭━━〔 THENUWA X MD 〕━━┈⊷
 ┃◈╭─────────────·๏
 ┃◈┃• Here is the owner details
 ┃◈┃• Name - ${ownerName}
@@ -60,7 +60,7 @@ END:VCARD
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
                     newsletterJid: '120363429118791328@newsletter',
-                    newsletterName: "DILA MD",
+                    newsletterName: "THENUWA X MD",
                     serverMessageId: 143
                 }
             }
