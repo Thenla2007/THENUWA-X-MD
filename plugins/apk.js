@@ -73,7 +73,7 @@ cmd(
       apkCaption += `│  ◦ 📦 *App :* ${appName}.apk\n`;
       apkCaption += `│  ◦ 🎞 *Status :* Successfully Sent\n`;
       apkCaption += `╰───────────────────.★*\n\n`;
-      apkCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`;
+      apkCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`;
 
       // වට්සැප් එකට APK එක Document එකක් ලෙස සෘජුවම යැවීම (Newsletter Context සමඟ)
       await danuwa.sendMessage(
