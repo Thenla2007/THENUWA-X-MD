@@ -44,14 +44,10 @@ END:VCARD
             image: {
                 url: 'https://i.ibb.co/N68698yW/5df1e9c651fd.jpg'
             },
-            caption: `╭━━〔 THENUWA X MD 〕━━┈⊷
-┃◈╭─────────────·๏
-┃◈┃• Here is the owner details
-┃◈┃• Name - ${ownerName}
-┃◈┃• Number - ${ownerNumber}
-┃◈┃• Version - ${config.VERSION || "1.0.0"}
-┃◈└───────────┈⊷
-╰──────────────┈⊷
+            caption: `👋 HELLOW...*${pushname || 'User'}* ❤️ I am owner NOW CYBER X THENULA
+            
+
+            
 
 > ✦POWERED BY DILA MD`,
             contextInfo: {
