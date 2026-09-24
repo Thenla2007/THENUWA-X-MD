@@ -1,213 +1,215 @@
 const config = require('../config')
-const { cmd, commands } = require('../command')
+const {cmd , commands} = require('../command')
+const os = require("os")
+const {runtime} = require('../lib/functions')
+const axios = require('axios')
 
-cmd(
-{
-    pattern: "menu3",
+cmd({
+
+    pattern: "menu",
+
     react: "🛸",
-    alias: ["panel", "list", "commands"],
-    desc: "Get bot's command list.",
+
+    alias: ["panel","commands"],
+
+    desc: "Get bot\'s command list.",
+
     category: "main",
-    use: '.menu3',
+
+    use: '.menu',
+
     filename: __filename
+
 },
 
-async(
-    conn,
-    mek,
-    m,
-    {
-        from,
-        l,
-        quoted,
-        body,
-        isCmd,
-        umarmd,
-        args,
-        q,
-        isGroup,
-        sender,
-        senderNumber,
-        botNumber2,
-        botNumber,
-        pushname,
-        isMe,
-        isOwner,
-        groupMetadata,
-        groupName,
-        participants,
-        groupAdmins,
-        isBotAdmins,
-        isAdmins,
-        reply
-    }
-) => {
+async(conn, mek, m,{from, l, quoted, body, isCmd, umarmd, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 
-    try {
+try{
+let madeMenu = `*╭┈───────────────•*
 
-        // ─────────────────────────────
-        // BOT UPTIME
-        // ─────────────────────────────
-        const formatUptime = (seconds) => {
-            seconds = Number(seconds);
+*⇆ ʜɪɪ ᴍʏ ᴅᴇᴀʀ ғʀɪᴇɴᴅ ⇆*
 
-            const d = Math.floor(seconds / (3600 * 24));
-            const h = Math.floor((seconds % (3600 * 24)) / 3600);
-            const m = Math.floor((seconds % 3600) / 60);
-            const s = Math.floor(seconds % 60);
+     *${pushname}*
+     
+*╰┈───────────────•*
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━•⟢
+*ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ sɪʟᴇɴᴛ-sᴏʙx-ᴍᴅ ғᴜʟʟ ᴄᴏᴍᴍᴀɴᴅ ʟɪsᴛ*
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━•⟢
 
-            return `${d}d ${h}h ${m}m ${s}s`;
-        };
+*ᴄʀᴇᴀᴛᴇᴅ ʙʏ sɪʟᴇɴᴛ ʟᴏᴠᴇʀ⁴³²👨🏻‍💻*
 
-        const uptime = formatUptime(process.uptime());
+*◆─〈 ${config.BOT_NAME} 〉─◆*
+*╭┈───────────────•* 
+*│  ◦*  *ʀᴜɴᴛɪᴍᴇ* : ${runtime(process.uptime())}
+*│  ◦*  *ᴍᴏᴅᴇ* : *[${config.MODE}]*
+*│  ◦*  *ᴘʀᴇғɪx* : *[${config.PREFIX}]*
+*│  ◦*  *ʀᴀᴍ ᴜsᴇ* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+*│  ◦*  *ɴᴀᴍᴇ ʙᴏᴛ* : *❖sɪʟᴇɴᴛ-sᴏʙx-ᴍᴅ❖*
+*│  ◦*  *ᴄʀᴇᴀᴛᴏʀ* : *➺ѕเℓεɳƭ_ℓσѵε૨࿐*
+*│  ◦*  *ᴠᴇʀsɪᴏɴs* : *ᴠ.2.0.0*
+*│  ◦*  *ᴍᴇɴᴜ ᴄᴍᴅ* : *ᴍᴇɴᴜ ʟɪsᴛ*
+*╰┈───────────────•*
+*♡︎•━━━━━━☻︎━━━━━━•♡︎*
 
-        // ─────────────────────────────
-        // RAM USAGE
-        // ─────────────────────────────
-        const memory = process.memoryUsage();
-        const ram = (memory.rss / 1024 / 1024).toFixed(2);
+*[ • 📥 DOWNLOADER-CMD 📥 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ғʙ <ᴜʀʟ>*
+*┋* *.ɪɴꜱᴛᴀ <ᴜʀʟ>*
+*┋* *.ᴠɪᴅᴇᴏ <ᴜʀʟ>*
+*┋* *.ɢᴅʀɪᴠᴇ <ᴜʀʟ>*
+*┋* *.ᴛᴡɪᴛᴛᴇʀ <ᴜʀʟ>*
+*┋* *.ᴛᴛ<ᴜʀʟ>*
+*┋* *.ᴍᴇᴅɪᴀғɪʀᴇ <ᴜʀʟ>*
+*┋* *.ꜱᴏɴɢ <ϙᴜᴇʀʏ>*
+*┋* *.ᴘʟᴀʏ <ᴜʀʟ>*
+*┋* *.ᴠɪᴅᴇᴏ <ϙᴜᴇʀʏ>*
+*┋* *.ᴠɪᴅᴇᴏ2 <ᴜʀʟ>*
+*┋* *.ɪᴍɢ <ϙᴜᴇʀʏ>*
+*┋* *.ᴀᴘᴋ <ɴᴀᴍᴇ>*
+*┋* *.ᴅᴀʀᴀᴍᴀ <ᴛɪᴛᴛʟᴇ>*
+*┋* *.ᴘʟᴀʏ2 <ᴛɪᴛᴛʟᴇ>*
+*┋* *.ʙᴀɪsᴄᴏᴘᴇ <ᴜʀʟ>*
+*┋* *.ɢɪɴɪsɪsɪʟᴀ <ᴛɪᴛᴛʟᴇ>*
+*╰┈───────────────•*
 
-        // ─────────────────────────────
-        // BOT INFO
-        // ─────────────────────────────
-        const botName = "DILA-MD";
-        const ownerName = "Dilshan";
-        const botMode = config.MODE || "public";
+*[ • 🔎 SEARCH-CMD 🔍 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ʏᴛꜱ  <ᴛᴇxᴛ>*
+*┋* *.ʏᴛᴀ <ᴜʀʟ>*
+*┋* *.ʟᴏʟɪ <ᴛᴇxᴛ>*
+*┋* *.ᴍᴏᴠɪᴇɪɴғᴏ <ᴛᴇxᴛ>*
+*┋* *.ɪᴍɢ <ᴛᴇxᴛ>*
+*┋* *.ᴡᴇᴀᴛʜᴇʀ <ᴄɪᴛʏ>*
+*╰┈───────────────•*
 
-        // ─────────────────────────────
-        // MENU HEADER
-        // ─────────────────────────────
-        let madeMenu = `
-╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃      🛸 *DILA-MD* 🛸
-┃━━━━━━━━━━━━━━━━━━━━━━┃
-┃ 👋 *HELLO*  : ${pushname}
-┃ 🤖 *BOT*    : ${botName}
-┃ ⚡ *MODE*   : ${botMode}
-┃ 🟢 *STATUS* : ONLINE
-┃ ⏱️ *UPTIME* : ${uptime}
-┃ 💾 *RAM*    : ${ram} MB
-┃ 👨‍💻 *OWNER*  : ${ownerName}
-╰━━━━━━━━━━━━━━━━━━━━━━╯
+*[ • 🧠 AI-CMD 🧠 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ɢᴘᴛ <ᴛᴇxᴛ>*
+*┋* *.ᴀɪ <ᴛᴇxᴛ>*
+*┋* *.ʙᴏᴛ <ᴛᴇxᴛ>*
+*╰┈───────────────•*
 
-╭━━━〔 *📥 DOWNLOAD COMMANDS* 〕━━━┈
-│
-│ 📖 *COMMAND:* .play
-│ ℹ️ Download Audio from YouTube
-│
-│ 📖 *COMMAND:* .song
-│ ℹ️ Download Song from YouTube
-│
-│ 📖 *COMMAND:* .apk
-│ ℹ️ Download APK from Play Store
-│
-│ 📖 *COMMAND:* .video
-│ ℹ️ Download Video from YouTube
-│
-│ 📖 *COMMAND:* .fb
-│ ℹ️ Download Video from Facebook
-│
-│ 📖 *COMMAND:* .tk
-│ ℹ️ Download Video from TikTok
-│
-│ 📖 *COMMAND:* .ig
-│ ℹ️ Download Video from Instagram
-│
-│ 📖 *COMMAND:* .gdrive
-│ ℹ️ Download Google Drive Files
-│
-│ 📖 *COMMAND:* .wamod
-│ ℹ️ Download WhatsApp MOD APK
-│
-│ 📖 *COMMAND:* .img
-│ ℹ️ Search Images
-│
-╰━━━━━━━━━━━━━━━━━━━┈
+*[ • 👨‍💻 OWNER-CMD 👨‍💻 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ᴜᴘᴅᴀᴛᴇᴄᴍᴅ*
+*┋* *.sᴇᴛᴛɪɴɢs*
+*┋* *.ᴏᴡɴᴇʀ*
+*┋* *.ʀᴇᴘᴏ*
+*┋* *.ꜱʏꜱᴛᴇᴍ*
+*┋* *.ꜱᴛᴀᴛᴜꜱ*
+*┋* *.ʙʟᴏᴄᴋ*
+*┋* *.ᴜɴʙʟᴏᴄᴋ*
+*┋* *.sʜᴜᴛᴅᴏᴡɴ*
+*┋* *.ᴄʟᴇᴀʀᴄʜᴀᴛs*
+*┋* *.sᴇᴛᴘᴘ*
+*┋* *.ʙʀᴏᴀᴅᴄᴀsᴛ*
+*┋* *.ᴊɪᴅ*
+*┋* *.ɢᴊɪᴅ*
+*┋* *.ʀᴇꜱᴛᴀʀᴛ*
+*╰┈───────────────•*
 
-`;
+*[ • 👥 GROUP-CMD 👥 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ʀᴇᴍᴏᴠᴇ <ʀᴇᴘʟʏ ғᴏʀ ᴅᴇʟᴇᴛᴇ sᴍs>*
+*┋* *.ᴅᴇʟᴇᴛᴇ <ʀᴇᴘʟʏ ғᴏʀ ᴅᴇʟᴇᴛᴇ sᴍs>*
+*┋* *.ᴀᴅᴅ*
+*┋* *.ᴋɪᴄᴋ*
+*┋* *.sᴇᴛɢᴏᴏᴅʙʏᴇ <ᴛᴇxᴛ>*
+*┋* *.sᴇᴛᴡᴇʟᴄᴏᴍᴇ <ᴛᴇxᴛ>*
+*┋* *.ᴘʀᴏᴍᴏᴛᴇ*
+*┋* *.ᴅᴇᴍᴏᴛᴇ*
+*┋* *.ᴛᴀɢᴀʟʟ*
+*┋* *.ɢᴇᴛᴘɪᴄ*
+*┋* *.ɪɴᴠɪᴛᴇ*
+*┋* *.ʀᴇᴠᴏᴋᴇ*
+*┋* *.ᴊᴏɪɴʀᴇǫᴜᴇsᴛs*
+*┋* *.ᴀʟʟʀᴇǫ*
+*┋* *.ᴍᴜᴛᴇ*
+*┋* *.ᴜɴᴍᴜᴛᴇ*
+*┋* *.ʟᴏᴄᴋɢᴄ*
+*┋* *.ᴜɴʟᴏᴄᴋɢᴄ*
+*┋* *.ʟᴇᴀᴠᴇ*
+*┋* *.ᴜᴘᴅᴀᴛᴇɢɴᴀᴍᴇ*
+*┋* *.ᴜᴘᴅᴀᴛᴇɢᴅᴇsᴄ*
+*┋* *.ᴊᴏɪɴ*
+*┋* *.ʜɪᴅᴇᴛᴀɢ*
+*┋* *.ɢɪɴғᴏ*
+*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ ᴏɴ*
+*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ ᴏғғ*
+*┋* *.ᴅɪsᴀᴘᴘᴇᴀʀ 7ᴅ 24ʜ 90ᴅ*
+*┋* *.sᴇɴᴅᴅᴍ*
+*╰┈───────────────•*
 
-        // ─────────────────────────────
-        // AUTO COMMAND LIST
-        // ─────────────────────────────
-        let categories = {};
+*[ • 📃 INFO-CMD 📃 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ᴍᴇɴᴜ*
+*┋* *.ᴍᴇɴᴜ2*
+*┋* *.ᴍᴇɴᴜ3*
+*┋* *.ᴀʙᴏᴜᴛ*
+*┋* *.sᴄʀɪᴘᴛ*
+*┋* *.ʀᴇᴘᴏ*
+*┋* *.ᴀʟɪᴠᴇ*
+*┋* *.ʙᴏᴛɪɴꜰᴏ*
+*┋* *.ꜱᴛᴀᴛᴜꜱ*
+*┋* *.ꜱᴜᴘᴘᴏʀᴛ*
+*┋* *.ᴘɪɴɢ*
+*┋* *.ᴘɪɴɢ2*
+*┋* *.ꜱʏꜱᴛᴇᴍ*
+*╰┈───────────────•*
 
-        for (let i = 0; i < commands.length; i++) {
+*[ • 🎡 CONVERTER-CMD 🎡 ‎• ]*
+*╭┈───────────────•*
+*┋* *.sᴛɪᴄᴋᴇʀ*
+*┋* *.ᴛʀᴛ <ᴛᴇxᴛ>*
+*┋* *.ᴛᴛs <ᴛᴇxᴛ>*
+*╰┈───────────────•*
 
-            const command = commands[i];
+*[ • 🥂 RANDOM-CMD 🥂 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ᴋɪɴɢ*
+*┋* *.ᴅᴏɢ*
+*┋* *.ᴀɴɪᴍᴇ*
+*┋* *.ᴀɴɪᴍᴇɢɪʀʟ*
+*┋* *.ᴀɴɪᴍᴇɢɪʀʟ1*
+*┋* *.ᴀɴɪᴍᴇɢɪʀʟ2*
+*┋* *.ᴀɴɪᴍᴇɢɪʀʟ3*
+*┋* *.ᴀɴɪᴍᴇɢɪʀʟ4*
+*┋* *.ᴀɴɪᴍᴇɢɪʀʟ5*
+*╰┈───────────────•*
 
-            if (!command.pattern) continue;
+*[ • 🏜️ WALLPAPERS-CMD 🏜️ ‎• ]*
+*╭┈───────────────•*
+*┋* *.ɪᴍɢ*
+*╰┈───────────────•*
 
-            const category = command.category || "misc";
+*[ • 🌐 OTHER-CMD 🌐 ‎• ]*
+*╭┈───────────────•*
+*┋* *.ᴛʀᴛ*
+*┋* *.ᴊᴏᴋᴇ*
+*┋* *.ꜰᴀᴄᴛ*
+*┋* *.ɢɪᴛʜᴜʙꜱᴛᴀʟᴋ*
+*┋* *.ɢᴘᴀꜱꜱ*
+*┋* *.ʜᴀᴄᴋ*
+*┋* *.ǫᴜᴏᴛᴇ*
+*┋* *.ꜱʀᴇᴘᴏ*
+*┋* *.ᴅᴇꜰɪɴᴇ*
+*╰┈───────────────•*
 
-            if (!categories[category]) {
-                categories[category] = [];
-            }
+*❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
 
-            let pattern = command.pattern;
+┏━━━━━━━━━━━━━━━━━━━◆
+*https://whatsapp.com/channel/0029VaHO5B0G3R3cWkZN970s*
+┗━━━━━━━━━━━━━━━━━━━◆
 
-            if (typeof pattern === "string") {
-                categories[category].push(pattern);
-            }
-        }
+*•────────────•⟢*
+> © ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪʟᴇɴᴛʟᴏᴠᴇʀ⁴³²
+*•────────────•⟢*
+`
 
-        // ─────────────────────────────
-        // CATEGORY MENU
-        // ─────────────────────────────
-        for (const category in categories) {
+await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
 
-            if (category.toLowerCase() === "download") continue;
-
-            madeMenu += `
-╭━━━〔 *${category.toUpperCase()}* 〕━━━┈
-│
-`;
-
-            const uniqueCommands = [
-                ...new Set(categories[category])
-            ];
-
-            for (const command of uniqueCommands) {
-                madeMenu += `│ ✦ .${command}\n`;
-            }
-
-            madeMenu += `│
-╰━━━━━━━━━━━━━━━━━━━┈
-
-`;
-        }
-
-        // ─────────────────────────────
-        // FOOTER
-        // ─────────────────────────────
-        madeMenu += `
-╭━━━━━━━━━━━━━━━━━━━━━━╮
-┃  🛸 *DILA-MD* 🤖
-┃━━━━━━━━━━━━━━━━━━━━━━┃
-┃ ⚡ Fast • Simple • Powerful
-┃ 🟢 Bot is currently Online
-┃ 👨‍💻 Created by *Dilshan*
-╰━━━━━━━━━━━━━━━━━━━━━━╯
-`;
-
-        // ─────────────────────────────
-        // SEND MENU
-        // ─────────────────────────────
-        await conn.sendMessage(
-            from,
-            {
-                text: madeMenu
-            },
-            {
-                quoted: mek
-            }
-        );
-
-    } catch (e) {
-
-        console.log("Menu3 Error:", e);
-
-        reply(
-            `❌ *MENU ERROR*\n\n${e.message}`
-        );
-    }
-});
+}catch(e){
+console.log(e)
+reply(`${e}`)
+}
+})
