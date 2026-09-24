@@ -34,7 +34,7 @@ let madeMenu = `👋 HELLOW...*${pushname || 'User'}*
 │  ◦ ⚡ *mode* :  *[${config.MODE}]*
 │  ◦ ⚙️ *prefix* : *[${config.PREFIX}]*
 │  ◦ 💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-│  ◦ 🤖 *Name Bot* : *THENUWA X MD*
+│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
 │  ◦ 👤 *creater* : *Thenula/Dilshan*
 │  ◦ 📌 *version* : *ᴠ.2.0.0*
 │  ◦ 📜 *Menu Cmd* : *menu list*
@@ -42,7 +42,7 @@ let madeMenu = `👋 HELLOW...*${pushname || 'User'}*
 
 
 *╭───────────────❒⁠⁠⁠⁠*
-*│* *_https://github.com/SILENTLOVER40/SILENT-SOBX-MD_*
+*│* *_https://github.com_*
 *┕───────────────❒*
 
 *╭───────────────❒⁠⁠⁠⁠*
@@ -64,32 +64,33 @@ ${menu.main || '*┋* No Commands Available\n'}*╰─────────�
 ${menu.group || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭───────────────❒⁠⁠⁠⁠*
-*│* *❂ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs❂*
+*│* *❂ᴏᴡ穩ɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
 *╭──────────●●►*
 ${menu.owner || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭───────────────❒⁠⁠⁠⁠*
-*│* *❂<b>💥 CONVERT 💥</b> ᴄᴏᴍᴍᴀɴᴅs❂*
+*│* *❂ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
 *╭──────────●●►*
 ${menu.convert || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭─────────────────❒⁠⁠⁠⁠*
-*│* *❂s<b>💥 EARCH 💥</b> ᴄᴏᴍᴍᴀɴᴅs❂*
+*│* *❂sᴇᴀʀᴄʜ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕─────────────────❒*
 *╭──────────●●►*
 ${menu.search || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
 
-> © 🌟POWERED BY CYBER THENUVA🌟
-`
+> *<b>💥 POWERED 💥</b> BY SILENT_LOVER⁴³²*
 
-await conn.sendMessage(from,{image:{url: 'https://i.ibb.co/N68698yW/5df1e9c651fd.jpg'
+╰━❁ ═══ ❃•⇆•❃ ═══ ❁━╯`;
+
+await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek});
 
 }catch(e){
-console.log(e)
-reply(`${e}`)
+console.log(e);
+reply(`${e}`);
 }
-})
+});
