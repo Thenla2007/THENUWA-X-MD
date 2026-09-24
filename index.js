@@ -172,32 +172,13 @@ const port = process.env.PORT || 8000;
   const content = JSON.stringify(mek.message)
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
-          const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
-        
-        // ---- NUMBER MENU FIX START ----
-        let finalBody = body ? body.trim() : '';
-        if (finalBody === "1" || finalBody === "2" || finalBody === "3" || finalBody === "4" || finalBody === "5" || finalBody === "6") {
-            finalBody = prefix + finalBody;
-        }
-        // ---- NUMBER MENU FIX END ----
-
-        const isCmd = finalBody.startsWith(prefix)
-        var budy = typeof mek.text == 'string' ? mek.text : ''
-        const command = isCmd ? finalBody.slice(prefix.length).trim().split(/ +/).shift().toLowerCase() : ''
-	  // ==========================================
-// 178 වෙනි ලයින් එකට යටින් (LINE 179) මේක දාන්න
-// ==========================================
-// ---- NUMBER COMMAND FIX ----
-if (!isCmd && (body === "1" || body === "2" || body === "3" || body === "4" || body === "5" || body === "6")) {
-    command = body; 
-}
-// ----------------------------
-
-
-        const args = finalBody.trim().split(/ +/).slice(1)
-        const q = args.join(' ')
-        const text = args.join(' ')
-
+  const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
+  const isCmd = body.startsWith(prefix)
+  var budy = typeof mek.text == 'string' ? mek.text : false;
+  const command = isCmd ? body.slice(prefix.length).trim().split(' ').shift().toLowerCase() : ''
+  const args = body.trim().split(/ +/).slice(1)
+  const q = args.join(' ')
+  const text = args.join(' ')
   const isGroup = from.endsWith('@g.us')
   const sender = mek.key.fromMe ? (conn.user.id.split(':')[0]+'@s.whatsapp.net' || conn.user.id) : (mek.key.participant || mek.key.remoteJid)
   const senderNumber = sender.split('@')[0]
