@@ -30,13 +30,13 @@ menu[commands[i].category] += `*┋* .${commands[i].pattern}\n`;
 let madeMenu = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA
 
 
-✅CYBER THENULA X MD✅
+✅CYBER THENUWA X MD✅
 ╭┈───────────────•* 
 │  ◦ 🕒 *Runtime* :  ${runtime(process.uptime())}
 │  ◦ ⚡ *mode* :  *[${config.MODE}]*
 │  ◦ ⚙️ *prefix* : *[${config.PREFIX}]*
 │  ◦ 💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
+│  ◦ 🤖 *Name Bot* : *THENUWA XMD*
 │  ◦ 👤 *creater* : *Thenula/Dilshan*
 │  ◦ 📌 *version* : *ᴠ.2.0.0*
 │  ◦ 📜 *Menu Cmd* : *menu list*
@@ -100,7 +100,7 @@ await conn.sendMessage(
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
                 newsletterJid: '120363403804248705@newsletter',
-                newsletterName: 'THENUVA XMD',
+                newsletterName: 'THENUWA XMD',
                 serverMessageId: 143
             }
         }
