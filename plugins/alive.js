@@ -41,7 +41,7 @@ await conn.sendMessage(
             forwardingScore: 999,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363420387793916@newsletter',
+                newsletterJid: '120363403804248705@newsletter',
                 newsletterName: 'THENUVA XMD',
                 serverMessageId: 143
             }
