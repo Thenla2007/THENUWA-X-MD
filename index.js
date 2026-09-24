@@ -196,8 +196,21 @@ const port = process.env.PORT || 8000;
   const isReact = m.message.reactionMessage ? true : false
   const reply = (teks) => {
   conn.sendMessage(from, { text: teks }, { quoted: mek })
-  }
-  const udp = botNumber.split('@')[0];
+ // ---- NUMBER MENU FIX START ----
+for (let i = 0; i < commands.length; i++) {
+    if (commands[i].on === "text" && body) {
+        commands[i].function(conn, mek, m, {
+            from, quoted, body, isCmd, command, args, q, text, 
+            isGroup, sender, senderNumber, botNumber2, botNumber, 
+            pushname, isMe, isOwner, groupMetadata, groupName, 
+            participants, groupAdmins, isBotAdmins, isAdmins, reply
+        });
+    }
+}
+// ---- NUMBER MENU FIX END ----
+
+  
+    const udp = botNumber.split('@')[0];
     const jawad = ('94773416478', '94761068032', '94723975388');
     let isCreator = [udp, jawad, config.DEV]
 					.map(v => v.replace(/[^0-9]/g) + '@s.whatsapp.net')
