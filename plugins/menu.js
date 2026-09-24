@@ -27,10 +27,12 @@ menu[commands[i].category] += `*┋* .${commands[i].pattern}\n`;
  }
 }
 
-let madeMenu = `👋 HELLOW...*${pushname || 'User'}*
+let madeMenu = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA
 
+
+✅CYBER THENULA X MD✅
 ╭┈───────────────•* 
-│   🕒 *Runtime* :  ${runtime(process.uptime())}
+│  ◦ 🕒 *Runtime* :  ${runtime(process.uptime())}
 │  ◦ ⚡ *mode* :  *[${config.MODE}]*
 │  ◦ ⚙️ *prefix* : *[${config.PREFIX}]*
 │  ◦ 💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
@@ -69,7 +71,7 @@ ${menu.group || '*┋* No Commands Available\n'}*╰─────────�
 *╭──────────●●►*
 ${menu.owner || '*┋* No Commands Available\n'}*╰──────────●●►*
 
-*╭───────────────❒⁠⁠⁠⁠*
+*╭───────────────❒⁠்த*
 *│* *❂ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
 *╭──────────●●►*
@@ -83,11 +85,12 @@ ${menu.search || '*┋* No Commands Available\n'}*╰─────────
 
 *❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
 
-> *<b>💥 POWERED 💥</b> BY SILENT_LOVER⁴³²*
+> *<b>💥 POWERED 💥</b> BY CYBER X MD⁴³²*
 
 ╰━❁ ═══ ❃•⇆•❃ ═══ ❁━╯`;
 
-await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek});
+// මෙතන url: 'දාන්න_ඕන_image_link_එක' විදිහට කෙලින්ම image link එකක් දාන්න පුළුවන්
+await conn.sendMessage(from,{image:{url: `https://i.ibb.co/N68698yW/5df1e9c651fd.jpg`},caption:madeMenu},{quoted:mek});
 
 }catch(e){
 console.log(e);
