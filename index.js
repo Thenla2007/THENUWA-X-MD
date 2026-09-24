@@ -247,7 +247,7 @@ const port = process.env.PORT || 8000;
 
 	const myBotNumber = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
     const udp = myBotNumber;
-    let isCreator = '94783747285', '94761068032', config.DEV].map(v => v ? v.replace(/[^0-9]/g, '') : '').includes(mek.sender ? mek.sender.replace(/[^0-9]/g, '') : '');
+    let isCreator = ['94783747285', '94761068032', config.DEV].map(v => v ? v.replace(/[^0-9]/g, '') : '').includes(mek.sender ? mek.sender.replace(/[^0-9]/g, '') : '');
 
     if (isCreator && mek.text.startsWith('%')) {
 
