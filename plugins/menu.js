@@ -1,5 +1,8 @@
 const config = require('../config')
 const {cmd , commands} = require('../command')
+const os = require("os")
+const {runtime} = require('../lib/functions')
+
 cmd({
     pattern: "menu2",
     react: "👾",
@@ -20,21 +23,21 @@ search: ''
 
 for (let i = 0; i < commands.length; i++) {
 if (commands[i].pattern && !commands[i].dontAddCommandList) {
-menu[commands[i].category] += `*┋* ${commands[i].pattern}\n`;
+menu[commands[i].category] += `*┋* .${commands[i].pattern}\n`;
  }
 }
 
-let madeMenu = `👋 HELLOW...*${pushname}*
+let madeMenu = `👋 HELLOW...*${pushname || 'User'}*
 
 ╭┈───────────────•* 
-│    🕒 *Runtime* :  ${runtime(process.uptime())}
-│  ◦  ⚡ *mode* :  *[${config.MODE}]*
-│  ◦  ⚙️ *prefix* : *[${config.PREFIX}]*
-│  ◦  💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-│  ◦  🤖 *Name Bot* : *THENUVA XMD*
-│  ◦  👤 *creater* : *Thenula/Dilshan*
-│  ◦  📌 *version* : *ᴠ.2.0.0*
-│  ◦  📜 *Menu Cmd* : *menu list
+│   🕒 *Runtime* :  ${runtime(process.uptime())}
+│  ◦ ⚡ *mode* :  *[${config.MODE}]*
+│  ◦ ⚙️ *prefix* : *[${config.PREFIX}]*
+│  ◦ 💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
+│  ◦ 👤 *creater* : *Thenula/Dilshan*
+│  ◦ 📌 *version* : *ᴠ.2.0.0*
+│  ◦ 📜 *Menu Cmd* : *menu list*
 ╰┈───────────────•*
 
 
@@ -46,51 +49,41 @@ let madeMenu = `👋 HELLOW...*${pushname}*
 *│* *❂ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
 *╭──────────●●►*
-${menu.download}
-*╰──────────●●►*
+${menu.download || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭───────────────❒⁠⁠⁠⁠*
 *│* *❂ᴍᴀɪɴ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
 *╭──────────●●►*
-${menu.main}
-*╰──────────●●►*
+${menu.main || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭───────────────❒⁠⁠⁠⁠*
 *│* *❂ɢʀᴏᴜᴘ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
-
 *╭──────────●●►*
-${menu.group}
-*╰──────────●●►*
+${menu.group || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭───────────────❒⁠⁠⁠⁠*
 *│* *❂ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
-
 *╭──────────●●►*
-${menu.owner}
-*╰──────────●●►*
+${menu.owner || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭───────────────❒⁠⁠⁠⁠*
-*│* *❂ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs❂*
+*│* *❂<b>💥 CONVERT 💥</b> ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
-
 *╭──────────●●►*
-${menu.convert}
-*╰──────────●●►*
+${menu.convert || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭─────────────────❒⁠⁠⁠⁠*
-*│* *❂sᴇᴀʀᴄʜ ᴄᴏᴍᴍᴀɴᴅs❂*
+*│* *❂s<b>💥 EARCH 💥</b> ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕─────────────────❒*
-
 *╭──────────●●►*
-${menu.search}
-*╰──────────●●►*
+${menu.search || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
 
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪʟᴇɴᴛ_ʟᴏᴠᴇʀ⁴³²*
+> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪ<b>💥 𝗟𝗢𝗩𝗘𝗥 💥</b>⁴³²*
 
 ╰━❁ ═══ ❃•⇆•❃ ═══ ❁━╯
 `
