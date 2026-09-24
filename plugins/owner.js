@@ -46,10 +46,17 @@ END:VCARD
             },
             caption: `👋 HELLOW...*${pushname || 'User'}* ❤️ I am owner NOW CYBER X THENULA
             
-
+            ╭┈───────────────•* 
+│  ◦ 🕒 *Runtime* :  ${runtime(process.uptime())}
+│  ◦ ⚡ *Mode* :  *[${config.MODE}]*
+│  ◦ ⚙️ *Prefix* : *[${config.PREFIX}]*
+│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
+│  ◦ 👤 *Owner* : *Thenula/Dilshan*
+│  ◦ 📌 *Version* : *ᴠ.2.0.0*
+╰┈───────────────•*
             
 
-> ✦POWERED BY DILA MD`,
+> © ⚡POWERED by CYBER THENUVA`,
             contextInfo: {
                 mentionedJid: [`${cleanNumber}@s.whatsapp.net`],
                 forwardingScore: 999,
