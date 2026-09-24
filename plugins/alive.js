@@ -15,7 +15,7 @@ try {
 
 let aliveMessage = `🟢 *ALIVE NOW* 🟢
 
-👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA
+👋 HELLOW...*${pushname || 'User'}* ❤️ I am ALIVE NOW CYBER X THENULA
 
 ✅ *CYBER THENULA X MD IS ONLINE* ✅
 
@@ -28,7 +28,7 @@ let aliveMessage = `🟢 *ALIVE NOW* 🟢
 │  ◦ 📌 *Version* : *ᴠ.2.0.0*
 ╰┈───────────────•*
 
-> *𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗖𝗬𝗕𝗘𝗥 𝗫 𝗠𝗗⁴³²*`;
+> © ⚡*POWERED by CYBER THENUVA*`;
 
 // Image එක සහ Newsletter Forwarding එක සමඟ සෙන්ඩ් කිරීම
 await conn.sendMessage(
