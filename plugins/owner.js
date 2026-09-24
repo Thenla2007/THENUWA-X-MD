@@ -1,8 +1,9 @@
-const pushname = m.pushName || 'User';
-const { cmd } = require('../command');
 const config = require('../config');
+const { cmd } = require('../command');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
+const { runtime } = require('../lib/functions'); // runtime error එක මඟහැරීමට එකතු කරන ලදි
 
 const audioPath = path.join(__dirname, '../media/goku_owner.mp3');
 
@@ -16,6 +17,8 @@ cmd({
 },
 async (conn, mek, m, { from }) => {
     try {
+        // pushname එක parameter එකක් විදිහට function එක ඇතුළේදීම සකසා ගැනීම
+        const pushname = m.pushName || 'User';
         const ownerNumber = "94783747285";
         const ownerName = "CYBER X THENULA";
         const ownerEmail = config.OWNER_EMAIL || "dilamd@gmail.com";
@@ -34,6 +37,7 @@ NOTE:Official contact card of THENUWA X MD
 END:VCARD
 `;
 
+        // Contact VCard එක යැවීම
         await conn.sendMessage(from, {
             contacts: {
                 displayName: ownerName,
@@ -41,13 +45,15 @@ END:VCARD
             }
         }, { quoted: mek });
 
+        // ඔයා එවපු අලුත් real image එක සහ විස්තර යැවීම
         await conn.sendMessage(from, {
             image: {
-                url: 'https://i.ibb.co/N68698yW/5df1e9c651fd.jpg'
+                url: 'https://catbox.moe' // ඔයා එවපු Logo Image එකට යාවත්කාලීන කරන ලදි
             },
-            caption: `👋 HELLOW...*${pushname || 'User'}* ❤️ I am owner NOW CYBER X THENULA
+            caption: `👋 HELLOW...*${pushname}* ❤️ I am owner NOW CYBER X THENULA
             
-            ╭┈───────────────•* 
+✅CYBER THENULA X MD✅
+╭┈───────────────•* 
 │  ◦ 🕒 *Runtime* :  ${runtime(process.uptime())}
 │  ◦ ⚡ *Mode* :  *[${config.MODE}]*
 │  ◦ ⚙️ *Prefix* : *[${config.PREFIX}]*
@@ -59,7 +65,7 @@ END:VCARD
 
 > © ⚡POWERED by CYBER THENUVA`,
             contextInfo: {
-                mentionedJid: [`${cleanNumber}@s.whatsapp.net`],
+                mentionedJid: [`${cleanNumber}@s.whatsapp.net`, m.sender],
                 forwardingScore: 999,
                 isForwarded: true,
                 forwardedNewsletterMessageInfo: {
@@ -70,6 +76,7 @@ END:VCARD
             }
         }, { quoted: mek });
 
+        // Audio ෆයිල් එකක් තිබේ නම් එය ප්ලේ කිරීම
         if (fs.existsSync(audioPath)) {
             await conn.sendMessage(from, {
                 audio: fs.readFileSync(audioPath),
