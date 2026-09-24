@@ -68,7 +68,7 @@ cmd({
     // ලස්සන මෙනු කැප්ෂන් එකක් සෑදීම
     let captionText = `*👋 HELLOW...${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA
 
-   *📸 Image Uploaded Successfully!*
+  *📸 Image Uploaded Successfully!*
 
 ╭┈───────────────•* ⚡
 │  ◦ 📂 *File Size* : ${(imageBuffer.length / 1024).toFixed(2)} KB
@@ -79,7 +79,7 @@ cmd({
 
     // 4. ඔයා එවපු අලුත්ම DENETH-MD Logo එක සමඟ සෙන්ඩ් කිරීම
     await conn.sendMessage(from, {
-      'image': { url: "https://catbox.moe" }, // ඔයා එවපු ලෝගෝවට යාවත්කාලීන කරන ලදි
+      'image': { url: "https://i.ibb.co/7JWk0d08/11625411f042.jpg" }, // ඔයා එවපු ලෝගෝවට යාවත්කාලීන කරන ලදි
       'caption': captionText,
       'contextInfo': contextSettings
     }, { quoted: mek });
