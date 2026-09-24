@@ -58,10 +58,19 @@ cmd(
       detailsText += `📥 *DOWNLOADING VIDEO FILE* 📥\n`;
       detailsText += `─── ── ─●●●─ ── ───\n\n\n`; // මෙතැනට හිස් පේළි එකතු කර ඇත
 
-      // විස්තර පණිවිඩය යාවත්කාලීന කිරීම (ලෝඩින් මැසේජ් එක වෙනුවට)
+      // විස්තර පණිවිඩය යාවත්කාලීන කිරීම (Newsletter Context සමඟ)
       await danuwa.sendMessage(targetJid, { 
         text: detailsText,
-        edit: loadingMsg.key
+        edit: loadingMsg.key,
+        contextInfo: {
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterJid: "120363403804248705@newsletter", // ඔබේ Newsletter JID එක
+            newsletterName: "CYBER X THENULA", // Newsletter එකේ නම
+            serverMessageId: 143
+          }
+        }
       });
 
       // 4. තත්ත්වයෙන් උසස්ම වීඩියෝ ලින්ක් එක තෝරා ගැනීම
@@ -77,11 +86,21 @@ cmd(
       videoCaption += `╰───────────────────.★*\n\n`;
       videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමට පේළි 3ක් පහළට දමා ඇත
 
+      // වට්සැප් එකට වීඩියෝ එක සෘජුවම යැවීම (Newsletter Context සමඟ)
       await danuwa.sendMessage(
         targetJid,
         {
           video: { url: downloadUrl },
           caption: videoCaption,
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+              newsletterJid: "120363403804248705@newsletter", // ඔබේ Newsletter JID එක
+              newsletterName: "CYBER X THENULA", // Newsletter එකේ නම
+              serverMessageId: 143
+            }
+          }
         },
         { quoted: mek }
       );
