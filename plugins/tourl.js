@@ -59,7 +59,7 @@ cmd({
       'forwardingScore': 999,
       'isForwarded': true,
       'forwardedNewsletterMessageInfo': {
-        'newsletterJid': '120363292876277898@newsletter',
+        'newsletterJid': '120363403804248705@newsletter',
         'newsletterName': "THENUVA XMD",
         'serverMessageId': 143
       }
