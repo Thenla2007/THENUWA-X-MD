@@ -97,7 +97,7 @@ cmd(
       docCaption += `│  ◦ 🎶 *Song :* ${data.title}\n`;
       docCaption += `│  ◦ 🎞 *Status :* Audio Document Sent\n`;
       docCaption += `╰───────────────────.★*\n\n`;
-      docCaption += `*©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      docCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       // වට්සැප් එකට Document එකක් ලෙස සෘජුවම යැවීම
       await danuwa.sendMessage(
