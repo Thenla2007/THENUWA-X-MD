@@ -20,7 +20,7 @@ cmd(
 
       // 1. දත්ත ලබා ගන්නා තෙක් 'Loading' පණිවිඩය යැවීම
       const loadingMsg = await danuwa.sendMessage(targetJid, { 
-        text: `⚡ *CYBER THENUVA SEARCHING VIDEO...*` 
+        text: `⚡ *CYBER THENUWA SEARCHING VIDEO...*` 
       }, { quoted: mek });
 
       const search = await yts(q);
@@ -36,7 +36,7 @@ cmd(
       // CYBER X THENULA ස්ටයිල් එකට සකස් කළ විස්තර පත්‍රිකාව (Image Caption)
       let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
-      detailsText += `✅CYBER THENULA X MD✅\n`;
+      detailsText += `✅CYBER THENUWA X MD✅\n`;
       detailsText += `╭───────────────────.★*\n`;
       detailsText += `│  ◦ 📝 *Title :* ${data.title}\n`;
       detailsText += `│  ◦ ⏱️ *Duration :* ${data.timestamp}\n`;
@@ -69,7 +69,7 @@ cmd(
       videoCaption += `│  ◦ 🎬 *Video :* ${data.title}\n`;
       videoCaption += `│  ◦ 🎞 *Status :* Video File Sent\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      videoCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       await danuwa.sendMessage(
         targetJid,
@@ -88,7 +88,7 @@ cmd(
       docCaption += `│  ◦ 🎶 *Audio :* ${data.title}\n`;
       docCaption += `│  ◦ 🎞 *Status :* Audio Document Sent\n`;
       docCaption += `╰───────────────────.★*\n\n`;
-      docCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      docCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       await danuwa.sendMessage(
         targetJid,
