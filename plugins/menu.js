@@ -72,7 +72,7 @@ ${menu.group || '*┋* No Commands Available\n'}*╰─────────�
 ${menu.owner || '*┋* No Commands Available\n'}*╰──────────●●►*
 
 *╭───────────────❒⁠்த*
-*│* *❂ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs❂*
+*│* *❂幕ᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs❂*
 *┕───────────────❒*
 *╭──────────●●►*
 ${menu.convert || '*┋* No Commands Available\n'}*╰──────────●●►*
@@ -87,10 +87,26 @@ ${menu.search || '*┋* No Commands Available\n'}*╰─────────
 
 > *<b>💥 POWERED 💥</b> BY CYBER X MD⁴³²*
 
-╰━❁ ═══ ❃•⇆•❃ ═══ ❁━╯`;
+__________________________`;
 
-// මෙතන url: 'දාන්න_ඕන_image_link_එක' විදිහට කෙලින්ම image link එකක් දාන්න පුළුවන්
-await conn.sendMessage(from,{image:{url: `https://i.ibb.co/N68698yW/5df1e9c651fd.jpg`},caption:madeMenu},{quoted:mek});
+await conn.sendMessage(
+    from,
+    {
+        image: { url: `https://i.ibb.co/N68698yW/5df1e9c651fd.jpg` },
+        caption: madeMenu,
+        contextInfo: {
+            mentionedJid: [m.sender],
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363420387793916@newsletter',
+                newsletterName: 'THENUVA XMD',
+                serverMessageId: 143
+            }
+        }
+    },
+    { quoted: mek }
+);
 
 }catch(e){
 console.log(e);
