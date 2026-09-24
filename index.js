@@ -184,6 +184,16 @@ const port = process.env.PORT || 8000;
         const isCmd = finalBody.startsWith(prefix)
         var budy = typeof mek.text == 'string' ? mek.text : ''
         const command = isCmd ? finalBody.slice(prefix.length).trim().split(/ +/).shift().toLowerCase() : ''
+	  // ==========================================
+// 178 වෙනි ලයින් එකට යටින් (LINE 179) මේක දාන්න
+// ==========================================
+// ---- NUMBER COMMAND FIX ----
+if (!isCmd && (body === "1" || body === "2" || body === "3" || body === "4" || body === "5" || body === "6")) {
+    command = body; 
+}
+// ----------------------------
+
+
         const args = finalBody.trim().split(/ +/).slice(1)
         const q = args.join(' ')
         const text = args.join(' ')
