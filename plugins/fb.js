@@ -10,7 +10,7 @@ cmd(
     category: "download",
     filename: __filename,
   },
-  async (danuwa, mek, m, { from, quoted, body, args, q, reply }) => {
+  async (danuwa, mek, m, { from, quoted, body, args, q, pushname, reply }) => {
     try {
       // JID එක නිවැරදිව ලබා ගැනීම
       const targetJid = typeof from === 'string' ? from : (mek.key.remoteJid || String(from));
@@ -41,8 +41,8 @@ cmd(
 
       const { title, sd, hd } = videoData;
       
-      // ඔබ එවූ Image එකේ ඇති ආකාරයටම නිවැරදිව නිමවා ඇති විස්තර පත්‍රිකාව
-      let detailsText = `👋 HELLOW...No ❤️ Welcome to\n`;
+      // pushname එක Welcome සෙක්ෂන් එකට එකතු කර සකස් කළ විස්තර පත්‍රිකාව
+      let detailsText = `👋 HELLOW ${pushname || "User"}...No ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
       detailsText += `✅CYBER THENULA X MD✅\n`;
       detailsText += `╭───────────────────.★*\n`;
@@ -71,6 +71,7 @@ cmd(
       // 5. වීඩියෝ ෆයිල් එක සෘජුවම WhatsApp වෙත අප්ලෝඩ් කිරීමේ Caption එක
       let videoCaption = `✅ *DOWNLOAD SUCCESS* ✅\n`;
       videoCaption += `╭───────────────────.★*\n`;
+      videoCaption += `│  ◦ 👤 *User :* ${pushname || "User"}\n`;
       videoCaption += `│  ◦ 🎞️ *Status :* Successfully Sent\n`;
       videoCaption += `│  ◦ 🖼️ *Quality :* ${finalQuality}\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
