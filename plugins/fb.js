@@ -74,7 +74,7 @@ cmd(
       videoCaption += `│  ◦ 🎞️ *Status :* Successfully Sent\n`;
       videoCaption += `│  ◦ 🖼️ *Quality :* ${finalQuality}\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `*©⚡ POWERED by CYBER THENUVA* 🚀`;
+      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀`;
 
       await danuwa.sendMessage(
         targetJid,
