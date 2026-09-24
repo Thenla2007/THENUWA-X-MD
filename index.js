@@ -245,10 +245,11 @@ const port = process.env.PORT || 8000;
     }
 });
 
-	// ---- BOTNUMBER REFERENCE FIX ---- const myBotNumber = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
+	    // ---- BOTNUMBER REFERENCE FIX START ----
+    const myBotNumber = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
     const udp = myBotNumber;
-    let isCreator = ['94773416478', '94761068032', config.DEV].map(v => v.replace(/[^0-9]/g, '')).includes(mek.sender ? mek.sender.split('@')[0] : '');
-    // ---------------------------------
+    // ---- BOTNUMBER REFERENCE FIX END ----
+
 
 
             if (isCreator && mek.text.startsWith('%')) {
