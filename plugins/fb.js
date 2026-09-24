@@ -68,8 +68,7 @@ cmd(
       const downloadUrl = hd || sd;
       const finalQuality = hd ? "HD Quality" : "SD Quality";
 
-      // 5. වීඩියෝ ෆයිල් එක සෘජුවම WhatsApp වෙත අප්ලෝඩ් කිරීමේ Caption එක
-      let videoCaption = `✅ *DOWNLOAD SUCCESS* ✅\n`;
+      // 5. වීඩියෝ ෆයිල්`✅ *DOWNLOAD SUCCESS* ✅\n`;
       videoCaption += `╭───────────────────.★*\n`;
       videoCaption += `│  ◦ 🎞️ *Status :* Successfully Sent\n`;
       videoCaption += `│  ◦ 🖼️ *Quality :* ${finalQuality}\n`;
