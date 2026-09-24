@@ -66,7 +66,7 @@ cmd({
     };
 
     // ලස්සන මෙනු කැප්ෂන් එකක් සෑදීම
-    let captionText = `*👋 HELLOW... ${activePushname}*
+    let captionText = `*👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA
 
    *📸 Image Uploaded Successfully! 📸*
 
