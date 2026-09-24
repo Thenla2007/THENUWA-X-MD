@@ -1,104 +1,213 @@
-const config = require('../config');
-const { cmd, commands } = require('../command');
+const config = require('../config')
+const { cmd, commands } = require('../command')
 
-// ==========================================
-// 1. ප්‍රධාන MENU விධානය (.menu2 ගැසූ විට)
-// ==========================================
-cmd({
-    pattern: "menu2",
-    react: "👾",
-    desc: "get cmd list",
+cmd(
+{
+    pattern: "menu3",
+    react: "🛸",
+    alias: ["panel", "list", "commands"],
+    desc: "Get bot's command list.",
     category: "main",
+    use: '.menu3',
     filename: __filename
 },
-async(conn, mek, m, { from, pushname, reply }) => {
+
+async(
+    conn,
+    mek,
+    m,
+    {
+        from,
+        l,
+        quoted,
+        body,
+        isCmd,
+        umarmd,
+        args,
+        q,
+        isGroup,
+        sender,
+        senderNumber,
+        botNumber2,
+        botNumber,
+        pushname,
+        isMe,
+        isOwner,
+        groupMetadata,
+        groupName,
+        participants,
+        groupAdmins,
+        isBotAdmins,
+        isAdmins,
+        reply
+    }
+) => {
+
     try {
-        let madeMenu = `*╭─────────────────❒⁠⁠⁠⁠*
 
-*⇆ ʜɪɪ ᴍʏ ᴅᴇᴀʀ ғʀɪᴇɴᴅ ⇆*
+        // ─────────────────────────────
+        // BOT UPTIME
+        // ─────────────────────────────
+        const formatUptime = (seconds) => {
+            seconds = Number(seconds);
 
-     *${pushname}*
+            const d = Math.floor(seconds / (3600 * 24));
+            const h = Math.floor((seconds % (3600 * 24)) / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = Math.floor(seconds % 60);
 
-*┕─────────────────❒*
+            return `${d}d ${h}h ${m}m ${s}s`;
+        };
 
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━
-   *ᴡᴇʟᴄᴏᴍᴇ ᴛᴏ sɪʟᴇɴᴛ-sᴏʙx-ᴍᴅ ᴄᴀᴛᴇɢᴏʀʏ ʟɪsᴛ*
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━
+        const uptime = formatUptime(process.uptime());
 
-*ᴄʀᴇᴀᴛᴇᴅ ʙʏ sɪʟᴇɴᴛ ʟᴏᴠᴇʀ⁴³²👨🏻‍💻*
+        // ─────────────────────────────
+        // RAM USAGE
+        // ─────────────────────────────
+        const memory = process.memoryUsage();
+        const ram = (memory.rss / 1024 / 1024).toFixed(2);
 
-> ඔබට අවශ්‍ය Category එකෙහි අංකය පමණක් Reply කරන්න. 👇
+        // ─────────────────────────────
+        // BOT INFO
+        // ─────────────────────────────
+        const botName = "DILA-MD";
+        const ownerName = "Dilshan";
+        const botMode = config.MODE || "public";
 
-*╭───────────────❒⁠⁠⁠⁠*
-*│ [1] ❂ ᴍᴀɪɴ ᴄᴏᴍᴍᴀɴᴅs ❂*
-*│ [2] ❂ ᴅᴏᴡɴload ᴄᴏᴍᴍᴀɴᴅs ❂*
-*│ [3] ❂ ɢʀᴏᴜᴘ ᴄᴏᴍᴍᴀɴᴅs ❂*
-*│ [4] ❂ ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs ❂*
-*│ [5] ❂ ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs ❂*
-*│ [6] ❂ sᴇᴀʀᴄʜ ᴄᴏᴍᴍᴀɴᴅs ❂*
-*┕───────────────❒*
+        // ─────────────────────────────
+        // MENU HEADER
+        // ─────────────────────────────
+        let madeMenu = `
+╭━━━━━━━━━━━━━━━━━━━━━━╮
+┃      🛸 *DILA-MD* 🛸
+┃━━━━━━━━━━━━━━━━━━━━━━┃
+┃ 👋 *HELLO*  : ${pushname}
+┃ 🤖 *BOT*    : ${botName}
+┃ ⚡ *MODE*   : ${botMode}
+┃ 🟢 *STATUS* : ONLINE
+┃ ⏱️ *UPTIME* : ${uptime}
+┃ 💾 *RAM*    : ${ram} MB
+┃ 👨‍💻 *OWNER*  : ${ownerName}
+╰━━━━━━━━━━━━━━━━━━━━━━╯
 
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪʟᴇɴᴛ_ʟᴏᴠᴇʀ⁴³²*
+╭━━━〔 *📥 DOWNLOAD COMMANDS* 〕━━━┈
+│
+│ 📖 *COMMAND:* .play
+│ ℹ️ Download Audio from YouTube
+│
+│ 📖 *COMMAND:* .song
+│ ℹ️ Download Song from YouTube
+│
+│ 📖 *COMMAND:* .apk
+│ ℹ️ Download APK from Play Store
+│
+│ 📖 *COMMAND:* .video
+│ ℹ️ Download Video from YouTube
+│
+│ 📖 *COMMAND:* .fb
+│ ℹ️ Download Video from Facebook
+│
+│ 📖 *COMMAND:* .tk
+│ ℹ️ Download Video from TikTok
+│
+│ 📖 *COMMAND:* .ig
+│ ℹ️ Download Video from Instagram
+│
+│ 📖 *COMMAND:* .gdrive
+│ ℹ️ Download Google Drive Files
+│
+│ 📖 *COMMAND:* .wamod
+│ ℹ️ Download WhatsApp MOD APK
+│
+│ 📖 *COMMAND:* .img
+│ ℹ️ Search Images
+│
+╰━━━━━━━━━━━━━━━━━━━┈
+
 `;
 
-        await conn.sendMessage(from, { image: { url: config.ALIVE_IMG }, caption: madeMenu }, { quoted: mek });
+        // ─────────────────────────────
+        // AUTO COMMAND LIST
+        // ─────────────────────────────
+        let categories = {};
 
-    } catch (e) {
-        console.log(e);
-        reply(`${e}`);
-    }
-});
-
-// ==========================================
-// 2. තිත නැතුව අංකය විතරක් රිප්ලයි කළ විට වැඩ කරන කොටස
-// ==========================================
-cmd({
-    on: "text",
-    dontAddCommandList: true,
-    filename: __filename
-}, async (conn, mek, m, { from, body }) => {
-    try {
-        if (!body || m.isBot) return; // බොට් කෙනෙක් රිප්ලයි කළොත් නවත්වන්න
-
-        const input = body.trim();
-        let menuSection = "";
-        let targetCategory = "";
-        let categoryTitle = "";
-
-        // යූසර් එවන අංකය අනුව Category එක වෙන් කර ගැනීම
-        if (input === "1") { targetCategory = "main"; categoryTitle = "ᴍᴀɪɴ ᴄᴏᴍᴍᴀɴᴅs"; }
-        else if (input === "2") { targetCategory = "download"; categoryTitle = "ᴅᴏᴡɴload ᴄᴏᴍᴍᴀɴᴅs"; }
-        else if (input === "3") { targetCategory = "group"; categoryTitle = "ɢʀᴏᴜᴘ ᴄᴏᴍᴍᴀɴᴅs"; }
-        else if (input === "4") { targetCategory = "owner"; categoryTitle = "ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs"; }
-        else if (input === "5") { targetCategory = "convert"; categoryTitle = "ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs"; }
-        else if (input === "6") { targetCategory = "search"; categoryTitle = "sᴇᴀʀᴄʜ ᴄᴏᴍᴍᴀɴᴅs"; }
-        else { return; } // 1-6 අතර නොවන වෙනත් මැසේජ් එකක් නම් ක්‍රියාවලිය නවත්වන්න
-
-        // තෝරාගත් category එකට අදාළ විධාන පමණක් dynamic ලෙස loop එකකින් එකතු කර ගැනීම
-        let foundCommands = "";
         for (let i = 0; i < commands.length; i++) {
-            if (commands[i].pattern && !commands[i].dontAddCommandList && commands[i].category === targetCategory) {
-                foundCommands += `*┋* .${commands[i].pattern}\n`;
+
+            const command = commands[i];
+
+            if (!command.pattern) continue;
+
+            const category = command.category || "misc";
+
+            if (!categories[category]) {
+                categories[category] = [];
+            }
+
+            let pattern = command.pattern;
+
+            if (typeof pattern === "string") {
+                categories[category].push(pattern);
             }
         }
 
-        if (!foundCommands) {
-            foundCommands = `*┋* මෙම Category එක යටතේ දැනට විධාන කිසිවක් නැත.\n`;
+        // ─────────────────────────────
+        // CATEGORY MENU
+        // ─────────────────────────────
+        for (const category in categories) {
+
+            if (category.toLowerCase() === "download") continue;
+
+            madeMenu += `
+╭━━━〔 *${category.toUpperCase()}* 〕━━━┈
+│
+`;
+
+            const uniqueCommands = [
+                ...new Set(categories[category])
+            ];
+
+            for (const command of uniqueCommands) {
+                madeMenu += `│ ✦ .${command}\n`;
+            }
+
+            madeMenu += `│
+╰━━━━━━━━━━━━━━━━━━━┈
+
+`;
         }
 
-        // යවන සුබ මෙනු මැසේජ් එක ලස්සනට Format කිරීම
-        let replyMenu = `*╭───────────────❒⁠⁠⁠⁠*
-*│* *❂ ${categoryTitle} ❂*
-*┕───────────────❒*
-*╭──────────●●►*
-${foundCommands}*╰──────────●●►*
+        // ─────────────────────────────
+        // FOOTER
+        // ─────────────────────────────
+        madeMenu += `
+╭━━━━━━━━━━━━━━━━━━━━━━╮
+┃  🛸 *DILA-MD* 🤖
+┃━━━━━━━━━━━━━━━━━━━━━━┃
+┃ ⚡ Fast • Simple • Powerful
+┃ 🟢 Bot is currently Online
+┃ 👨‍💻 Created by *Dilshan*
+╰━━━━━━━━━━━━━━━━━━━━━━╯
+`;
 
-> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪʟᴇɴᴛ_ʟᴏᴠᴇʀ⁴³²*`;
-
-        // එම මැසේජ් එක යූසර්ට රිප්ලයි කිරීම
-        return await conn.sendMessage(from, { text: replyMenu }, { quoted: mek });
+        // ─────────────────────────────
+        // SEND MENU
+        // ─────────────────────────────
+        await conn.sendMessage(
+            from,
+            {
+                text: madeMenu
+            },
+            {
+                quoted: mek
+            }
+        );
 
     } catch (e) {
-        console.error("Number Reply Menu Error:", e);
+
+        console.log("Menu3 Error:", e);
+
+        reply(
+            `❌ *MENU ERROR*\n\n${e.message}`
+        );
     }
 });
