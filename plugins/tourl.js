@@ -60,22 +60,22 @@ cmd({
       'isForwarded': true,
       'forwardedNewsletterMessageInfo': {
         'newsletterJid': '120363292876277898@newsletter',
-        'newsletterName': "DENETH-𝐌𝐃",
+        'newsletterName': "THENUVA XMD",
         'serverMessageId': 143
       }
     };
 
     // ලස්සන මෙනු කැප්ෂන් එකක් සෑදීම
-    let captionText = `👋 *👋 HELLOW ${activePushname}*
+    let captionText = `*👋 HELLOW... ${activePushname}*
 
-*Image Uploaded Successfully! 📸*
+   *📸 Image Uploaded Successfully! 📸*
 
 ╭┈───────────────•* ⚡
 │  ◦ 📂 *File Size* : ${(imageBuffer.length / 1024).toFixed(2)} KB
 │  ◦ 🖇️ *URL* : ${uploadedUrl}
 ╰┈───────────────•* 🎉
 
-> 🛠️ Uploaded via DENETH-𝐌𝐃`;
+> © ⚡POWERED by CYBER THENUVA`;
 
     // 4. ඔයා එවපු අලුත්ම DENETH-MD Logo එක සමඟ සෙන්ඩ් කිරීම
     await conn.sendMessage(from, {
