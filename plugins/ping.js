@@ -20,10 +20,19 @@ async (conn, mek, from, options) => {
         const endTime = Date.now();
         const pingTime = endTime - startTime;
 
-        // පණිවිඩය Edit කිරීම
+        // Newsletter සහ Context Info සහිතව පණිවිඩය Edit කිරීම
         await conn.sendMessage(targetJid, { 
-            text: `*THENUWA X MD SPEED* 🚀\n\n⚡ *Ping:* \`${pingTime} ms\`\n📶 *Status:* \`Excellent\``,
-            edit: pingMsg.key 
+            text: `*THENUWA X MD SPEED* 🚀\n\n⚡ *Ping:* \`\${pingTime} ms\`\n📶 *Status:* \`Excellent\`\n\n📢 *Join Our Channel:* https://whatsapp.com`,
+            edit: pingMsg.key,
+            contextInfo: {
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
+                    newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                    serverMessageId: -1
+                }
+            }
         });
 
     } catch (e) {
