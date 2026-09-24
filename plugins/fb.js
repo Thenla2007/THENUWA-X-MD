@@ -42,7 +42,7 @@ cmd(
       const { title, sd, hd } = videoData;
       
       // pushname එක Welcome සෙක්ෂන් එකට එකතු කර සකස් කළ විස්තර පත්‍රිකාව
-      let detailsText = `👋 HELLOW ${pushname || "User"}...No ❤️ Welcome to\n`;
+      let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
       detailsText += `✅CYBER THENULA X MD✅\n`;
       detailsText += `╭───────────────────.★*\n`;
