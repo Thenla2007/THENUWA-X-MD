@@ -47,6 +47,7 @@ cmd(
       detailsText += `╭───────────────╼\n`;
       detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
       detailsText += `╰───────────────╼\n\n`;
+      detailsText += `📢 *Join Our Channel:* https://whatsapp.com\n\n`;
       detailsText += `📥 *DOWNLOADING VIDEO FILE* 📥\n`;
       detailsText += `─── ── ─●●●─ ── ───\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
@@ -55,7 +56,19 @@ cmd(
       
       await danuwa.sendMessage(
         targetJid,
-        { image: { url: data.thumbnail }, caption: detailsText },
+        { 
+          image: { url: data.thumbnail }, 
+          caption: detailsText,
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
+                newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                serverMessageId: -1
+            }
+          }
+        },
         { quoted: mek }
       );
 
@@ -69,7 +82,8 @@ cmd(
       videoCaption += `│  ◦ 🎬 *Video :* ${data.title}\n`;
       videoCaption += `│  ◦ 🎞 *Status :* Video File Sent\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      videoCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
+      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       await danuwa.sendMessage(
         targetJid,
@@ -77,6 +91,15 @@ cmd(
           video: { url: downloadUrl },
           mimetype: "video/mp4",
           caption: videoCaption,
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363403804248705@newsletter',
+                newsletterName: 'THENUWA XMD',
+                serverMessageId: -1
+            }
+          }
         },
         { quoted: mek }
       );
@@ -88,7 +111,8 @@ cmd(
       docCaption += `│  ◦ 🎶 *Audio :* ${data.title}\n`;
       docCaption += `│  ◦ 🎞 *Status :* Audio Document Sent\n`;
       docCaption += `╰───────────────────.★*\n\n`;
-      docCaption += `> *©⚡ POWERED by CYBER THENUWA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      docCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
+      docCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       await danuwa.sendMessage(
         targetJid,
@@ -97,6 +121,15 @@ cmd(
           mimetype: "audio/mpeg",
           fileName: `${data.title}.mp3`,
           caption: docCaption,
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363403804248705@newsletter',
+                newsletterName: 'THENUWA XMD',
+                serverMessageId: -1
+            }
+          }
         },
         { quoted: mek }
       );
