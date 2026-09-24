@@ -1,173 +1,104 @@
 const config = require('../config')
-const { cmd, commands } = require('../command');
-const os = require("os")
-const {runtime} = require('../lib/functions')
-const axios = require('axios')
-
+const {cmd , commands} = require('../command')
 cmd({
     pattern: "menu2",
-    alias: "allmenu",
-    desc: "menu the bot",
-    category: "menu",
-    react: "⚡",
+    react: "👾",
+    desc: "get cmd list",
+    category: "main",
     filename: __filename
-}, 
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        let dec = `╭━━━━∙⋆⋅⋆∙━ ─┉─ • ─┉─⊷
+},
+async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+let menu = {
+main: '',
+download: '',
+group: '',
+owner: '',
+convert: '',
+search: ''
+};
 
-*⇆𝗧𝗛𝗘𝗡𝗨𝗪𝗔 𝗫𝗠𝗗 𝗩1 ⇆*
+for (let i = 0; i < commands.length; i++) {
+if (commands[i].pattern && !commands[i].dontAddCommandList) {
+menu[commands[i].category] += `*┋* ${commands[i].pattern}\n`;
+ }
+}
 
-     *${pushname}*
-     
-╰━━━━∙⋆⋅⋆∙━ ─┉─ • ─┉─⊷
-╭───────────────────⊷❒
-> 𝚆𝙴𝙻𝙲𝙾𝙼𝙴 𝚃𝙾 𝚃𝙷𝙴𝙽𝚄𝚆𝙰 𝚇𝙼𝙳-ALL MENU ❒⁠⁠⁠⁠ʕ•ᴥ•ʔ
-⁠⁠⁠⁠╰───────────────────⊷❒
+let madeMenu = `👋 HELLOW...*${pushname}*
 
-╒✦•··············•••••••••··············•··•✦
-🧬◦ *ɴᴀᴍᴇ ʙᴏᴛ* :❖𝚃𝙷𝙴𝙽𝚄𝚆𝙰 𝚇𝙼𝙳❖
-🧬◦ *ᴄʀᴇᴀᴛᴏʀ* : 𝙲𝚈𝙱𝙴𝚁 𝚇 𝚃𝙷𝙴𝙽𝚄𝙻𝙰 〽️𝙳
-🧬◦ *ᴠᴇʀsɪᴏɴs* : 𝚅.1.0.0✨
-🧬◦ *ᴍᴇɴᴜ ᴄᴍᴅ* : 𝙼𝙴𝙽𝚄📁
-🧬◦ *ᴊᴏɪɴ ᴍʏ ᴄʜᴀɴɴᴇʟ* :  https://whatsapp.com/channel/0029VbA97wVElagprBAP9W0n
-🧬◦ *ᴄᴏɴᴛᴀᴄᴛ ᴡɪᴛʜ sɪʟᴇɴᴛ-ᴋɪʟʟᴇʀ*: https://wa.me/94724926574?text=*Hi_I_AM_THENUWA_XMD_OWNER*l
-╘✦•·············•••••••••··················•✦
+╭┈───────────────•* 
+│    🕒 *Runtime* :  ${runtime(process.uptime())}
+│  ◦  ⚡ *mode* :  *[${config.MODE}]*
+│  ◦  ⚙️ *prefix* : *[${config.PREFIX}]*
+│  ◦  💾 *Ram use* : ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+│  ◦  🤖 *Name Bot* : *THENUVA XMD*
+│  ◦  👤 *creater* : *Thenula/Dilshan*
+│  ◦  📌 *version* : *ᴠ.2.0.0*
+│  ◦  📜 *Menu Cmd* : *menu list
+╰┈───────────────•*
 
-*╭────❒⁠⁠⁠⁠* *📥 DOWNLOADER-CMD 📥* *❒⁠⁠⁠⁠* 
-*┋* *.ғʙ <ᴜʀʟ>*
-*┋* *.ɪɴꜱᴛᴀ <ᴜʀʟ>*
-*┋* *.ᴠɪᴅᴇᴏ <ᴜʀʟ>*
-*┋* *.ɢᴅʀɪᴠᴇ <ᴜʀʟ>*
-*┋* *.ᴛᴡɪᴛᴛᴇʀ <ᴜʀʟ>*
-*┋* *.ᴛᴛ<ᴜʀʟ>*
-*┋* *.ᴍᴇᴅɪᴀғɪʀᴇ <ᴜʀʟ>*
-*┋* *.ꜱᴏɴɢ <ϙᴜᴇʀʏ>*
-*┋* *.ᴘʟᴀʏ <ᴜʀʟ>*
-*┋* *.ᴠɪᴅᴇᴏ <ϙᴜᴇʀʏ>*
-*┋* *.ᴠɪᴅᴇᴏ <ᴜʀʟ>*
-*┋* *.ɪᴍɢ <ϙᴜᴇʀʏ>*
-*┋* *.ᴀᴘᴋ <ɴᴀᴍᴇ>*
-*┕───────────────────❒*
 
-*╭────❒⁠⁠⁠⁠* *🔎 SEARCH-CMD 🔍* *❒⁠⁠⁠⁠* 
-*┋* *.ʏᴛꜱ  <ᴛᴇxᴛ>*
-*┋* *.ʏᴛꜱ1 <ᴛᴇxᴛ>*
-*┋* *.ᴍᴏᴠɪᴇ <ᴛᴇxᴛ>*
-*┋* *.ɪᴍɢ <ᴛᴇxᴛ>*
-*┕───────────────────❒*
+*╭───────────────❒⁠⁠⁠⁠*
+*│* *_https://github.com/SILENTLOVER40/SILENT-SOBX-MD_*
+*┕───────────────❒*
 
-*╭────❒⁠⁠⁠⁠* *🧠 AI-CMD 🧠* *❒⁠⁠⁠⁠* 
-*┋* *.ɢᴘᴛ <ᴛᴇxᴛ>*
-*┋* *.ᴀɪ <ᴛᴇxᴛ>*
-*┕───────────────────❒*
+*╭───────────────❒⁠⁠⁠⁠*
+*│* *❂ᴅᴏᴡɴʟᴏᴀᴅ ᴄᴏᴍᴍᴀɴᴅs❂*
+*┕───────────────❒*
+*╭──────────●●►*
+${menu.download}
+*╰──────────●●►*
 
-*╭────❒⁠⁠⁠⁠* *👨‍💻 OWNER-CMD 👨‍💻* *❒⁠⁠⁠⁠* 
-*┋* *.ꜱᴜᴘᴘᴏʀᴛ*
-*┋* *.ꜱᴇᴛᴀᴜᴛᴏʙɪᴏ*
-*┋* *.ᴍᴜᴛᴇ*
-*┋* *.ᴜɴᴍᴜᴛᴇ*
-*┋* *.ᴏᴡɴᴇʀ*
-*┋* *.ʀᴇᴘᴏ*
-*┋* *.ꜱʏꜱᴛᴇᴍ*
-*┋* *.ꜱᴛᴀᴛᴜꜱ*
-*┋* *.ʙᴏᴛɪɴꜰᴏ*
-*┋* *.ʀᴇꜱᴛᴀʀᴛ*
-*┕───────────────────❒*
+*╭───────────────❒⁠⁠⁠⁠*
+*│* *❂ᴍᴀɪɴ ᴄᴏᴍᴍᴀɴᴅs❂*
+*┕───────────────❒*
+*╭──────────●●►*
+${menu.main}
+*╰──────────●●►*
 
-*╭────❒⁠⁠⁠⁠* *👥 GROUP-CMD 👥* *❒⁠⁠⁠⁠* 
-*┋* *.ʀᴇᴍᴏᴠᴇ <ʀᴇᴘʟʏ ғᴏʀ ᴅᴇʟᴇᴛᴇ sᴍs>*
-*┋* *.ᴅᴇʟᴇᴛᴇ <ʀᴇᴘʟʏ ғᴏʀ ᴅᴇʟᴇᴛᴇ sᴍs>*
-*┋* *.ᴀᴅᴅ*
-*┋* *.ᴋɪᴄᴋ*
-*┋* *.sᴇᴛɢᴏᴏᴅʙʏᴇ <ᴛᴇxᴛ>*
-*┋* *.sᴇᴛᴡᴇʟᴄᴏᴍᴇ <ᴛᴇxᴛ>*
-*┋* *.ᴘʀᴏᴍᴏᴛᴇ*
-*┋* *.ᴅᴇᴍᴏᴛᴇ*
-*┋* *.ꜱᴜᴘᴘᴏʀᴛ*
-*┋* *.ɢᴇᴛᴘɪᴄ*
-*┋* *.ʟɪɴᴋ*
-*┕───────────────────❒*
+*╭───────────────❒⁠⁠⁠⁠*
+*│* *❂ɢʀᴏᴜᴘ ᴄᴏᴍᴍᴀɴᴅs❂*
+*┕───────────────❒*
 
-*╭────❒⁠⁠⁠⁠* *📃 INFO-CMD 📃* *❒⁠⁠⁠⁠* 
-*┋* *.ᴍᴇɴᴜ*
-*┋* *.ᴀʟɪᴠᴇ*
-*┋* *.ʀᴇʙᴏᴛ*
-*┋* *.ʀᴇꜱᴛᴀʀᴛ*
-*┋* *.ʙᴏᴛɪɴꜰᴏ*
-*┋* *.ꜱᴛᴀᴛᴜꜱ*
-*┋* *.ꜱᴜᴘᴘᴏʀᴛ*
-*┋* *.ᴘɪɴɢ*
-*┋* *.ꜱʏꜱᴛᴇᴍ*
-*┕───────────────────❒*
+*╭──────────●●►*
+${menu.group}
+*╰──────────●●►*
 
-*╭────❒⁠⁠⁠⁠* *🎡 CONVERTER-CMD 🎡* *❒⁠⁠⁠⁠* 
-*┋* *.sᴛɪᴄᴋᴇʀ*
-*┕───────────────────❒*
+*╭───────────────❒⁠⁠⁠⁠*
+*│* *❂ᴏᴡɴᴇʀ ᴄᴏᴍᴍᴀɴᴅs❂*
+*┕───────────────❒*
 
-*╭────❒⁠⁠⁠⁠* *⛱ RANDOM-CMD ⛱* *❒⁠⁠⁠⁠* 
-*┋* *.ᴋɪɴɢ*
-*┋* *.ᴅᴏɢ*
-*┋* *.ᴀɴɪᴍᴇ*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ1*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ2*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ3*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ4*
-*┋* *.ᴀɴɪᴍᴇɢɪʀʟ5*
-*┕───────────────────❒*
+*╭──────────●●►*
+${menu.owner}
+*╰──────────●●►*
 
-*╭────❒⁠⁠⁠⁠* *🏜 WALLPAPERS-CMD 🏜* *❒⁠⁠⁠⁠* 
-*┋* *.ɪᴍɢ*
-*┕───────────────────❒*
+*╭───────────────❒⁠⁠⁠⁠*
+*│* *❂ᴄᴏɴᴠᴇʀᴛ ᴄᴏᴍᴍᴀɴᴅs❂*
+*┕───────────────❒*
 
-*╭────❒⁠⁠⁠⁠* *🌐 OTHER-CMD 🌐* *❒⁠⁠⁠⁠* 
-*┋* *.ɴᴇᴡꜱ*
-*┋* *.ᴡᴇᴀᴛʜᴇʀ*
-*┋* *.ᴛʀᴛ*
-*┋* *.ᴍᴏᴠɪᴇ*
-*┋* *.ꜰᴀᴄᴛ*
-*┋* *.ɢɪᴛʜᴜʙꜱᴛᴀʟᴋ*
-*┋* *.ɢᴘᴀꜱꜱ*
-*┋* *.ʜᴀᴄᴋ*
-*┋* *.ǫᴜᴏᴛᴇ*
-*┋* *.ꜱʀᴇᴘᴏ*
-*┋* *.ᴅᴇꜰɪɴᴇ*
-*┕───────────────────❒*
+*╭──────────●●►*
+${menu.convert}
+*╰──────────●●►*
 
-*❒⁠⁠⁠⁠▭▬▭▬▭▬▭👀▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
+*╭─────────────────❒⁠⁠⁠⁠*
+*│* *❂sᴇᴀʀᴄʜ ᴄᴏᴍᴍᴀɴᴅs❂*
+*┕─────────────────❒*
 
-> *𝗣𝗢𝗪𝗘𝗥𝗘𝗗 𝗕𝗬 𝗧𝗛𝗘𝗡𝗨𝗪𝗔 𝗫𝗠𝗗 〽️𝗗*
-╘✦•·········••••😄•••············•✦`;
+*╭──────────●●►*
+${menu.search}
+*╰──────────●●►*
 
-        await conn.sendMessage(
-            from,
-            {
-                image: { url: `https://files.catbox.moe/jgnhg4.jpg` },
-                caption: dec,
-                contextInfo: {
-                    mentionedJid: [m.sender],
-                    forwardingScore: 999,
-                    isForwarded: true,
-                    forwardedNewsletterMessageInfo: {
-                        newsletterJid: '120363420387793916@newsletter',
-                        newsletterName: 'THENUVA XMD',
-                        serverMessageId: 143
-                    }
-                }
-            },
-            { quoted: mek }
-        );
+*❒⁠⁠⁠⁠▭▬▭▬▭▬▭▬▭▬▭▬▭▬▭❒*⁠⁠⁠⁠
 
-        // Send audio
-        await conn.sendMessage(from, {
-            audio: { url: 'https://files.catbox.moe/oxx2t7.mp3' },
-            mimetype: 'audio/mp4',
-            ptt: true
-        }, { quoted: mek });
-        
-    } catch (e) {
-        console.log(e);
-        reply(`${e}`);
-    }
-});
+> *ᴘᴏᴡᴇʀᴇᴅ ʙʏ sɪʟᴇɴᴛ_ʟᴏᴠᴇʀ⁴³²*
+
+╰━❁ ═══ ❃•⇆•❃ ═══ ❁━╯
+`
+
+await conn.sendMessage(from,{image:{url:config.ALIVE_IMG},caption:madeMenu},{quoted:mek})
+
+}catch(e){
+console.log(e)
+reply(`${e}`)
+}
+})
