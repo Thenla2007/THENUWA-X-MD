@@ -22,7 +22,7 @@ async (conn, mek, from, options) => {
 
         // පණිවිඩය Edit කිරීම
         await conn.sendMessage(targetJid, { 
-            text: `*DENETH-MD SPEED* 🚀\n\n⚡ *Ping:* \`${pingTime} ms\`\n📶 *Status:* \`Excellent\``,
+            text: `*THENUWA X MD SPEED* 🚀\n\n⚡ *Ping:* \`${pingTime} ms\`\n📶 *Status:* \`Excellent\``,
             edit: pingMsg.key 
         });
 
