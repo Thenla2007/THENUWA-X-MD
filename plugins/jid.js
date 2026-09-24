@@ -12,7 +12,6 @@ async (conn, mek, m, {
     from,
     quoted,
     mentionedJid,
-    pushname,
     reply
 }) => {
     try {
@@ -37,21 +36,14 @@ async (conn, mek, m, {
             return reply("❌ JID එක හොයාගන්න බැරි වුණා.");
         }
 
-        // CYBER X THENULA ස්ටයිල් එකට සකස් කළ JID විස්තර පත්‍රිකාව
-        let jidText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
-        jidText += `CYBER X THENULA\n\n`;
-        jidText += `✅CYBER THENULA X MD✅\n`;
-        jidText += `╭───────────────────.★*\n`;
-        jidText += `│  ◦ 👤 *User :* ${pushname || "User"}\n`;
-        jidText += `│  ◦ 🆔 *WhatsApp JID :*\n`;
-        jidText += `│  ◦ \`\${jid}\`\n`;
-        jidText += `╰───────────────────.★*\n\n`;
-        jidText += `╭───────────────╼\n`;
-        jidText += `│👨‍💻 CYBER-TEAM 🥷\n`;
-        jidText += `╰───────────────╼\n\n`;
-        jidText += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+        return reply(
+`╭━━━〔 🆔 DILA-MD JID 〕━━━╮
 
-        return reply(jidText);
+┃ 👤 *JID:*
+┃ ${jid}
+
+╰━━━━━━━━━━━━━━━━━━╯`
+        );
 
     } catch (error) {
         console.error("JID Plugin Error:", error);
