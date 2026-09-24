@@ -23,12 +23,12 @@ let aliveMessage = `🟢 *ALIVE NOW* 🟢
 │  ◦ 🕒 *Runtime* :  ${runtime(process.uptime())}
 │  ◦ ⚡ *Mode* :  *[${config.MODE}]*
 │  ◦ ⚙️ *Prefix* : *[${config.PREFIX}]*
-│  ◦ 🤖 *Name Bot* : *THENUVA XMD*
+│  ◦ 🤖 *Name Bot* : *THENUWA XMD*
 │  ◦ 👤 *Creator* : *Thenula/Dilshan*
 │  ◦ 📌 *Version* : *ᴠ.2.0.0*
 ╰┈───────────────•*
 
-> © ⚡*POWERED by CYBER THENUVA*`;
+> © ⚡*POWERED by CYBER THENUWA*`;
 
 // Image එක සහ Newsletter Forwarding එක සමඟ සෙන්ඩ් කිරීම
 await conn.sendMessage(
@@ -42,7 +42,7 @@ await conn.sendMessage(
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
                 newsletterJid: '120363403804248705@newsletter',
-                newsletterName: 'THENUVA XMD',
+                newsletterName: 'THENUWA XMD',
                 serverMessageId: 143
             }
         }
