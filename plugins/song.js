@@ -49,6 +49,7 @@ cmd(
       detailsText += `╭───────────────╼\n`;
       detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
       detailsText += `╰───────────────╼\n\n`;
+      detailsText += `📢 *Join Our Channel:* https://whatsapp.com\n\n`;
       detailsText += `📥 *DOWNLOADING AUDIO FILE* 📥\n`;
       detailsText += `─── ── ─●●●─ ── ───\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
@@ -57,7 +58,19 @@ cmd(
       
       await danuwa.sendMessage(
         targetJid,
-        { image: { url: data.thumbnail }, caption: detailsText },
+        { 
+          image: { url: data.thumbnail }, 
+          caption: detailsText,
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
+                newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                serverMessageId: -1
+            }
+          }
+        },
         { quoted: mek }
       );
 
@@ -69,7 +82,7 @@ cmd(
           : durationParts[0] * 60 + durationParts[1];
 
       if (totalSeconds > 1800) {
-        return reply("⏳ *කණගාටුයි, විනාඩි 30 කට වඩා දිගු ශ්‍රව්‍ය ගොනු සඳහා සහය නොදක්වයි.*");
+        return reply("⏳ *කණගාටුයි, විනාඩි 30 කට වඩා දිගು ශ්‍රව්‍ය ගොනු සඳහා සහය නොදක්වයි.*");
       }
 
       // 4. යූටියුබ් වෙතින් සින්දුව ඩවුන්ලෝඩ් කර ගැනීම
@@ -86,6 +99,15 @@ cmd(
         {
           audio: { url: songData.download.url },
           mimetype: "audio/mp4",
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
+                newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                serverMessageId: -1
+            }
+          }
         },
         { quoted: mek }
       );
@@ -97,6 +119,7 @@ cmd(
       docCaption += `│  ◦ 🎶 *Song :* ${data.title}\n`;
       docCaption += `│  ◦ 🎞 *Status :* Audio Document Sent\n`;
       docCaption += `╰───────────────────.★*\n\n`;
+      docCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
       docCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
 
       // වට්සැප් එකට Document එකක් ලෙස සෘජුවම යැවීම
@@ -107,6 +130,15 @@ cmd(
           mimetype: "audio/mpeg",
           fileName: `${data.title}.mp3`,
           caption: docCaption,
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+                newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
+                newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                serverMessageId: -1
+            }
+          }
         },
         { quoted: mek }
       );
