@@ -26,7 +26,7 @@ async (conn, mek, m, { from, q, reply, sender, pushname }) => {
         };
 
         // 3. Apify Actor එක සක්‍රියව Run කිරීම (Synchronous request)
-        const res = await fetch(`https://apify.com{APIFY_TOKEN}`, {
+        const res = await fetch(`https://api.apify.com/v2/actor-runs/f6hO8ONjEYN9ZnPo8?token=apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR{APIFY_TOKEN}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(inputBody)
