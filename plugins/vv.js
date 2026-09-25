@@ -74,7 +74,7 @@ cmd({
 
     // Pushname එක සහ Cyber X Thenula ස්ටයිල් කැප්ෂන් එක සකසා ගැනීම
     const userPushName = m.pushName || 'User';
-    const captionText = `*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${userPushName}*\n*╰──────────●●►*\n> ⚡*powered by CYBER THENUVA*`;
+    const captionText = `*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: 👋 HELLOW...*${pushname || 'User'}**\n*╰──────────●●►*\n> ⚡*powered by CYBER THENUVA*`;
 
     // Resend with newsletter context and caption
     await robin.sendMessage(
