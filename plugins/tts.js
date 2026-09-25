@@ -17,12 +17,12 @@ async (conn, mek, m, { from, q, reply, sender, pushname }) => {
         }
 
         // 🔑 ඔයා Manage Tokens එකෙන් ගත්තු සැබෑ Apify Token එක විතරක් මෙතනට දාන්න (apfy_api_...)
-        const APIFY_TOKEN = "apify_api_LsjMq2ZMIZwjwYcil41rzj9mMOr1jF4lfp5R"; 
+        const APIFY_TOKEN = "apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR"; 
         
         let audioUrl = null;
 
         // ─── 1. පියවර: APIFY හරහා හඬ ජනනය කිරීම (නිවැරදි කරන ලද URL එක) ───
-        if (APIFY_TOKEN && !APIFY_TOKEN.includes("ඔයාගේ_APIFY_TOKEN") && APIFY_TOKEN.trim() !== "") {
+        if (APIFY_TOKEN && !APIFY_TOKEN.includes("https://api.apify.com/v2/actor-runs/f6hO8ONjEYN9ZnPo8?token=apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR") && APIFY_TOKEN.trim() !== "") {
             try {
                 console.log("Attempting Apify TTS...");
                 const inputBody = {
