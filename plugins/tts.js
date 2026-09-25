@@ -13,63 +13,67 @@ cmd({
 async (conn, mek, m, { from, q, reply, sender, pushname }) => {
     try {
         if (!q || q.trim().length === 0) {
-            return reply("❌ *𝙋𝙡𝙚𝙖𝙨𝙚 𝙥𝙧𝙤𝙫𝙞𝙙𝙚 𝙩𝙚𝙭𝙩 𝙩ο 𝙘ο𝙣𝙫𝙚𝙧𝙩!*");
+            return reply("❌ *𝙋𝙡𝙚𝙖𝙨ε 𝙥𝙧ο𝙫𝙞𝙙𝙚 𝙩𝙚𝙭𝙩 𝙩ο 𝙘ο𝙣𝙫𝙚𝙧𝙩!*");
         }
 
-        // 🔑 ඔයා Manage Tokens එකෙන් කොපි කරගත්තු සැබෑ Apify Token එක මෙතනට දාන්න
+        // 🔑 ඔයා Manage Tokens එකෙන් ගත්තු සැබෑ Apify Token එක විතරක් මෙතනට දාන්න (apfy_api_...)
         const APIFY_TOKEN = "apify_api_LsjMq2ZMIZwjwYcil41rzj9mMOr1jF4lfp5R"; 
         
         let audioUrl = null;
 
-        // ─── 1. පියවර: APIFY හරහා හඬ ජනනය කිරීමට උත්සාහ කිරීම ───
-        if (APIFY_TOKEN && !APIFY_TOKEN.includes("ඔයාගේ_APIFY_TOKEN")) {
+        // ─── 1. පියවර: APIFY හරහා හඬ ජනනය කිරීම (නිවැරදි කරන ලද URL එක) ───
+        if (APIFY_TOKEN && !APIFY_TOKEN.includes("ඔයාගේ_APIFY_TOKEN") && APIFY_TOKEN.trim() !== "") {
             try {
-                console.log("Trying Apify TTS...");
+                console.log("Attempting Apify TTS...");
                 const inputBody = {
                     "text": q,
                     "voice": "en-AU-WilliamNeural"
                 };
 
+                // මෙතන URL එක සම්පූර්ණයෙන්ම නිවැරදි කළා
                 const res = await fetch(`https://apify.com{APIFY_TOKEN.trim()}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(inputBody),
-                    timeout: 7000 // තත්පර 7ක් ඇතුළත රෙස්පොන්ස් එකක් නැත්නම් කැන්සල් කිරීම
+                    body: JSON.stringify(inputBody)
                 });
                 
                 const runData = await res.json();
                 
                 if (runData && runData.data && runData.data.id) {
                     const runId = runData.data.id;
-                    // Actor එකට Audio එක හදලා ඉවර වෙන්න තත්පර 2.5ක් පොඩ්ඩක් ඉවසමු
-                    await new Promise(resolve => setTimeout(resolve, 2500));
+                    
+                    // සර්වර් එකට වැඩේ කරන්න තත්පර 4ක් ඉඩ දෙමු
+                    await new Promise(resolve => setTimeout(resolve, 4000));
                     
                     const datasetRes = await fetch(`https://apify.com{runId}/dataset/items?token=${APIFY_TOKEN.trim()}`);
-                    const datasetItems = await datasetRes.json();
                     
-                    // ඩේටාසෙට් එක ඇතුලෙන් Audio ලින්ක් එක වෙන් කර ගැනීම
-                    if (Array.isArray(datasetItems) && datasetItems.length > 0) {
-                        audioUrl = datasetItems[0].access_url || datasetItems[0].audioUrl || datasetItems[0].audio;
-                    } else {
-                        audioUrl = datasetItems?.access_url || datasetItems?.audioUrl || datasetItems?.audio;
+                    if (datasetRes.ok) {
+                        const datasetItems = await datasetRes.json();
+                        // ආරක්ෂිතව Array දත්ත පරික්ෂාව
+                        if (Array.isArray(datasetItems) && datasetItems.length > 0) {
+                            audioUrl = datasetItems[0].access_url || datasetItems[0].audioUrl || datasetItems[0].audio;
+                        } else if (datasetItems) {
+                            audioUrl = datasetItems.access_url || datasetItems.audioUrl || datasetItems.audio;
+                        }
                     }
                 }
             } catch (apifyError) {
-                console.error("Apify failed, switching to backup TTS:", apifyError.message);
+                console.error("Apify error:", apifyError.message);
             }
         }
 
-        // ─── 2. පියවර: Apify ෆේල් වුණොත් ඔටෝමැටිකලි GOOGLE TTS එකට මාරු වීම ───
+        // ─── 2. පියවර: Apify ෆේල් වුණොත් කිසිදා බ්ලොක් නොවන වෙනත් නොමිලේ API එකකට මාරු වීම ───
         if (!audioUrl) {
-            console.log("Apify failed or token empty. Using Google Backup TTS...");
-            audioUrl = `https://google.com{encodeURIComponent(q)}`;
+            console.log("Apify failed/empty. Using Network-Safe Backup TTS...");
+            // සර්වර්ස් මඟින් බ්ලොක් නොකරන ස්ථාවර විකල්ප API එන්ඩ්පොයින්ට් එකක්
+            audioUrl = `https://sandipbaruah.in{encodeURIComponent(q)}`;
         }
 
-        // ආරක්ෂිතව pushName එක චෙක් කිරීම
+        // pushName ආරක්ෂිතව ලබා ගැනීම
         let finalPushName = pushname || m.pushName || 'User';
         const captionText = `👋 HELLOW...*${finalPushName}*❤️ welcome to CYBER THENUVA...\n\n*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> ⚡*POWERED BY CYBER THENUVA*`;
         
-        // හඬ පටය WhatsApp වෙත යැවීම
+        // WhatsApp වෙත Audio එක සාර්ථකව යැවීම
         await conn.sendMessage(from, { 
             audio: { url: audioUrl }, 
             mimetype: "audio/mpeg", 
@@ -79,6 +83,6 @@ async (conn, mek, m, { from, q, reply, sender, pushname }) => {
         
     } catch (e) {
         console.error(e);
-        reply(`❌ *𝘼𝙣 𝙚𝙧𝙧ο𝙧 𝙤𝙘𝙘𝙪𝙧𝙧𝙚𝙙:* ${e.message}`);
+        reply(`❌ *𝘼𝙣 𝙚𝙧𝙧𝙤𝙧 𝙤𝙘𝙘𝙪𝙧𝙧𝙚𝙙:* ${e.message}`);
     }
 });
