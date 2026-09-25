@@ -14,7 +14,7 @@ try{
 
 let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA...
 
-
+✅CYBER THENUWA X MD✅
 *╭──────────●●►*
 *┋ 👤 HEY ${pushname.toUpperCase()}
 *┋ ⛩️ ANIME PHOTOS MENU*
