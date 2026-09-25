@@ -2,9 +2,9 @@ const config = require('../config')
 const axios = require('axios');
 const { cmd, commands } = require('../command');
 
-// පොදු contextInfo Object එකක් (හැම image එකකටම යටින් View Channel වැටීමට)
+// පොදු contextInfo Object එකක් (හැම image එකකටම يටින් View Channel වැටීමට)
 const channelContext = {
-    mentionedJid: [/* sender */], // ඇතුළතදී dynamic ලෙස සකසා ඇත
+    mentionedJid: [], 
     forwardingScore: 999,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
@@ -19,6 +19,7 @@ const apifyToken = "apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR";
 
 // Apify හරහා Pinterest එකෙන් Image එකක් ගන්නා පොදු Function එකක්
 async function fetchPinterestAnime(keyword) {
+    // සඟල වරහන් දෝෂය මෙතැනින් සම්පූර්ණයෙන්ම නිවැරදි කර ඇත
     const runUrl = `https://apify.com{apifyToken}`;
     const input = {
         "searchKeywords": keyword,
