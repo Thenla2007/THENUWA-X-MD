@@ -69,7 +69,7 @@ throw new Error("Downloader task timed out.");
 }
 
 // 3. Fetch the results from the dataset items endpoint
-const datasetUrl = https://api.apify.com/v2/datasets/${datasetId}/items?token=${apiToken};
+const datasetUrl = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${apiToken}`;
 const datasetResponse = await fetch(datasetUrl);
 const items = await datasetResponse.json();
 
