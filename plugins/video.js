@@ -48,7 +48,7 @@ const runId = runData.data.id;
 
 // 2. Wait for the Actor run to complete successfully
 let isFinished = false;
-const checkUrl = https://api.apify.com/v2/actor-runs/${runId}?token=${apiToken};
+const checkUrl = `https://api.apify.com/v2/actor-runs/${runId}?token=${apiToken}`;
 
 for (let i = 0; i < 30; i++) { // Poll for up to 60 seconds
 const checkResponse = await fetch(checkUrl);
