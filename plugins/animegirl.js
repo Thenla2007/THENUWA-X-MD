@@ -12,10 +12,16 @@ cmd({
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
-let dec = `*╭──────────●●►*
-*┋ CYBER XMD ❯❯*
-*┋⛩️ ANIME PHOTOS MENU*
+let dec = `
+
+*╭──────────●●►*
+*┋ 👤 HEY ${pushname.toUpperCase()} ❯❯*
+*┋ ⛩️ ANIME PHOTOS MENU*
+*┋*
+*┋ 📢 CHANNEL: ${config.NEWSLETTER_NAME || 'CYBER XMD COMMUNITY'}*
+*┋ 🆔 ID: ${config.NEWSLETTER_ID || '120363xxx@newsletter'}*
 *╰──────────●●►*
+
 > *POWERED BY CYBER THENUVA*`
 
 
