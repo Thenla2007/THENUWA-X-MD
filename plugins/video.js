@@ -1,112 +1,182 @@
-const { cmd, commands } = require("../command");
-const yts = require("yt-search");
-const axios = require("axios");
-const config = require("../config");
+const { cmd } = require('../command');
+const yts = require('yt-search');
+const fetch = require('node-fetch');
+const path = require('path');
 
-cmd(
-  {
+// Configure newsletter context
+const newsletterContext = {
+    mentionedJid: [], // Can add specific JIDs if needed
+    forwardingScore: 1000,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363292876277898@newsletter',
+        newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        serverMessageId: 143,
+    }
+};
+
+// Utility: Send error reply helper
+function sendError(reply, message) {
+    return reply(`*❌ ${message}*`);
+}
+
+// VIDEO COMMAND - accepts a prompt (title or URL)
+cmd({
     pattern: "video",
-    alias: ["playvideo", "ytmp4"],
-    react: "🎬",
-    desc: "Download YouTube videos as MP4 and Document format.",
+    alias: ['ytdl', 'youtube'],
+    react: "🎥",
+    desc: "Download video from YouTube by prompt or URL",
     category: "download",
-    filename: __filename,
-  },
-  async (
-    danuwa,
-    mek,
-    m,
-    {
-      from,
-      quoted,
-      body,
-      isCmd,
-      command,
-      args,
-      q,
-      isGroup,
-      sender,
-      senderNumber,
-      botNumber2,
-      botNumber,
-      pushname,
-      isMe,
-      isOwner,
-      groupMetadata,
-      groupName,
-      participants,
-      groupAdmins,
-      isBotAdmins,
-      isAdmins,
-      reply,
+    filename: __filename
+}, async (conn, mek, m, { from, q, reply, sender }) => {
+    const retryLimit = 3;
+    let attempt = 0;
+
+    const fetchVideo = async () => {
+        try {
+            if (!q) return sendError(reply, "Please provide a video title or YouTube URL");
+
+            let videoUrl = q;
+
+            // If input is not a direct YouTube URL, search for video
+            if (!q.includes('youtu')) {
+                const search = await yts(q);
+                const video = search.videos[0];
+                if (!video) return sendError(reply, "No results found");
+                videoUrl = video.url;
+            }
+
+            const messageContext = {
+                ...newsletterContext,
+                mentionedJid: [sender]
+            };
+
+            // Fetch video info from new API
+            const apiUrl = `https://api.giftedtech.web.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(videoUrl)}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (!data.success || !data.result) {
+                return sendError(reply, "Failed to get video download info");
+            }
+
+            const { title, thumbnail, video_url, audi_quality, video_quality } = data.result;
+
+            const infoMsg = `
+╭════════════⊷❍
+│
+│ *🎥 Video Downloader*
+│──────────────────────
+│ 📌 Title: ${title}
+│ 🎞️ Quality: ${video_quality}
+│ 🎧 Audio Quality: ${audi_quality}
+╰──────────●●►
+*📥 Downloaded via HANS BYTE MD*`.trim();
+
+            await conn.sendMessage(from, {
+                image: { url: thumbnail },
+                caption: infoMsg,
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+            // Send video
+            await conn.sendMessage(from, {
+                video: { url: video_url },
+                mimetype: 'video/mp4',
+                caption: "*🎥 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+            // Send as document
+            await conn.sendMessage(from, {
+                document: { url: video_url },
+                mimetype: 'video/mp4',
+                fileName: `${title}.mp4`,
+                caption: "*📁 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+        } catch (error) {
+            console.error('Video Error:', error);
+            attempt++;
+            if (attempt < retryLimit) {
+                console.log(`Retrying... Attempt ${attempt + 1}`);
+                await fetchVideo();
+            } else {
+                return sendError(reply, error.message);
+            }
+        }
+    };
+
+    await fetchVideo();
+});
+
+
+// YTMP4 COMMAND - only accepts direct YouTube URL, downloads video (same API, but must be URL)
+cmd({
+    pattern: "ytmp4",
+    alias: ['youtube', 'ytvid'],
+    react: "🎧",
+    desc: "Download video from YouTube URL",
+    category: "download",
+    filename: __filename
+}, async (conn, mek, m, { from, q, reply, sender }) => {
+    if (!q || !q.includes("youtube.com/watch") && !q.includes("youtu.be")) {
+        return sendError(reply, "Please provide a valid YouTube video URL");
     }
-  ) => {
+
     try {
-      if (!q) return reply("⚠️ *Please provide a video name or a YouTube link!*");
+        const apiUrl = `https://api.giftedtech.web.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(q)}`;
+        const response = await fetch(apiUrl);
+        const json = await response.json();
 
-      const targetJid = typeof from === 'string' ? from : (mek.key.remoteJid || String(from));
+        if (!json.success || !json.result) {
+            return sendError(reply, "Failed to retrieve video info");
+        }
 
-      // 1. වීඩියෝව සෙවීම ආරම්භ කිරීම
-      const loadingMsg = await danuwa.sendMessage(targetJid, { 
-        text: `🎬 *DENETH-MD Searching Your Video...*\n\`"${q}"\`` 
-      }, { quoted: mek });
+        const { title, thumbnail, video_url, audi_quality, video_quality } = json.result;
 
-      const search = await yts(q);
-      if (!search.videos || search.videos.length === 0) {
-        return await danuwa.sendMessage(targetJid, { text: "❌ *Video not found! Please check the name and try again.*", edit: loadingMsg.key });
-      }
-      
-      const data = search.videos[0]; // පළමු වීඩියෝව නිවැරදිව තෝරාගැනීම
+        const messageContext = {
+            ...newsletterContext,
+            mentionedJid: [sender]
+        };
 
-      // වීඩියෝ විස්තර Format කිරීම
-      let desc = `*🎬 DENETH-MD VIDEO DOWNLOADER 🎬*
+        const infoMsg = `
+╭════════════⊷❍
+│
+│ *🎥 YT Video Downloader*
+│──────────────────────
+│ 📌 Title: ${title}
+│ 🎞️ Quality: ${video_quality}
+│ 🎧 Audio Quality: ${audi_quality}
+╰──────────●●►
+*📥 Powered by HANS BYTE MD*`.trim();
 
-🎬 *Title:* ${data.title}
-⏱️ *Duration:* ${data.timestamp}
-📅 *Uploaded:* ${data.ago}
-👀 *Views:* ${data.views.toLocaleString()}
-🔗 *URL:* ${data.url}
+        await conn.sendMessage(from, {
+            image: { url: thumbnail },
+            caption: infoMsg,
+            contextInfo: messageContext
+        }, { quoted: mek });
 
-> *Downloading your MP4 video and Document file... Please wait!* ⏳`;
+        // Send video
+        await conn.sendMessage(from, {
+            video: { url: video_url },
+            mimetype: 'video/mp4',
+            caption: "*🎥 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
 
-      await danuwa.sendMessage(targetJid, { text: `✅ *Video Found! Sending details...*` }, { edit: loadingMsg.key });
-      
-      await danuwa.sendMessage(
-        targetJid,
-        { image: { url: data.thumbnail }, caption: desc },
-        { quoted: mek }
-      );
+        // Send as document
+        await conn.sendMessage(from, {
+            document: { url: video_url },
+            mimetype: 'video/mp4',
+            fileName: `${title}.mp4`,
+            caption: "*📁 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
 
-      // 2. ඔයා දීපු Apify Direct Download Link එක
-      const downloadUrl = "https://apify.com";
-
-      // 3. වට්සැප් එකට වීඩියෝ එකක් (MP4 Video) ලෙස යැවීම
-      await danuwa.sendMessage(
-        targetJid,
-        {
-          video: { url: downloadUrl },
-          mimetype: "video/mp4",
-          caption: "🎬 *Your video is ready!* \n\n> *Generated by DENETH-MD* 🚀",
-        },
-        { quoted: mek }
-      );
-
-      // 4. වට්සැප් එකට ෆයිල් එකක් (Document/MP3 File) ලෙස යැවීම
-      await danuwa.sendMessage(
-        targetJid,
-        {
-          document: { url: downloadUrl },
-          mimetype: "audio/mpeg",
-          fileName: `${data.title}.mp3`,
-          caption: "🎶 *Your video file document is ready!* \n\n> *Generated by DENETH-MD* 🚀",
-        },
-        { quoted: mek }
-      );
-
-      return reply("✅ *Thank you for using DENETH-MD!*");
-    } catch (e) {
-      console.log(e);
-      reply(`❌ *Error:* ${e.message} 😞`);
+    } catch (err) {
+        console.error("YTMP4 Error:", err);
+        return sendError(reply, err.message);
     }
-  }
-);
+});
