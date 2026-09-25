@@ -1,5 +1,6 @@
 const { cmd } = require('../command');
 const fetch = require('node-fetch');
+const config = require ('../config')
 
 cmd({
     pattern: "tts",
@@ -9,14 +10,14 @@ cmd({
     category: "📁 𝗨𝘁𝗶𝗹𝗶𝘁𝗶𝗲𝘀",
     filename: __filename
 },
-async (conn, mek, m, { from, q, reply, sender }) => {
+async (conn, mek, m, { from, q, reply, sender, pushname }) => { // 1. මෙතනට pushname එකතු කළා
     try {
         // Debug: log the input to see if q is being passed correctly.
         console.log("Received input:", q);
         
         if (!q || q.trim().length === 0) {
             // Fallback: if reply isn't working, use conn.sendMessage directly.
-            const errorMsg = "❌ *𝙋𝙡𝙚𝙖𝙨𝙚 𝙥𝙧𝙤𝙫𝙞𝙙𝙚 𝙩𝙚𝙭𝙩 𝙩𝙤 𝙘𝙤𝙣𝙫𝙚𝙧𝙩 𝙞𝙣𝙩𝙤 𝙨𝙥𝙚𝙚𝙘𝙝!* ❌";
+            const errorMsg = "❌ *𝙋𝙡𝙚𝙖𝙨𝙚 𝙥𝙧𝙤𝙫𝙞𝙙𝙚 𝙩𝙚𝙭𝙩 𝙩ο 𝙘𝙤𝙣𝙫𝙚𝙧𝙩 𝙞𝙣𝙩𝙤 𝙨𝙥𝙚𝙚𝙘𝙝!* ❌";
             if (typeof reply === 'function') {
                 return reply(errorMsg);
             } else {
@@ -25,21 +26,35 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         }
         
         const voice = "Bianca"; // You can customize this
-        const res = await fetch(`https://apis.davidcyriltech.my.id/tts?text=${encodeURIComponent(q)}&voice=${voice}`);
+        const res = await fetch(`https://davidcyriltech.my.id{encodeURIComponent(q)}&voice=${voice}`);
         const data = await res.json();
         
         if (!data.success) return reply("❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙜𝙚𝙣𝙚𝙧𝙖𝙩𝙚 𝙏𝙏𝙎.* ❌");
         
+        // Newsletter context configuration
         const newsletterContext = {
             mentionedJid: [sender],
             forwardingScore: 1000,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403804248705@newsletter',
-                newsletterName: "THENUWA XMD",
-                serverMessageId: 143,
+                newsletterJid: config.NEWSLETTER_JID || '120363403804248705@newsletter',
+                newsletterName: config.NEWSLETTER_NAME || "THENUVA XMD",
+                serverMessageId: Math.floor(Math.random() * 1000),
             },
         };
+        
+        // pushname is not defined error එක විසඳීමට ආරක්ෂිත ක්‍රමයක් (Safe check for pushName)
+        let finalPushName = 'User';
+        if (typeof pushname !== 'undefined' && pushname) {
+            finalPushName = pushname;
+        } else if (m && m.pushName) {
+            finalPushName = m.pushName;
+        } else if (mek && mek.pushName) {
+            finalPushName = mek.pushName;
+        }
+
+        // Caption format
+        const captionText = `👋 HELLOW...*${finalPushName}*❤️ welcome to CYBER THENUVA...\n\n*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> ⚡*POWERED BY CYBER THENUVA*`;
         
         await conn.sendMessage(
             from, 
@@ -47,7 +62,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
                 audio: { url: data.audioUrl }, 
                 mimetype: "audio/mpeg", 
                 fileName: "TTS-Output.mp3", 
-                caption: "✅ *𝗧𝗲𝘅𝘁 𝗰𝗼𝗻𝘃𝗲𝗿𝘁𝗲𝗱 𝘁𝗼 𝘀𝗽𝗲𝗲𝗰𝗵 𝘀𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆!* ✅\n🔰 *𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 THENUWA XMD* ⚡",
+                caption: captionText, // මෙතනට අලුත් කැප්ෂන් එක දැම්මා
                 contextInfo: newsletterContext
             },
             { quoted: mek }
@@ -55,6 +70,6 @@ async (conn, mek, m, { from, q, reply, sender }) => {
         
     } catch (e) {
         console.error(e);
-        reply("❌ *𝘼𝙣 𝙚𝙧𝙧𝙤𝙧 𝙤𝙘𝙘𝙪𝙧𝙧𝙚𝙙 𝙬𝙝𝙞𝙡𝙚 𝙜𝙚𝙣𝙚𝙧𝙖𝙩𝙞𝙣𝙜 𝙏𝙏𝙎.* ❌");
+        reply("❌ *𝘼𝙣 𝙚𝙧𝙧ο𝙧 𝙤𝙘𝙘𝙪𝙧𝙧𝙚𝙙 𝙬𝙝𝙞𝙡ε 𝙜𝙚𝙣𝙚𝙧𝙖𝙩𝙞𝙣𝙜 𝙏𝙏𝙎.* ❌");
     }
 });
