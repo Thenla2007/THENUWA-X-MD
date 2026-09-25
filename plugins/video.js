@@ -8,7 +8,7 @@ cmd(
     pattern: "video",
     alias: ["playvideo", "ytmp4"],
     react: "🎬",
-    desc: "Download YouTube videos as MP4 and Document format.",
+    desc: "Download YouTube videos as MP4 format.",
     category: "download",
     filename: __filename,
   },
@@ -49,7 +49,7 @@ cmd(
       detailsText += `╰───────────────╼\n\n`;
       detailsText += `📢 *Join Our Channel:* https://whatsapp.com\n\n`;
       detailsText += `📥 *DOWNLOADING VIDEO FILE* 📥\n`;
-      detailsText += `─── ── ─●●●─ ── ───\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      detailsText += `─── ── ─●●●─ ── ───\n\n\n`; 
 
       // සෙවුම් පණිවිඩය වෙනස් කර පින්තූරය සමඟ විස්තර යැවීම
       await danuwa.sendMessage(targetJid, { text: `✅ *Video Found! Processing...*` }, { edit: loadingMsg.key });
@@ -63,8 +63,8 @@ cmd(
             forwardingScore: 999,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403804248705@newsletter', // ඔයාගේ Channel ID එක මෙතනට දාන්න
-                newsletterName: 'THENUWA XMD', // ඔයාගේ Channel එකේ නම මෙතනට දාන්න
+                newsletterJid: '120363403804248705@newsletter', 
+                newsletterName: 'THENUWA XMD', 
                 serverMessageId: -1
             }
           }
@@ -72,7 +72,7 @@ cmd(
         { quoted: mek }
       );
 
-      // 2. Apify Direct Download Link එක
+      // 2. Direct Download Link එක
       const downloadUrl = "https://apify.com";
 
       // 3. වට්සැප් එකට වීඩියෝ (MP4) එක සමඟ යන Caption එක
@@ -83,7 +83,7 @@ cmd(
       videoCaption += `│  ◦ 🎞 *Status :* Video File Sent\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
       videoCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
-      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
+      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; 
 
       await danuwa.sendMessage(
         targetJid,
@@ -91,36 +91,6 @@ cmd(
           video: { url: downloadUrl },
           mimetype: "video/mp4",
           caption: videoCaption,
-          contextInfo: {
-            forwardingScore: 999,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403804248705@newsletter',
-                newsletterName: 'THENUWA XMD',
-                serverMessageId: -1
-            }
-          }
-        },
-        { quoted: mek }
-      );
-
-      // 4. වට්සැප් එකට ෆයිල් එකක් (Document/MP3) ලෙස යැවීමේ Caption එක
-      let docCaption = `✅ *DOCUMENT SUCCESS* ✅\n`;
-      docCaption += `╭───────────────────.★*\n`;
-      docCaption += `│  ◦ 👤 *User :* ${pushname || "User"}\n`;
-      docCaption += `│  ◦ 🎶 *Audio :* ${data.title}\n`;
-      docCaption += `│  ◦ 🎞 *Status :* Audio Document Sent\n`;
-      docCaption += `╰───────────────────.★*\n\n`;
-      docCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
-      docCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; // යට කැපීම වැළැක්වීමේ Padding
-
-      await danuwa.sendMessage(
-        targetJid,
-        {
-          document: { url: downloadUrl },
-          mimetype: "audio/mpeg",
-          fileName: `${data.title}.mp3`,
-          caption: docCaption,
           contextInfo: {
             forwardingScore: 999,
             isForwarded: true,
