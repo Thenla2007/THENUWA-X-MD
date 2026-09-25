@@ -10,25 +10,23 @@ cmd({
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-let madeMenu = `✨ *CYBER THENUVA INFO* ✨
+let madeMenu = `👋 *Hello, ${pushname}!* ❤️ welcome to CYBER X THENULA...
 
-👋 *Hello, ${pushname}!* 🌟 welcomee to info...
-
-⭐ *DEVELOPER DETAILS*
-────────────────────────
+🌟 *DEVELOPER DETAILS* 🌟
+─────────────────────
 👨‍💻 *Developer:* CYBER THENUVA
 🔞 *Age:* 19 Years Old
 🙈 *Location:* Personal Hai 😁
 🤖 *Status:* Simple WhatsApp Bot Developer
-────────────────────────
+─────────────────────
 
-💡 *Thank you for using my bot!*... 
+ 💡 *Thank you for using my bot!*...
 
 
 > *⚡ Powered By CYBER THENUVA*`
 
 await conn.sendMessage(from, {
-    image: { url: config.ALIVE_IMG },
+    image: { url: 'https://i.ibb.co/7JWk0d08/11625411f042.jpg' },
     caption: madeMenu,
     contextInfo: {
         forwardingScore: 999,
