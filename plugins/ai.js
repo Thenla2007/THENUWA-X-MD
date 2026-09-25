@@ -16,7 +16,7 @@ try{
 if (!q) return reply("කරුණාකර AI එකෙන් ඇසීමට ප්‍රශ්නයක් ඇතුළත් කරන්න. (උදා: .ai hello)")
 
 // 2. API එකෙන් Response එක ලබා ගැනීම
-let data = await fetchJson(`https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(q)}`)
+let data = await fetchJson(`https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(query)
 
 // 3. API Response එක ඇතුළේ result හෝ response ලෙස දත්ත ඇත්දැයි බැලීම (undefined වීම වැළැක්වීමට)
 let aiResponse = data.result || data.response || data.data || data.message;
