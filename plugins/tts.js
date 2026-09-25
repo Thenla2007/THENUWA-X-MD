@@ -26,7 +26,7 @@ async (conn, mek, m, { from, q, reply, sender, pushname }) => { // 1. මෙත�
         }
         
         const voice = "Bianca"; // You can customize this
-        const res = await fetch(`https://google.com{encodeURIComponent(q)}&voice=${voice}`);
+        const res = await fetch(`https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=si&q=%E0%B6%86%E0%B6%BA%E0%B7%94%E0%B6%B6%E0%B7%9D%E0%B7%80%E0%B6%B1%E0%B7%8A&utm_source=chatgpt.com${voice}`);
         const data = await res.json();
         
         if (!data.success) return reply("❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙜𝙚𝙣𝙚𝙧𝙖𝙩𝙚 𝙏𝙏𝙎.* ❌");
