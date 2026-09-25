@@ -1,5 +1,5 @@
 const { cmd } = require('../command');
-const { downloadMediaMessage } = require('@whiskeysockets/baileys'); // Baileys ලිබ්‍රරියෙන්ම කෙලින්ම downloadMediaMessage එක ගනිමු
+const { downloadMediaMessage } = require('@whiskeysockets/baileys'); 
 const config = require ('../config')
 
 cmd({
@@ -72,12 +72,17 @@ cmd({
     const mediaType = isImage ? 'image' : 'video';
     const mimeType = isImage ? viewOnceContent.imageMessage.mimetype : viewOnceContent.videoMessage.mimetype;
 
-    // Resend with newsletter context
+    // Pushname එක සහ Cyber X Thenula ස්ටයිල් කැප්ෂන් එක සකසා ගැනීම
+    const userPushName = m.pushName || 'User';
+    const captionText = `*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${userPushName}*\n*╰──────────●●►*\n> ⚡*powered by CYBER THENUVA*`;
+
+    // Resend with newsletter context and caption
     await robin.sendMessage(
       from,
       {
         [mediaType]: media,
         mimetype: mimeType,
+        caption: captionText,
         contextInfo: newsletterContext
       },
       { quoted: mek }
