@@ -2,6 +2,43 @@ const config = require('../config')
 const axios = require('axios');
 const { cmd, commands } = require('../command');
 
+// පොදු contextInfo Object එකක් (හැම image එකකටම යටින් View Channel වැටීමට)
+const channelContext = {
+    mentionedJid: [/* sender */], // ඇතුළතදී dynamic ලෙස සකසා ඇත
+    forwardingScore: 999,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+        newsletterJid: config.NEWSLETTER_ID || "120363403804248705@newsletter",
+        newsletterName: config.NEWSLETTER_NAME || "CYBER XMD",
+        serverMessageId: 143
+    }
+};
+
+// ඔබේ නිල Apify API Token එක
+const apifyToken = "apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR";
+
+// Apify හරහා Pinterest එකෙන් Image එකක් ගන්නා පොදු Function එකක්
+async function fetchPinterestAnime(keyword) {
+    const runUrl = `https://apify.com{apifyToken}`;
+    const input = {
+        "searchKeywords": keyword,
+        "maxPins": 15
+    };
+    const runResponse = await axios.post(runUrl, input);
+    const datasetId = runResponse.data.data.defaultDatasetId;
+    
+    // Scrape වන තෙක් තත්පර 6ක් රැඳී සිටීම
+    await new Promise(resolve => setTimeout(resolve, 6000));
+    
+    const datasetUrl = `https://apify.com{datasetId}/items?token=${apifyToken}`;
+    const result = await axios.get(datasetUrl);
+    if (result.data && result.data.length > 0) {
+        const randomPin = result.data[Math.floor(Math.random() * result.data.length)];
+        return randomPin.images?.orig?.url || randomPin.imageUrl || randomPin.image;
+    }
+    return null;
+}
+
 cmd({
     pattern: "anime",
     desc: "anime the bot",
@@ -14,7 +51,6 @@ try{
 
 let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA...
 
-
 ✅CYBER THENUWA X MD✅
 *╭──────────●●►*
 *┋ 👤 HEY ${pushname.toUpperCase()}*
@@ -25,26 +61,16 @@ let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENU
 
 > ⚡*POWERED BY CYBER THENUVA*`
 
-// පොදු contextInfo Object එකක් (හැම image එකකටම යටින් View Channel වැටීමට)
-const channelContext = {
-    mentionedJid: [sender],
-    forwardingScore: 999,
-    isForwarded: true,
-    forwardedNewsletterMessageInfo: {
-        newsletterJid: config.NEWSLETTER_ID || "120363403804248705@newsletter",
-        newsletterName: config.NEWSLETTER_NAME || "CYBER XMD",
-        serverMessageId: 143
-    }
-};
+const currentContext = { ...channelContext, mentionedJid: [sender] };
 
-await conn.sendMessage(from, { image: { url: `https://i.ibb.co/qPDNmSY/5cdec1f68264.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
-await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/b26f27aa5daaada031b90.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
-await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/51b44e4b086667361061b.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
-await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/7d165d73f914985542537.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
-await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/3d9732d2657d2d72dc102.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
-await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/8daf7e432a646f3ebe7eb.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
-await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/7514b18ea89da924e7496.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
-await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/ce9cb5acd2cec7693d76b.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://ibb.co` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph` }, caption: dec, contextInfo: currentContext }, { quoted: mek });
 
 }catch(e){
 console.log(e)
@@ -61,7 +87,7 @@ cmd({
 },
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        const apiUrl = `apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR`;
+        const apiUrl = `https://waifu.pics`;
         const response = await axios.get(apiUrl);
         const data = response.data;
 
@@ -74,101 +100,116 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 
 cmd({
     pattern: "animegirl1",
-    desc: "Fetch a random anime girl image.",
+    desc: "Fetch a random anime image from Pinterest using Apify.",
     category: "fun",
     react: "👧",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, sender, reply }) => {
     try {
-        const apiUrl = `https://api.waifu.pics/sfw/waifu`;
-        const response = await axios.get(apiUrl);
-        const data = response.data;
+        const imageUrl = await fetchPinterestAnime("anime girl icon aesthetic hd");
+        if (!imageUrl) return reply("කණගාටුයි, පින්තූර කිසිවක් හමු වුණේ නැත.");
 
-        await conn.sendMessage(from, { image: { url: data.url }, caption: '👸 *SILENT-SOBX-MD RANDOM ANIME GIRL IMAGES* 👸\n\n\n *🧬©SILENT-SOBX-MD BY SILENTLOVER432*' }, { quoted: mek });
+        const currentContext = { ...channelContext, mentionedJid: [sender] };
+        await conn.sendMessage(from, { 
+            image: { url: imageUrl }, 
+            caption: `👸 *CYBER XMD RANDOM PINTEREST ANIME 1* 👸\n\n> *POWERED BY CYBER THENUVA*`,
+            contextInfo: currentContext 
+        }, { quoted: mek });
     } catch (e) {
-        console.log(e);
-        reply(`*Error Fetching Anime Girl image*: ${e.message}`);
+        reply(`*Error Fetching Pinterest Anime 1*: ${e.message}`);
     }
 });
 
 cmd({
     pattern: "animegirl2",
-    desc: "Fetch a random anime girl image.",
+    desc: "Fetch a random anime image from Pinterest using Apify.",
     category: "fun",
     react: "👧",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, sender, reply }) => {
     try {
-        const apiUrl = `https://api.waifu.pics/sfw/waifu`;
-        const response = await axios.get(apiUrl);
-        const data = response.data;
+        const imageUrl = await fetchPinterestAnime("anime waifu cute loli hd");
+        if (!imageUrl) return reply("කණගාටුයි, පින්තූර කිසිවක් හමු වුණේ නැත.");
 
-        await conn.sendMessage(from, { image: { url: data.url }, caption: '👸 *SILENT-SOBX-MD RANDOM ANIME GIRL IMAGES* 👸\n\n\n *🧬©SILENT-SOBX-MD BY SILENTLOVER432*' }, { quoted: mek });
+        const currentContext = { ...channelContext, mentionedJid: [sender] };
+        await conn.sendMessage(from, { 
+            image: { url: imageUrl }, 
+            caption: `👸 *CYBER XMD RANDOM PINTEREST ANIME 2* 👸\n\n> *POWERED BY CYBER THENUVA*`,
+            contextInfo: currentContext 
+        }, { quoted: mek });
     } catch (e) {
-        console.log(e);
-        reply(`*Error Fetching Anime Girl image*: ${e.message}`);
+        reply(`*Error Fetching Pinterest Anime 2*: ${e.message}`);
     }
 });
 
 cmd({
     pattern: "animegirl3",
-    desc: "Fetch a random anime girl image.",
+    desc: "Fetch a random anime image from Pinterest using Apify.",
     category: "fun",
     react: "👧",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, sender, reply }) => {
     try {
-        const apiUrl = `https://api.waifu.pics/sfw/waifu`;
-        const response = await axios.get(apiUrl);
-        const data = response.data;
+        const imageUrl = await fetchPinterestAnime("anime girl dark aesthetic wallpaper");
+        if (!imageUrl) return reply("කණගාටුයි, පින්තූර කිසිවක් හමු වුණේ නැත.");
 
-        await conn.sendMessage(from, { image: { url: data.url }, caption: '👸 *SILENT-SOBX-MD RANDOM ANIME GIRL IMAGES* 👸\n\n\n *🧬©SILENT-SOBX-MD BY SILENTLOVER432*' }, { quoted: mek });
+        const currentContext = { ...channelContext, mentionedJid: [sender] };
+        await conn.sendMessage(from, { 
+            image: { url: imageUrl }, 
+            caption: `👸 *CYBER XMD RANDOM PINTEREST ANIME 3* 👸\n\n> *POWERED BY CYBER THENUVA*`,
+            contextInfo: currentContext 
+        }, { quoted: mek });
     } catch (e) {
-        console.log(e);
-        reply(`*Error Fetching Anime Girl image*: ${e.message}`);
+        reply(`*Error Fetching Pinterest Anime 3*: ${e.message}`);
     }
 });
 
 cmd({
     pattern: "animegirl4",
-    desc: "Fetch a random anime girl image.",
+    desc: "Fetch a random anime image from Pinterest using Apify.",
     category: "fun",
     react: "👧",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, sender, reply }) => {
     try {
-        const apiUrl = `https://api.waifu.pics/sfw/waifu`;
-        const response = await axios.get(apiUrl);
-        const data = response.data;
+        const imageUrl = await fetchPinterestAnime("anime girl cool gaming pfp");
+        if (!imageUrl) return reply("කණගාටුයි, පින්තූර කිසිවක් හමු වුණේ නැත.");
 
-        await conn.sendMessage(from, { image: { url: data.url }, caption: '👸 *SILENT-SOBX-MD RANDOM ANIME GIRL IMAGES* 👸\n\n\n *🧬©SILENT-SOBX-MD BY SILENTLOVER432*' }, { quoted: mek });
+        const currentContext = { ...channelContext, mentionedJid: [sender] };
+        await conn.sendMessage(from, { 
+            image: { url: imageUrl }, 
+            caption: `👸 *CYBER XMD RANDOM PINTEREST ANIME 4* 👸\n\n> *POWERED BY CYBER THENUVA*`,
+            contextInfo: currentContext 
+        }, { quoted: mek });
     } catch (e) {
-        console.log(e);
-        reply(`*Error Fetching Anime Girl image*: ${e.message}`);
+        reply(`*Error Fetching Pinterest Anime 4*: ${e.message}`);
     }
 });
 
 cmd({
     pattern: "animegirl5",
-    desc: "Fetch a random anime girl image.",
+    desc: "Fetch a random anime image from Pinterest using Apify.",
     category: "fun",
     react: "👧",
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+async (conn, mek, m, { from, quoted, sender, reply }) => {
     try {
-        const apiUrl = `https://api.waifu.pics/sfw/waifu`;
-        const response = await axios.get(apiUrl);
-        const data = response.data;
+        const imageUrl = await fetchPinterestAnime("anime girl fanart high quality");
+        if (!imageUrl) return reply("කණගාටුයි, පින්තූර කිසිවක් හමු වුණේ නැත.");
 
-        await conn.sendMessage(from, { image: { url: data.url }, caption: '👸 *SILENT-SOBX-MD RANDOM ANIME GIRL IMAGES* 👸\n\n\n *🧬©SILENT-SOBX-MD BY SILENTLOVER432*' }, { quoted: mek });
+        const currentContext = { ...channelContext, mentionedJid: [sender] };
+        await conn.sendMessage(from, { 
+            image: { url: imageUrl }, 
+            caption: `👸 *CYBER XMD RANDOM PINTEREST ANIME 5* 👸\n\n> *POWERED BY CYBER THENUVA*`,
+            contextInfo: currentContext 
+        }, { quoted: mek });
     } catch (e) {
-        console.log(e);
-        reply(`*Error Fetching Anime Girl image*: ${e.message}`);
+        reply(`*Error Fetching Pinterest Anime 5*: ${e.message}`);
     }
 });
 
@@ -182,7 +223,7 @@ cmd({
 },
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        const apiUrl = `https://api.waifu.pics/sfw/waifu`;
+        const apiUrl = `https://waifu.pics`;
         const response = await axios.get(apiUrl);
         const data = response.data;
 
