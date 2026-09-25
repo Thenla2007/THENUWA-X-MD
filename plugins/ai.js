@@ -1,60 +1,105 @@
-const config = require('../config')
-const { cmd, commands } = require('../command')
-const { GoogleGenAI } = require('@google/genai')
+const axios = require('axios');
+const fetch = require('node-fetch');
 
-// ඔයා දුන්න API Key එක මෙතනට ඇතුළත් කරලා තියෙන්නේ
-const ai = new GoogleGenAI({ apiKey: "AQ.Ab8RN6K-worhtp7MvuQrWqdy-JmYEpSU_TRuMUa8wx4FIZXAJQ" })
-
-cmd({
-    pattern: "ai",
-    alias: ["bot", "ask", "thenuva"],
-    react: "🧠",
-    desc: "Ask anything from CYBER THENUVA AI",
-    category: "main",
-    filename: __filename
-},
-async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, reply }) => {
+async function aiCommand(sock, chatId, message) {
     try {
-        if (!q) return reply("⚠️ කරුණාකර ප්‍රශ්නයක් හෝ යමක් ඇතුළත් කරන්න! (උදා: .ai hello)")
+        const text = message.message?.conversation || message.message?.extendedTextMessage?.text;
+        
+        if (!text) {
+            return await sock.sendMessage(chatId, { 
+                text: "Please provide a question after .gpt or .gemini\n\nExample: .gpt write a basic html code"
+            }, {
+                quoted: message
+            });
+        }
 
-        // AI එකෙන් පිළිතුර ලබා ගැනීම
-        const response = await ai.models.generateContent({
-            model: 'gemini-1.5-flash',
-            contents: q,
-        })
+        // Get the command and query
+        const parts = text.split(' ');
+        const command = parts[0].toLowerCase();
+        const query = parts.slice(1).join(' ').trim();
 
-        let aiReply = `👋 *Hello, ${pushname}!*❤️ welcome to AI ASSISTANT...
+        if (!query) {
+            return await sock.sendMessage(chatId, { 
+                text: "Please provide a question after .gpt or .gemini"
+            }, {quoted:message});
+        }
 
+        try {
+            // Show processing message
+            await sock.sendMessage(chatId, {
+                react: { text: '🤖', key: message.key }
+            });
 
-🧠 *CYBER THENUVA AI ANSWER* 🧠
-
-
-📝 *Your Question:* ${q}
-
-💬 *Answer:*
-────────────────────────
-${response.text}
-────────────────────────
-
-
-> *⚡ Powered By CYBER THENUVA AI*`
-
-        // Newsletter Forward එකක් විදිහට මැසේජ් එක යැවීම
-        await conn.sendMessage(from, {
-            text: aiReply,
-            contextInfo: {
-                forwardingScore: 999,
-                isForwarded: true,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.NEWSLETTER_JID || '120363403804248705@newsletter',
-                    newsletterName: 'CYBER XMD',
-                    serverMessageId: 143
+            if (command === '.gpt') {
+                // Call the GPT API
+                const response = await axios.get(`https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(query)}`);
+                
+                if (response.data && response.data.status && response.data.result) {
+                    const answer = response.data.result;
+                    await sock.sendMessage(chatId, {
+                        text: answer
+                    }, {
+                        quoted: message
+                    });
+                    
+                } else {
+                    throw new Error('Invalid response from API');
                 }
-            }
-        }, { quoted: mek })
+            } else if (command === '.gemini') {
+                const apis = [
+                    `https://vapis.my.id/api/gemini?q=${encodeURIComponent(query)}`,
+                    `https://api.siputzx.my.id/api/ai/gemini-pro?content=${encodeURIComponent(query)}`,
+                    `https://api.ryzendesu.vip/api/ai/gemini?text=${encodeURIComponent(query)}`,
+                    `https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(query)}`,
+                    `https://api.giftedtech.my.id/api/ai/geminiai?apikey=gifted&q=${encodeURIComponent(query)}`,
+                    `https://api.giftedtech.my.id/api/ai/geminiaipro?apikey=gifted&q=${encodeURIComponent(query)}`
+                ];
 
-    } catch (e) {
-        console.log(e)
-        reply(`❌ Error: ${e.message}`)
+                for (const api of apis) {
+                    try {
+                        const response = await fetch(api);
+                        const data = await response.json();
+
+                        if (data.message || data.data || data.answer || data.result) {
+                            const answer = data.message || data.data || data.answer || data.result;
+                            await sock.sendMessage(chatId, {
+                                text: answer
+                            }, {
+                                quoted: message
+                            });
+                            
+                            return;
+                        }
+                    } catch (e) {
+                        continue;
+                    }
+                }
+                throw new Error('All Gemini APIs failed');
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            await sock.sendMessage(chatId, {
+                text: "❌ Failed to get response. Please try again later.",
+                contextInfo: {
+                    mentionedJid: [message.key.participant || message.key.remoteJid],
+                    quotedMessage: message.message
+                }
+            }, {
+                quoted: message
+            });
+        }
+    } catch (error) {
+        console.error('AI Command Error:', error);
+        await sock.sendMessage(chatId, {
+            text: "❌ An error occurred. Please try again later.",
+            contextInfo: {
+                mentionedJid: [message.key.participant || message.key.remoteJid],
+                quotedMessage: message.message
+            }
+        }, {
+            quoted: message
+        });
     }
-})
+}
+
+module.exports = aiCommand; 
