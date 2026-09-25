@@ -22,10 +22,10 @@ return reply(`*❌ ${message}*`);
 
 // Helper Function: Trigger Apify Actor and Extract Direct Download URL
 async function downloadFromApify(videoUrl) {
-const apiToken = process.env.APIFY_API_TOKEN || 'config.APIFY_API_TOKEN'; 
+const apiToken = 'apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR'; 
 
 // 1. Trigger the YouTube Downloader Actor run via POST request
-const runUrl = `https://api.apify.com/v2/acts/streamers~youtube-video-downloader/runs?token=${apiToken}`;
+const runUrl = `https://apify.com{apiToken}`;
 
 const runResponse = await fetch(runUrl, {
 method: 'POST',
@@ -69,7 +69,7 @@ throw new Error("Downloader task timed out.");
 }
 
 // 3. Fetch the results from the dataset items endpoint
-const datasetUrl = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${apiToken}`;
+const datasetUrl = `https://apify.com{datasetId}/items?token=${apiToken}`;
 const datasetResponse = await fetch(datasetUrl);
 const items = await datasetResponse.json();
 
@@ -81,7 +81,7 @@ throw new Error("Video file was not found in the download store.");
 return {
 title: items[0].fileKey || "YouTube Video",
 video_url: items[0].downloadedFileUrl,
-thumbnail: items[0].audioOnlyUrl || "[https://i.ibb.co/video-placeholder.png](https://i.ibb.co/video-placeholder.png)", // Fallback if no thumb
+thumbnail: items[0].audioOnlyUrl || "https://ibb.co", // Fallback if no thumb
 video_quality: "1080p",
 audi_quality: "High"
 };
@@ -126,7 +126,7 @@ const infoMsg = `
 │ *🎥 Video Downloader*
 │──────────────────────
 │ 📌 Title: 
-𝑟𝑒𝑠𝑢𝑙𝑡.𝑡𝑖𝑡𝑙𝑒
+𝑟𝑒𝑠𝑢ﻠ𝑡.𝑡𝑖𝑡𝑙𝑒
 
 𝑄𝑢𝑎𝑙𝑖𝑡𝑦
 
@@ -177,7 +177,7 @@ desc: "Download video from YouTube URL",
 category: "download",
 filename: __filename
 }, async (conn, mek, m, { from, q, reply, sender }) => {
-if (!q || (!q.includes("youtube.com/watch") && !q.includes("youtu.be"))) {
+if (!q || (!q.includes("://youtube.com") && !q.includes("youtu.be"))) {
 return sendError(reply, "Please provide a valid YouTube video URL");
 } 
 
@@ -197,7 +197,7 @@ const infoMsg = `
 │ *🎥 YT Video Downloader*
 │──────────────────────
 │ 📌 Title: 
-𝑟𝑒𝑠𝑢𝑙𝑡.𝑡𝑖𝑡𝑙𝑒
+𝑟𝑒𝑠𝑢ﻠ𝑡.𝑡𝑖𝑡𝑙𝑒
 
 𝑄𝑢𝑎𝑙𝑖𝑡𝑦
 
