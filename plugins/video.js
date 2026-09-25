@@ -52,7 +52,7 @@ cmd({
             };
 
             // Fetch video info from new API
-            const apiUrl = `https://api.giftedtech.web.id/api/download/ytdl?apikey=gifted&url=${encodeURIComponent(videoUrl)}`;
+            const apiUrl = `https://api.apify.com/v2/actor-runs/vhiqDN6KR6fkkb6fm?token=apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR${encodeURIComponent(videoUrl)}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
 
