@@ -9,7 +9,6 @@ cmd({
     react: "⛱️",
     filename: __filename
 },
-
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
@@ -25,29 +24,26 @@ let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENU
 
 > ⚡*POWERED BY CYBER THENUVA*`
 
-  await conn.sendMessage(from, { 
-    image: { url: `https://telegra.ph` }, 
-    caption: dec,
-    contextInfo: {
-        mentionedJid: [sender],
-        forwardingScore: 999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterJid: config.NEWSLETTER_ID || "120363403804248705@newsletter",
-            newsletterName: config.NEWSLETTER_NAME || "CYBER XMD",
-            serverMessageId: 143
-        }
+// පොදු contextInfo Object එකක් (හැම image එකකටම යටින් View Channel වැටීමට)
+const channelContext = {
+    mentionedJid: [sender],
+    forwardingScore: 999,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+        newsletterJid: config.NEWSLETTER_ID || "120363403804248705@newsletter",
+        newsletterName: config.NEWSLETTER_NAME || "CYBER XMD",
+        serverMessageId: 143
     }
-}, { quoted: mek })  
+};
 
-
-await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/b26f27aa5daaada031b90.jpg`},caption:dec},{quoted:mek});
-await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/51b44e4b086667361061b.jpg`},caption:dec},{quoted:mek});
-await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/7d165d73f914985542537.jpg`},caption:dec},{quoted:mek});
-await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/3d9732d2657d2d72dc102.jpg`},caption:dec},{quoted:mek});
-await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/8daf7e432a646f3ebe7eb.jpg`},caption:dec},{quoted:mek});
-await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/7514b18ea89da924e7496.jpg`},caption:dec},{quoted:mek});
-await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/ce9cb5acd2cec7693d76b.jpg`},caption:dec},{quoted:mek});
+await conn.sendMessage(from, { image: { url: `https://i.ibb.co/qPDNmSY/5cdec1f68264.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/b26f27aa5daaada031b90.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/51b44e4b086667361061b.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/7d165d73f914985542537.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/3d9732d2657d2d72dc102.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/8daf7e432a646f3ebe7eb.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/7514b18ea89da924e7496.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
+await conn.sendMessage(from, { image: { url: `https://telegra.ph/file/ce9cb5acd2cec7693d76b.jpg` }, caption: dec, contextInfo: channelContext }, { quoted: mek });
 
 }catch(e){
 console.log(e)
