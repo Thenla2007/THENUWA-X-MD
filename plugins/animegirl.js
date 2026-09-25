@@ -16,7 +16,7 @@ try{
 let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA...
 
 ✅CYBER THENUWA X MD✅
-*╭──────────●●►*
+ ╭──────────●●►*
 *┋ 👤 HEY ${pushname.toUpperCase()}
 *┋ ⛩️ ANIME PHOTOS MENU*
 *┋ 📢 CHANNEL: ${config.NEWSLETTER_NAME || 'CYBER XMD'}*
@@ -24,6 +24,21 @@ let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENU
 *╰──────────●●►*
 
 > ⚡*POWERED BY CYBER THENUVA*`
+
+  await conn.sendMessage(from, { 
+    image: { url: `https://telegra.ph` }, 
+    caption: dec,
+    contextInfo: {
+        mentionedJid: [sender],
+        forwardingScore: 999,
+        isForwarded: true,
+        forwardedNewsletterMessageInfo: {
+            newsletterJid: config.NEWSLETTER_ID || "120363403804248705@newsletter",
+            newsletterName: config.NEWSLETTER_NAME || "CYBER XMD",
+            serverMessageId: 143
+        }
+    }
+}, { quoted: mek })  
 
 
 await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/b26f27aa5daaada031b90.jpg`},caption:dec},{quoted:mek});
