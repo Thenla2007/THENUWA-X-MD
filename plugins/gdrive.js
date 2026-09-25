@@ -44,7 +44,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             forwardingScore: 1000,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: 120363403804248705@newsletter'',
+                newsletterJid: '120363403804248705@newsletter',
                 newsletterName: "THENUWA XMD",
                 serverMessageId: 143,
             },
