@@ -61,7 +61,7 @@ cmd({
 },
 async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
     try {
-        const apiUrl = `https://api.waifu.pics/sfw/waifu`;
+        const apiUrl = `apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR`;
         const response = await axios.get(apiUrl);
         const data = response.data;
 
