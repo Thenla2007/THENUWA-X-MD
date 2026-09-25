@@ -12,7 +12,7 @@ cmd({
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-let data = await fetchJson(`https://zellapi.autos/ai/chatbot?text=Dila${q}`)
+let data = await fetchJson(`https://zellapi.autos/ai/chatbot?text=${q}`)
 return reply(`${data.data}`)
 }catch(e){
 console.log(e)
