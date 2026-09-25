@@ -68,7 +68,7 @@ ANTI_VV: process.env.ANTI_VV || "true",
 ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || "log", 
 // change it to 'same' if you want to resend deleted message in same chat 
 AUTO_RECORDING: process.env.AUTO_RECORDING || "false",
-APIFY_API_TOKEN: process.env.APIFY_API_TOKEN || '',
+APIFY_API_TOKEN: process.env.APIFY_API_TOKEN || 'apify_api_Ch0IOvo9qabGqAt4RaSnmhYJuFXKbk0soR3M',
     
 // make it true for auto recoding 
 };
