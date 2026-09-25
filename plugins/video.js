@@ -33,7 +33,7 @@ cmd(
       
       const data = search.videos[0];
 
-      // CYBER X THENULA ස්ටයිල් එකට සකස් කළ විස්තර පත්‍රිකාව (Image Caption)
+      // CYBER X THENULA ස්ටයිල් එකට සකස් කළ விස්තර පත්‍රිකාව (Image Caption)
       let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
       detailsText += `✅CYBER THENUWA X MD✅\n`;
@@ -72,8 +72,14 @@ cmd(
         { quoted: mek }
       );
 
-      // 2. Direct Download Link එක
-      const downloadUrl = "https://apify.com";
+      // 2. සැබෑ YouTube ඩවුන්ලෝඩ් API එකක් මඟින් ලින්ක් එක ලබා ගැනීම
+      const apiResponse = await axios.get(`https://dreaded.site{encodeURIComponent(data.url)}`);
+      
+      if (!apiResponse.data || !apiResponse.data.result || !apiResponse.data.result.downloadUrl) {
+          return reply("❌ *වීඩියෝව බාගත කිරීමේ සබැඳිය (Download Link) ලබා ගැනීමට නොහැකි විය. කරුණාකර පසුව උත්සාහ කරන්න.*");
+      }
+      
+      const downloadUrl = apiResponse.data.result.downloadUrl;
 
       // 3. වට්සැප් එකට වීඩියෝ (MP4) එක සමඟ යන Caption එක
       let videoCaption = `✅ *DOWNLOAD SUCCESS* ✅\n`;
