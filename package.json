@@ -60,7 +60,7 @@
     "form-data": "^4.0.0",
     "@xaviabot/fb-downloader": "^1.0.14",
     "darksadasyt-anime": "^1.0.0",
-    "@google/genai": "^0.1.1"
+    "@google/genai": "latest"
 
 
   }
