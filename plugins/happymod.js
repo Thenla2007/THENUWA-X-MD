@@ -22,7 +22,7 @@ async (conn, mek, m, { from, quoted, q, reply, sender }) => {
         searchResults.data.forEach((item, index) => {
             apkList += `*${index + 1}.* ${item.title} (⭐ ${item.rating || 'N/A'})\n`;
         });
-        apkList += "\n◄❪ Reply with number to get download link ❫►\n🔰 *Powered by Hans Byte MD*";
+        apkList += "\n◄❪ Reply with number to get download link ❫►\n🔰 *Powered by THENUWA XMD*";
 
         const newsletterContext = {
             mentionedJid: [sender],
