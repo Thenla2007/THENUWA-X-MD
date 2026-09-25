@@ -8,7 +8,7 @@ cmd(
     pattern: "video",
     alias: ["playvideo", "ytmp4"],
     react: "🎬",
-    desc: "Download YouTube videos as MP4 format.",
+    desc: "Download YouTube videos using Apify.",
     category: "download",
     filename: __filename,
   },
@@ -18,7 +18,7 @@ cmd(
 
       const targetJid = typeof from === 'string' ? from : (mek.key.remoteJid || String(from));
 
-      // 1. දත්ත ලබා ගන්නා තෙක් 'Loading' පණිවිඩය යැවීම
+      // 1. සෙවුම ආරම්භ කරන විට Loading පණිවිඩය යැවීම
       const loadingMsg = await danuwa.sendMessage(targetJid, { 
         text: `⚡ *CYBER THENUWA SEARCHING VIDEO...*` 
       }, { quoted: mek });
@@ -26,14 +26,14 @@ cmd(
       const search = await yts(q);
       if (!search.videos || search.videos.length === 0) {
         return await danuwa.sendMessage(targetJid, { 
-          text: "❌ *වීඩියෝව සොයාගත නොහැකි විය! කරුණාකර නම නැවත පරීක්ෂා කරන්න.*", 
+          text: "❌ *වීඩියෝව සොයාගත නොහැකි විය!*", 
           edit: loadingMsg.key 
         });
       }
       
       const data = search.videos[0];
 
-      // CYBER X THENULA ස්ටයිල් එකට සකස් කළ விස්තර පත්‍රිකාව (Image Caption)
+      // CYBER X THENULA ස්ටයිල් එකට සකස් කළ විස්තර පත්‍රිකාව
       let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
       detailsText += `CYBER X THENULA\n\n`;
       detailsText += `✅CYBER THENUWA X MD✅\n`;
@@ -48,11 +48,11 @@ cmd(
       detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
       detailsText += `╰───────────────╼\n\n`;
       detailsText += `📢 *Join Our Channel:* https://whatsapp.com\n\n`;
-      detailsText += `📥 *DOWNLOADING VIDEO FILE* 📥\n`;
-      detailsText += `─── ── ─●●●─ ── ───\n\n\n`; 
+      detailsText += `📥 *DOWNLOADING VIDEO FILE VIA APIFY...* 📥\n`;
+      detailsText += `─── ── ─●●●─ ── ───\n\n\n`;
 
       // සෙවුම් පණිවිඩය වෙනස් කර පින්තූරය සමඟ විස්තර යැවීම
-      await danuwa.sendMessage(targetJid, { text: `✅ *Video Found! Processing...*` }, { edit: loadingMsg.key });
+      await danuwa.sendMessage(targetJid, { text: `✅ *Video Found! Processing with Apify...*` }, { edit: loadingMsg.key });
       
       await danuwa.sendMessage(
         targetJid,
@@ -72,23 +72,51 @@ cmd(
         { quoted: mek }
       );
 
-      // 2. සැබෑ YouTube ඩවුන්ලෝඩ් API එකක් මඟින් ලින්ක් එක ලබා ගැනීම
-      const apiResponse = await axios.get(`https://dreaded.site{encodeURIComponent(data.url)}`);
+      // 2. ඔබ ලබාදුන් සැබෑ Apify API Token එක
+      const APIFY_TOKEN = "apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR";
       
-      if (!apiResponse.data || !apiResponse.data.result || !apiResponse.data.result.downloadUrl) {
-          return reply("❌ *වීඩියෝව බාගත කිරීමේ සබැඳිය (Download Link) ලබා ගැනීමට නොහැකි විය. කරුණාකර පසුව උත්සාහ කරන්න.*");
-      }
-      
-      const downloadUrl = apiResponse.data.result.downloadUrl;
+      // Apify Actor එක ක්‍රියාත්මක කිරීම (Run Actor)
+      const runActor = await axios.post(
+        `https://api.apify.com/v2/actors/mrdoe~youtube-video-downloader/runs?token=${APIFY_TOKEN}`,
+        {
+          startUrls: [
+            {
+              url: data.url
+            }
+          ]
+        }
+      );
 
-      // 3. වට්සැප් එකට වීඩියෝ (MP4) එක සමඟ යන Caption එක
+      const runId = runActor.data.data.id;
+
+      // Actor එක සාර්ථකව රන් වී අවසන් වන තෙක් තත්පර 12ක් රැඳී සිටීම
+      await new Promise(resolve => setTimeout(resolve, 12000));
+
+      // 3. නිමැවුම් දත්ත ගබඩාවෙන් (Dataset) වීඩියෝ ලින්ක් එක ලබා ගැනීම
+      const datasetResult = await axios.get(
+        `https://apify.com{runId}/dataset/items?token=${APIFY_TOKEN}`
+      );
+
+      if (!datasetResult.data || datasetResult.data.length === 0) {
+        return reply("❌ *Apify හරහා දත්ත ලබා ගැනීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.*");
+      }
+
+      // Actor එකෙන් ලැබෙන පළමු අයිතමයේ වීඩියෝ සබැඳිය (Direct Video MP4 Link) ලබා ගැනීම
+      const videoDataItem = datasetResult.data[0];
+      const downloadUrl = videoDataItem ? (videoDataItem.videoUrl || videoDataItem.downloadUrl || videoDataItem.fileUrl || videoDataItem.url) : null;
+
+      if (!downloadUrl) {
+        return reply("❌ *වීඩියෝ බාගත කිරීමේ සබැඳිය (Direct MP4 Link) සොයාගත නොහැකි විය.*");
+      }
+
+      // 4. වට්සැප් එකට වීඩියෝ (MP4) එක සමඟ යන Caption එක
       let videoCaption = `✅ *DOWNLOAD SUCCESS* ✅\n`;
       videoCaption += `╭───────────────────.★*\n`;
       videoCaption += `│  ◦ 👤 *User :* ${pushname || "User"}\n`;
       videoCaption += `│  ◦ 🎬 *Video :* ${data.title}\n`;
       videoCaption += `│  ◦ 🎞 *Status :* Video File Sent\n`;
       videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `📢 *Channel:* https://whatsapp.com\n\n`;
+      videoCaption += `📢 *Channel:* https://whatsapp.com\n`;
       videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; 
 
       await danuwa.sendMessage(
