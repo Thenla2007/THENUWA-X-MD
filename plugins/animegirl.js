@@ -12,17 +12,17 @@ cmd({
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
-let dec = `
+let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA...
+
 
 *╭──────────●●►*
-*┋ 👤 HEY ${pushname.toUpperCase()} ❯❯*
+*┋ 👤 HEY ${pushname.toUpperCase()}
 *┋ ⛩️ ANIME PHOTOS MENU*
-*┋*
-*┋ 📢 CHANNEL: ${config.NEWSLETTER_NAME || 'CYBER XMD COMMUNITY'}*
-*┋ 🆔 ID: ${config.NEWSLETTER_ID || '120363xxx@newsletter'}*
+*┋ 📢 CHANNEL: ${config.NEWSLETTER_NAME || 'CYBER XMD'}*
+*┋ 🆔 ID: ${config.NEWSLETTER_ID || '120363403804248705@newsletter'}*
 *╰──────────●●►*
 
-> *POWERED BY CYBER THENUVA*`
+> ⚡*POWERED BY CYBER THENUVA*`
 
 
 await conn.sendMessage(from,{image:{url: `https://telegra.ph/file/b26f27aa5daaada031b90.jpg`},caption:dec},{quoted:mek});
