@@ -9,7 +9,7 @@ cmd({
   desc: 'Gets an image/video from viewonce files',
   category: 'utility',
   filename: __filename
-}, async (robin, mek, m, { from, quoted, reply, sender }) => {
+}, async (robin, mek, m, { from, quoted, reply, sender, pushname }) => { // 1. මෙතනට pushname එකතු කළා
   try {
     // Validate inputs
     if (!quoted) {
@@ -35,7 +35,7 @@ cmd({
       return reply('❌ Only view-once image and video replies are supported.');
     }
 
-    // මීඩියා එක ඩවුන්ලೋඩ් කිරීමට නිවැරදි ඔබ්ජෙක්ට් එක සකසා ගැනීම
+    // මීඩියා එක ඩවුන්ලۆඩ් කිරීමට නිවැරදි ඔබ්ජෙක්ට් එක සකසා ගැනීම
     const mediaObj = {
       key: quoted.key || m.message?.extendedTextMessage?.contextInfo?.stanzaId,
       message: viewOnceContent
@@ -82,8 +82,8 @@ cmd({
       finalPushName = mek.pushName;
     }
 
-    // Caption format
-    const captionText = `👋 HELLOW...*${pushname || 'User'}*❤️ welcome to CYBER THENUVA... *╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> ⚡*POWERED BY CYBER THENUVA*`;
+    // Caption format (හලෝ කියන තැනටත් pushname වෙනුවට finalPushName දැම්මා)
+    const captionText = `👋 HELLOW...*${pushname || 'User'}*❤️ welcome to CYBER THENUVA... \n\n*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> ⚡*POWERED BY CYBER THENUVA*`;
 
     // Resend with newsletter context and caption
     await robin.sendMessage(
