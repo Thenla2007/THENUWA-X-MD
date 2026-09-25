@@ -83,7 +83,7 @@ cmd({
     }
 
     // Caption format (හලෝ කියන තැනටත් pushname වෙනුවට finalPushName දැම්මා)
-    const captionText = `👋 HELLOW...*${pushname || 'User'}*❤️ welcome to CYBER THENUVA... \n\n*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> ⚡*POWERED BY CYBER THENUVA*`;
+    const captionText = `👋 HELLOW...*${pushname || 'User'}*❤️ welcome to CYBER THENUVA... \n\n*╭──────────●●►*\n*┋ 🧑‍💻 CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n>   ⚡*POWERED BY CYBER THENUVA*`;
 
     // Resend with newsletter context and caption
     await robin.sendMessage(
