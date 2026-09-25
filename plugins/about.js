@@ -12,13 +12,14 @@ async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender
 try{
 let madeMenu = `👋 *HELLOW, ${pushname}!* ❤️ welcome to CYBER X THENULA...
 
+
 🌟 *DEVELOPER DETAILS* 🌟
 ─────────────────────
 👨‍💻 *Developer:* CYBER THENUVA
 🔞 *Age:* 19 Years Old
 🙈 *Location:* Personal Hai 😁
 🤖 *Status:* Simple WhatsApp Bot Developer
-─────────────────────
+──────────────────────
 
  💡 *Thank you for using my bot!*...
 
