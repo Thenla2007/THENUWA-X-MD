@@ -22,6 +22,7 @@ return reply(`*❌ ${message}*`);
 
 // Helper Function: Trigger Apify Actor and Extract Direct Download URL
 async function downloadFromApify(videoUrl) {
+// ⚠️ මෙතැන ඇති 'apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR' වෙනුවට ඔබේ අලුත් Token එක දමන්න!
 const apiToken = 'apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR'; 
 
 // 1. Trigger the YouTube Downloader Actor run via POST request
@@ -48,7 +49,7 @@ const runId = runData.data.id;
 
 // 2. Wait for the Actor run to complete successfully
 let isFinished = false;
-const checkUrl = `https://api.apify.com/v2/actor-runs/${runId}?token=${apiToken}`;
+const checkUrl = `https://apify.com{runId}?token=${apiToken}`;
 
 for (let i = 0; i < 30; i++) { // Poll for up to 60 seconds
 const checkResponse = await fetch(checkUrl);
@@ -119,20 +120,12 @@ const messageContext = {
     mentionedJid: [sender]
 };
 
-const infoMsg = `
-
-╭════════════⊷❍
+const infoMsg = `╭════════════⊷❍
 │
 │ *🎥 Video Downloader*
 │──────────────────────
-│ 📌 Title: 
-𝑟𝑒𝑠𝑢ﻠ𝑡.𝑡𝑖𝑡𝑙𝑒
-
-𝑄𝑢𝑎𝑙𝑖𝑡𝑦
-
-∶
-
-{result.video_quality}
+│ 📌 Title: ${result.title}
+│ 🎬 Quality: ${result.video_quality}
 │ 🎧 Audio Quality: ${result.audi_quality}
 ╰──────────●●►
 *📥 Downloaded via HANS BYTE MD*`.trim(); 
@@ -171,6 +164,7 @@ return sendError(reply, error.message);
 // YTMP4 COMMAND - only accepts direct YouTube URL
 cmd({
 pattern: "ytmp4",
+pattern: "ytmp4",
 alias: ['youtube', 'ytvid'],
 react: "🎧",
 desc: "Download video from YouTube URL",
@@ -190,20 +184,12 @@ const messageContext = {
     mentionedJid: [sender]
 };
 
-const infoMsg = `
-
-╭════════════⊷❍
+const infoMsg = `╭════════════⊷❍
 │
 │ *🎥 YT Video Downloader*
 │──────────────────────
-│ 📌 Title: 
-𝑟𝑒𝑠𝑢ﻠ𝑡.𝑡𝑖𝑡𝑙𝑒
-
-𝑄𝑢𝑎𝑙𝑖𝑡𝑦
-
-∶
-
-{result.video_quality}
+│ 📌 Title: ${result.title}
+│ 🎬 Quality: ${result.video_quality}
 │ 🎧 Audio Quality: ${result.audi_quality}
 ╰──────────●●►
 *📥 Powered by HANS BYTE MD*`.trim(); 
