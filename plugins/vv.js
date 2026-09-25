@@ -35,7 +35,7 @@ cmd({
       return reply('❌ Only view-once image and video replies are supported.');
     }
 
-    // මීඩියා එක ඩවුන්ලෝඩ් කිරීමට නිවැරදි ඔබ්ජෙක්ට් එක සකසා ගැනීම
+    // මීඩියා එක ඩවුන්ලೋඩ් කිරීමට නිවැරදි ඔබ්ජෙක්ට් එක සකසා ගැනීම
     const mediaObj = {
       key: quoted.key || m.message?.extendedTextMessage?.contextInfo?.stanzaId,
       message: viewOnceContent
@@ -62,8 +62,8 @@ cmd({
       forwardingScore: 1000,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: config.NEWSLETTER_JID || '120363403804248705@newsletter',
-        newsletterName: config.NEWSLETTER_NAME || "CYBER XMD",
+        newsletterJid: config.NEWSLETTER_JID || '120363292876277898@newsletter',
+        newsletterName: config.NEWSLETTER_NAME || "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
         serverMessageId: Math.floor(Math.random() * 1000),
       }
     };
@@ -72,9 +72,18 @@ cmd({
     const mediaType = isImage ? 'image' : 'video';
     const mimeType = isImage ? viewOnceContent.imageMessage.mimetype : viewOnceContent.videoMessage.mimetype;
 
-    // Pushname එක සහ Cyber X Thenula ස්ටයිල් කැප්ෂන් එක සකසා ගැනීම
-    const userPushName = m.pushName || 'User';
-    const captionText = `*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: 👋 HELLOW...*${pushname || 'User'}**\n*╰──────────●●►*\n> ⚡*powered by CYBER THENUVA*`;
+    // pushname is not defined error එක විසඳීමට ආරක්ෂිත ක්‍රමයක් (Safe check for pushName)
+    let finalPushName = 'User';
+    if (typeof pushname !== 'undefined' && pushname) {
+      finalPushName = pushname;
+    } else if (m && m.pushName) {
+      finalPushName = m.pushName;
+    } else if (mek && mek.pushName) {
+      finalPushName = mek.pushName;
+    }
+
+    // Caption format
+    const captionText = `*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> *POWERED BY CYBER THENUVA*`;
 
     // Resend with newsletter context and caption
     await robin.sendMessage(
