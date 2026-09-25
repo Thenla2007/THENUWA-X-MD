@@ -44,14 +44,14 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
             forwardingScore: 1000,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363292876277898@newsletter',
-                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                newsletterJid: 120363403804248705@newsletter'',
+                newsletterName: "THENUWA XMD",
                 serverMessageId: 143,
             },
         };
 
         let desc = `
-╔══✦❘༻ *HANS BYTE* ༺❘✦══╗
+╔══✦❘༻ *THENUWA XMD* ༺❘✦══╗
 ┇  📂 *𝗚𝗢𝗢𝗚𝗟𝗘 𝗗𝗥𝗜𝗩𝗘 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗𝗘𝗥* 📂
 ┇╭───────────────────
 ┇│•📁 𝗙𝗶𝗹𝗲 𝗡𝗮𝗺𝗲: ${fileInfo.name} 
@@ -59,8 +59,8 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 ╰─・─・─・─・─・─・─・─╯
 ╭━✦❘༻ 𝗙𝗜𝗟𝗘 𝗜𝗡𝗙𝗢 ༺❘✦━╮
 │•🔗 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗 𝗟𝗜𝗡𝗞: ${fileInfo.downloadLink}
-╰━✦❘༻ *HANS BYTE* ༺❘✦━╯
-> POWERED BY HANS BYTE MD `;
+╰━✦❘༻ *THENUWA XMD* ༺❘✦━╯
+> POWERED BY THENUWA XMD `;
 
         // Send the description and thumbnail image
         await conn.sendMessage(from, {
