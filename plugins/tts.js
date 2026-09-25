@@ -35,8 +35,8 @@ async (conn, mek, m, { from, q, reply, sender }) => {
             forwardingScore: 1000,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363292876277898@newsletter',
-                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                newsletterJid: '120363403804248705@newsletter',
+                newsletterName: "THENUWA XMD",
                 serverMessageId: 143,
             },
         };
@@ -47,7 +47,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
                 audio: { url: data.audioUrl }, 
                 mimetype: "audio/mpeg", 
                 fileName: "TTS-Output.mp3", 
-                caption: "✅ *𝗧𝗲𝘅𝘁 𝗰𝗼𝗻𝘃𝗲𝗿𝘁𝗲𝗱 𝘁𝗼 𝘀𝗽𝗲𝗲𝗰𝗵 𝘀𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆!* ✅\n🔰 *𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 𝗛𝗮𝗻𝘀 𝗕𝐲𝘁𝗲 𝗠𝗗* ⚡",
+                caption: "✅ *𝗧𝗲𝘅𝘁 𝗰𝗼𝗻𝘃𝗲𝗿𝘁𝗲𝗱 𝘁𝗼 𝘀𝗽𝗲𝗲𝗰𝗵 𝘀𝘂𝗰𝗰𝗲𝘀𝘀𝗳𝘂𝗹𝗹𝘆!* ✅\n🔰 *𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆 THENUWA XMD* ⚡",
                 contextInfo: newsletterContext
             },
             { quoted: mek }
