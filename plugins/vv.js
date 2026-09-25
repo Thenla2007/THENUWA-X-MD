@@ -62,8 +62,8 @@ cmd({
       forwardingScore: 1000,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: config.NEWSLETTER_JID || '120363292876277898@newsletter',
-        newsletterName: config.NEWSLETTER_NAME || "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        newsletterJid: config.NEWSLETTER_JID || '120363403804248705@newsletter',
+        newsletterName: config.NEWSLETTER_NAME || "CYBER XMD",
         serverMessageId: Math.floor(Math.random() * 1000),
       }
     };
