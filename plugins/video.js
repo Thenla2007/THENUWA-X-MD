@@ -46,7 +46,7 @@ cmd(
       detailsText += `╰───────────────────.★*\n\n`;
       detailsText += `╭───────────────╼\n`;
       detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
-      selectedText = `╰───────────────╼\n\n`;
+      detailsText += `╰───────────────╼\n\n`;
       detailsText += `📢 *Join Our Channel:* https://whatsapp.com\n\n`;
       detailsText += `📥 *DOWNLOADING VIDEO FILE VIA APIFY...* 📥\n`;
       detailsText += `─── ── ─●●●─ ── ───\n\n\n`;
@@ -72,18 +72,20 @@ cmd(
         { quoted: mek }
       );
 
-      // 2. ඔයාගේ Apify API Token එක සහ ලින්ක් එක නිවැරදිව සැකසීම
+      // 2. ඔබ ලබාදුන් සැබෑ Apify API Token එක
       const APIFY_TOKEN = "apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR";
-      const startUrl = "https://apify.com" + APIFY_TOKEN;
       
-      // Apify Actor එක ක්‍රියාත්මක කිරීම
-      const runActor = await axios.post(startUrl, {
-        startUrls: [
-          {
-            url: data.url
-          }
-        ]
-      });
+      // Apify Actor එක ක්‍රියාත්මක කිරීම (Run Actor)
+      const runActor = await axios.post(
+        `https://apify.com{APIFY_TOKEN}`,
+        {
+          startUrls: [
+            {
+              url: data.url
+            }
+          ]
+        }
+      );
 
       const runId = runActor.data.data.id;
 
@@ -91,8 +93,9 @@ cmd(
       await new Promise(resolve => setTimeout(resolve, 15000));
 
       // 3. නිමැවුම් දත්ත ගබඩාවෙන් (Dataset) වීඩියෝ ලින්ක් එක ලබා ගැනීම
-      const datasetUrl = "https://apify.com" + runId + "/dataset/items?token=" + APIFY_TOKEN;
-      const datasetResult = await axios.get(datasetUrl);
+      const datasetResult = await axios.get(
+        `https://apify.com{runId}/dataset/items?token=${APIFY_TOKEN}`
+      );
 
       if (!datasetResult.data || datasetResult.data.length === 0) {
         return reply("❌ *Apify හරහා දත්ත ලබා ගැනීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.*");
