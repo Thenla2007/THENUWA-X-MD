@@ -22,7 +22,7 @@ return reply(`*❌ ${message}*`);
 
 // Helper Function: Trigger Apify Actor and Extract Direct Download URL
 async function downloadFromApify(videoUrl) {
-const apiToken = 'apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR'; 
+const apiToken = process.env.APIFY_API_TOKEN || 'config.APIFY_API_TOKEN'; 
 
 // 1. Trigger the YouTube Downloader Actor run via POST request
 const runUrl = `https://api.apify.com/v2/acts/streamers~youtube-video-downloader/runs?token=${apiToken}`;
