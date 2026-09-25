@@ -14,19 +14,13 @@ async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender
 try{
 if (!q) return reply("කරුණාකර AI එකෙන් ඇසීමට ප්‍රශ්නයක් ඇතුළත් කරන්න. (උදා: .ai hello)")
 
-// ක්‍රමය 1: Zell API එක නව Parameter එකක් (`query=`) සහිතව උත්සාහ කිරීම
-let data = await fetchJson(`https://zellapi.autos{encodeURIComponent(q)}`)
+// ක්‍රමය 1: සැමවිටම ක්‍රියාකාරී Sandip Baruwal ChatGPT API එක භාවිතා කිරීම
+let data = await fetchJson(`https://onrender.com{encodeURIComponent(q)}`)
 
-if (data && data.result) {
-    return reply(`${data.result}`)
-} 
-
-// ක්‍රමය 2: Zell API එක වැඩ නොකළහොත් Blackbox ChatGPT API එක භාවිතා කිරීම
-let fallbackData = await fetchJson(`https://giftedtech.my.id{encodeURIComponent(q)}`)
-if (fallbackData && fallbackData.results) {
-    return reply(`${fallbackData.results}`)
+if (data && data.answer) {
+    return reply(`${data.answer}`)
 } else {
-    return reply("කණගාටුයි, AI සේවාව මේ මොහොතේ කාර්යබහුලයි. පසුව උත්සාහ කරන්න.")
+    return reply("කණගාටුයි, AI සේවාව මේ මොහොතේ කාර්යබහුලයි. කරුණාකර සුළු මොහොතකින් නැවත උත්සාහ කරන්න.")
 }
 
 }catch(e){
