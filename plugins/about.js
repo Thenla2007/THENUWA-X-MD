@@ -10,7 +10,7 @@ cmd({
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-let madeMenu = `👋 *Hello, ${pushname}!* ❤️ welcome to CYBER X THENULA...
+let madeMenu = `👋 *HELLOW, ${pushname}!* ❤️ welcome to CYBER X THENULA...
 
 🌟 *DEVELOPER DETAILS* 🌟
 ─────────────────────
