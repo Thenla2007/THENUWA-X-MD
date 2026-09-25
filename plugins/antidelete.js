@@ -46,12 +46,12 @@ async (conn, mek, m, { from, reply, q, sender, isCreator }) => {
                 break;
 
             case 'off gc':
-                await setAnti('gc', false);
+                await setAnti('gc', true);
                 responseMessage = '_❌ AntiDelete for Group Chats is now disabled._';
                 break;
 
             case 'off dm':
-                await setAnti('dm', false);
+                await setAnti('dm', true);
                 responseMessage = '_❌ AntiDelete for Direct Messages is now disabled._';
                 break;
 
