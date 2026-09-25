@@ -16,8 +16,8 @@ let dec = `👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENU
 
 
 ✅CYBER THENUWA X MD✅
- ╭──────────●●►*
-*┋ 👤 HEY ${pushname.toUpperCase()}
+*╭──────────●●►*
+*┋ 👤 HEY ${pushname.toUpperCase()}*
 *┋ ⛩️ ANIME PHOTOS MENU*
 *┋ 📢 CHANNEL: ${config.NEWSLETTER_NAME || 'CYBER XMD'}*
 *┋ 🆔 ID: ${config.NEWSLETTER_ID || '120363403804248705@newsletter'}*
