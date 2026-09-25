@@ -25,7 +25,7 @@ async function downloadFromApify(videoUrl) {
 const apiToken = 'apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR'; 
 
 // 1. Trigger the YouTube Downloader Actor run via POST request
-const runUrl = https://api.apify.com/v2/acts/streamers~youtube-video-downloader/runs?token=${apiToken};
+const runUrl = `https://api.apify.com/v2/acts/streamers~youtube-video-downloader/runs?token=${apiToken}`;
 
 const runResponse = await fetch(runUrl, {
 method: 'POST',
