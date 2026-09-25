@@ -62,8 +62,8 @@ cmd({
       forwardingScore: 1000,
       isForwarded: true,
       forwardedNewsletterMessageInfo: {
-        newsletterJid: config.NEWSLETTER_JID || '120363292876277898@newsletter',
-        newsletterName: config.NEWSLETTER_NAME || "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        newsletterJid: config.NEWSLETTER_JID || '120363403804248705@newsletter',
+        newsletterName: config.NEWSLETTER_NAME || "THENUVA XMD",
         serverMessageId: Math.floor(Math.random() * 1000),
       }
     };
@@ -83,7 +83,7 @@ cmd({
     }
 
     // Caption format
-    const captionText = `*╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> *POWERED BY CYBER THENUVA*`;
+    const captionText = `👋 HELLOW...*${pushname || 'User'}*❤️ welcome to CYBER THENUVA... *╭──────────●●►*\n*┋ CYBER XMD ❯❯*\n*┋ 👤 REQUEST BY: ${finalPushName}*\n*╰──────────●●►*\n> ⚡*POWERED BY CYBER THENUVA*`;
 
     // Resend with newsletter context and caption
     await robin.sendMessage(
