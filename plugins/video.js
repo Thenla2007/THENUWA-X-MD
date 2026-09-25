@@ -52,7 +52,7 @@ cmd({
             };
 
             // Fetch video info from new API
-            const apiUrl = `https://api.apify.com/v2/key-value-stores/MbbSpfx7dYwDJGenr/records/dQw4w9WgXcQ_RickAstley-NeverGonnaGiveYouUp(OfficialVideo)(4KRemaster).mp4${encodeURIComponent(videoUrl)}`;
+            const apiUrl = `https://api.apify.com/v2/key-value-stores/MbbSpfx7dYwDJGenr/records/dQw4w9WgXcQ_RickAstley-NeverGonnaGiveYouUp(OfficialVideo)(4KRemaster).mp4?apikey=${encodeURIComponent(videoUrl)}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
 
@@ -126,7 +126,7 @@ cmd({
     }
 
     try {
-        const apiUrl = `https://api.apify.com/v2/key-value-stores/MbbSpfx7dYwDJGenr/records/dQw4w9WgXcQ_RickAstley-NeverGonnaGiveYouUp(OfficialVideo)(4KRemaster).mp4${encodeURIComponent(q)}`;
+        const apiUrl = `https://api.apify.com/v2/key-value-stores/MbbSpfx7dYwDJGenr/records/dQw4w9WgXcQ_RickAstley-NeverGonnaGiveYouUp(OfficialVideo)(4KRemaster).mp4?apikey=${encodeURIComponent(q)}`;
         const response = await fetch(apiUrl);
         const json = await response.json();
 
