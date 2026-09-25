@@ -15,7 +15,7 @@ let madeMenu = `👋 *HELLOW, ${pushname}!* ❤️ welcome to CYBER X THENULA...
 
 🌟 *DEVELOPER DETAILS* 🌟
 ─────────────────────
-👨‍💻 *Developer:* CYBER THENUVA
+👨‍💻 *Developer:* THENULA AND DILSHAN
 🔞 *Age:* 19 Years Old
 🙈 *Location:* Personal Hai 😁
 🤖 *Status:* Simple WhatsApp Bot Developer
@@ -24,7 +24,7 @@ let madeMenu = `👋 *HELLOW, ${pushname}!* ❤️ welcome to CYBER X THENULA...
  💡 *Thank you for using my bot!*...
 
 
-> *⚡ Powered By CYBER THENUVA*`
+> *⚡ Powered By CYBER X THENULA*`
 
 await conn.sendMessage(from, {
     image: { url: 'https://i.ibb.co/7JWk0d08/11625411f042.jpg' },
