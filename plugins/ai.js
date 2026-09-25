@@ -12,20 +12,21 @@ cmd({
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-// 1. පරිශීලකයා ප්‍රශ්නයක් ඇතුළත් කර නැතිනම් පණිවිඩයක් පෙන්වීම
 if (!q) return reply("කරුණාකර AI එකෙන් ඇසීමට ප්‍රශ්නයක් ඇතුළත් කරන්න. (උදා: .ai hello)")
 
-// 2. API එකෙන් Response එක ලබා ගැනීම
-let data = await fetchJson(`https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(query)
+// ක්‍රමය 1: Zell API එක නව Parameter එකක් (`query=`) සහිතව උත්සාහ කිරීම
+let data = await fetchJson(`https://zellapi.autos{encodeURIComponent(q)}`)
 
-// 3. API Response එක ඇතුළේ result හෝ response ලෙස දත්ත ඇත්දැයි බැලීම (undefined වීම වැළැක්වීමට)
-let aiResponse = data.result || data.response || data.data || data.message;
+if (data && data.result) {
+    return reply(`${data.result}`)
+} 
 
-if (aiResponse) {
-    return reply(`${aiResponse}`)
+// ක්‍රමය 2: Zell API එක වැඩ නොකළහොත් Blackbox ChatGPT API එක භාවිතා කිරීම
+let fallbackData = await fetchJson(`https://giftedtech.my.id{encodeURIComponent(q)}`)
+if (fallbackData && fallbackData.results) {
+    return reply(`${fallbackData.results}`)
 } else {
-    // API එකෙන් text එකක් ආවේ නැතිනම් සම්පූර්ණ JSON එක stringify කර පෙන්වීම (Debug කරගැනීමට)
-    return reply(JSON.stringify(data))
+    return reply("කණගාටුයි, AI සේවාව මේ මොහොතේ කාර්යබහුලයි. පසුව උත්සාහ කරන්න.")
 }
 
 }catch(e){
