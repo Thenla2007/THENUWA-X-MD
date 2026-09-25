@@ -12,10 +12,24 @@ cmd({
 },
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-let data = await fetchJson(`https://zellapi.autos/ai/chatbot?text=${q}`)
-return reply(`${data.data}`)
+// 1. පරිශීලකයා ප්‍රශ්නයක් ඇතුළත් කර නැතිනම් පණිවිඩයක් පෙන්වීම
+if (!q) return reply("කරුණාකර AI එකෙන් ඇසීමට ප්‍රශ්නයක් ඇතුළත් කරන්න. (උදා: .ai hello)")
+
+// 2. API එකෙන් Response එක ලබා ගැනීම
+let data = await fetchJson(`https://zellapi.autos/ai/chatbot?text=${encodeURIComponent(q)}`)
+
+// 3. API Response එක ඇතුළේ result හෝ response ලෙස දත්ත ඇත්දැයි බැලීම (undefined වීම වැළැක්වීමට)
+let aiResponse = data.result || data.response || data.data || data.message;
+
+if (aiResponse) {
+    return reply(`${aiResponse}`)
+} else {
+    // API එකෙන් text එකක් ආවේ නැතිනම් සම්පූර්ණ JSON එක stringify කර පෙන්වීම (Debug කරගැනීමට)
+    return reply(JSON.stringify(data))
+}
+
 }catch(e){
 console.log(e)
-reply(`${e}`)
+reply(`Error: ${e.message || e}`)
 }
 })
