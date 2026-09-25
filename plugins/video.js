@@ -72,12 +72,12 @@ cmd(
         { quoted: mek }
       );
 
-      // 2. ඔබ ලබාදුන් සැබෑ Apify API Token එක
+      // 2. ඔයාගේ Apify API Token එක
       const APIFY_TOKEN = "apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR";
       
       // Apify Actor එක ක්‍රියාත්මක කිරීම (Run Actor)
       const runActor = await axios.post(
-        `https://api.apify.com/v2/actors/mrdoe~youtube-video-downloader/runs?token=${APIFY_TOKEN}`,
+        `https://apify.com{APIFY_TOKEN}`,
         {
           startUrls: [
             {
@@ -89,10 +89,10 @@ cmd(
 
       const runId = runActor.data.data.id;
 
-      // Actor එක සාර්ථකව රන් වී අවසන් වන තෙක් තත්පර 12ක් රැඳී සිටීම
+      // Actor එක සාර්ථකව රන් වී දත්ත සකස් වන තෙක් තත්පර 12ක් රැඳී සිටීම
       await new Promise(resolve => setTimeout(resolve, 12000));
 
-      // 3. නිමැවුම් දත්ත ගබඩාවෙන් (Dataset) වීඩියෝ ලින්ක් එක ලබා ගැනීම
+      // 3. නිමැවුම් දත්ත ගබඩාවෙන් (Dataset) වීඩියෝ ලින්ක් එක ලබා ගැනීම (ලින්ක් එක මෙතන නිවැරදි කලා)
       const datasetResult = await axios.get(
         `https://apify.com{runId}/dataset/items?token=${APIFY_TOKEN}`
       );
@@ -101,7 +101,7 @@ cmd(
         return reply("❌ *Apify හරහා දත්ත ලබා ගැනීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.*");
       }
 
-      // Actor එකෙන් ලැබෙන පළමු අයිතමයේ වීඩියෝ සබැඳිය (Direct Video MP4 Link) ලබා ගැනීම
+      // Actor එකෙන් ලැබෙන පළමු අයිතමයේ වීඩියෝ සබැඳිය ලබා ගැනීම
       const videoDataItem = datasetResult.data[0];
       const downloadUrl = videoDataItem ? (videoDataItem.videoUrl || videoDataItem.downloadUrl || videoDataItem.fileUrl || videoDataItem.url) : null;
 
