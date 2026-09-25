@@ -29,8 +29,8 @@ async (conn, mek, m, { from, quoted, q, reply, sender }) => {
             forwardingScore: 1000,
             isForwarded: true,
             forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363292876277898@newsletter',
-                newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+                newsletterJid: '120363403804248705@newsletter',
+                newsletterName: "THENUWA XMD",
                 serverMessageId: 143,
             },
         };
@@ -80,7 +80,7 @@ async (conn, mek, m, { from, quoted, q, reply, sender }) => {
 
 *🔗 Download Link:* ${selectedMod.link}
 
-🔰 *Powered by Hans Byte MD*`;
+🔰 *Powered by THENULWA XMD*`;
 
                 await conn.sendMessage(from, { 
                     text: modInfo,
