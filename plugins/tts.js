@@ -26,7 +26,7 @@ async (conn, mek, m, { from, q, reply, sender, pushname }) => { // 1. මෙත�
         }
         
         const voice = "Bianca"; // You can customize this
-        const res = await fetch(`https://davidcyriltech.my.id{encodeURIComponent(q)}&voice=${voice}`);
+        const res = await fetch(`https://google.com{encodeURIComponent(q)}&voice=${voice}`);
         const data = await res.json();
         
         if (!data.success) return reply("❌ *𝙁𝙖𝙞𝙡𝙚𝙙 𝙩𝙤 𝙜𝙚𝙣𝙚𝙧𝙖𝙩𝙚 𝙏𝙏𝙎.* ❌");
