@@ -1,6 +1,7 @@
 const { cmd } = require('../command');
-const { downloadMediaMessage } = require('../lib/msg.js');
+const { downloadMediaMessage } = require('@whiskeysockets/baileys'); // Baileys ලිබ්‍රරියෙන්ම කෙලින්ම downloadMediaMessage එක ගනිමු
 const config = require ('../config')
+
 cmd({
   pattern: 'vv',
   alias: ['viewonce'],
@@ -12,15 +13,45 @@ cmd({
   try {
     // Validate inputs
     if (!quoted) {
-      return reply('❌ Please reply to a message containing media');
+      return reply('❌ Please reply to a view-once message.');
     }
 
-    if (!quoted.imageMessage && !quoted.videoMessage) {
-      return reply('❌ Only image and video replies are supported');
+    // View Once මැසේජ් එක ඇතුලේ තියෙන නියම image හෝ video message එක වෙන් කර ගැනීම
+    let viewOnceContent = quoted;
+    
+    if (quoted.viewOnceMessageV2?.message) {
+      viewOnceContent = quoted.viewOnceMessageV2.message;
+    } else if (quoted.viewOnceMessageV2Extension?.message) {
+      viewOnceContent = quoted.viewOnceMessageV2Extension.message;
+    } else if (quoted.viewOnceMessage?.message) {
+      viewOnceContent = quoted.viewOnceMessage.message;
     }
 
-    // Download media
-    const media = await downloadMediaMessage(quoted, 'buffer');
+    // එය image එකක්ද video එකක්ද කියා තහවුරු කර ගැනීම
+    const isImage = viewOnceContent.imageMessage ? true : false;
+    const isVideo = viewOnceContent.videoMessage ? true : false;
+
+    if (!isImage && !isVideo) {
+      return reply('❌ Only view-once image and video replies are supported.');
+    }
+
+    // මීඩියා එක ඩවුන්ලෝඩ් කිරීමට නිවැරදි ඔබ්ජෙක්ට් එක සකසා ගැනීම
+    const mediaObj = {
+      key: quoted.key || m.message?.extendedTextMessage?.contextInfo?.stanzaId,
+      message: viewOnceContent
+    };
+
+    // Download media using Baileys built-in downloader
+    const media = await downloadMediaMessage(
+      mediaObj,
+      'buffer',
+      {},
+      {
+        logger: console,
+        reconnectMode: 'on'
+      }
+    );
+
     if (!media) {
       return reply('❌ Failed to download the media. Please try again!');
     }
@@ -37,13 +68,16 @@ cmd({
       }
     };
 
-    // Determine media type and resend with newsletter context
-    const mediaType = quoted.imageMessage ? 'image' : 'video';
+    // Determine media type and mimeType
+    const mediaType = isImage ? 'image' : 'video';
+    const mimeType = isImage ? viewOnceContent.imageMessage.mimetype : viewOnceContent.videoMessage.mimetype;
+
+    // Resend with newsletter context
     await robin.sendMessage(
       from,
       {
         [mediaType]: media,
-        mimetype: quoted.mimetype,
+        mimetype: mimeType,
         contextInfo: newsletterContext
       },
       { quoted: mek }
