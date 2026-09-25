@@ -1,145 +1,182 @@
-const { cmd, commands } = require("../command");
-const yts = require("yt-search");
-const axios = require("axios");
-const config = require("../config");
+const { cmd } = require('../command');
+const yts = require('yt-search');
+const fetch = require('node-fetch');
+const path = require('path');
 
-cmd(
-  {
-    pattern: "video",
-    alias: ["playvideo", "ytmp4"],
-    react: "🎬",
-    desc: "Download YouTube videos using Streamers Apify Actor.",
-    category: "download",
-    filename: __filename,
-  },
-  async (danuwa, mek, m, { from, quoted, body, args, q, pushname, reply }) => {
-    try {
-      if (!q) return reply("⚠️ *කරුණාකර වීඩියෝවක නමක් හෝ YouTube ලින්ක් එකක් ඇතුළත් කරන්න!*");
-
-      const targetJid = typeof from === 'string' ? from : (mek.key.remoteJid || String(from));
-
-      // 1. Loading පණිවිඩය යැවීම
-      const loadingMsg = await danuwa.sendMessage(targetJid, { 
-        text: `⚡ *CYBER THENUWA SEARCHING VIDEO...*` 
-      }, { quoted: mek });
-
-      const search = await yts(q);
-      if (!search.videos || search.videos.length === 0) {
-        return await danuwa.sendMessage(targetJid, { 
-          text: "❌ *වීඩියෝව සොයාගත නොහැකි විය!*", 
-          edit: loadingMsg.key 
-        });
-      }
-      
-      const data = search.videos[0];
-
-      // CYBER X THENULA ස්ටයිල් එකට සකස් කළ විස්තර පත්‍රිකාව
-      let detailsText = `👋 HELLOW ${pushname || "User"} ❤️ Welcome to\n`;
-      detailsText += `CYBER X THENULA\n\n`;
-      detailsText += `✅CYBER THENUWA X MD✅\n`;
-      detailsText += `╭───────────────────.★*\n`;
-      detailsText += `│  ◦ 📝 *Title :* ${data.title}\n`;
-      detailsText += `│  ◦ ⏱️ *Duration :* ${data.timestamp}\n`;
-      detailsText += `│  ◦ 📅 *Uploaded :* ${data.ago}\n`;
-      detailsText += `│  ◦ 👀 *Views :* ${data.views.toLocaleString()}\n`;
-      detailsText += `│  ◦ 🔗 *Url :* ${data.url}\n`;
-      detailsText += `╰───────────────────.★*\n\n`;
-      detailsText += `╭───────────────╼\n`;
-      detailsText += `│👨‍💻 CYBER-TEAM 🥷\n`;
-      detailsText += `╰───────────────╼\n\n`;
-      detailsText += `📢 *Join Our Channel:* https://whatsapp.com\n\n`;
-      detailsText += `📥 *DOWNLOADING VIDEO FILE VIA APIFY...* 📥\n`;
-      detailsText += `─── ── ─●●●─ ── ───\n\n\n`;
-
-      // සෙවුම් පණිවිඩය වෙනස් කර පින්තූරය සමඟ විස්තර යැවීම
-      await danuwa.sendMessage(targetJid, { text: `✅ *Video Found! Processing with Apify...*` }, { edit: loadingMsg.key });
-      
-      await danuwa.sendMessage(
-        targetJid,
-        { 
-          image: { url: data.thumbnail }, 
-          caption: detailsText,
-          contextInfo: {
-            forwardingScore: 999,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403804248705@newsletter', 
-                newsletterName: 'THENUWA XMD', 
-                serverMessageId: -1
-            }
-          }
-        },
-        { quoted: mek }
-      );
-
-      // 2. ඔයාගේ Apify API Token එක
-      const APIFY_TOKEN = "apify_api_o26QUamyP05T5mIlQUZ974yUGLJTed0dScHR";
-      
-      // Apify Actor එක ක්‍රියාත්මක කිරීම (Preferred format එක mp4 ලෙස සකසා ඇත)
-      const runActor = await axios.post(
-        `https://apify.com{APIFY_TOKEN}`,
-        {
-          searchQueries: [data.url],
-          downloadMode: "video",
-          preferredFormat: "mp4",
-          preferredQuality: "720p"
-        }
-      );
-
-      const runId = runActor.data.data.id;
-
-      // Actor එක රන් වී දත්ත සකස් වන තෙක් තත්පර 20ක් රැඳී සිටීම (YouTube එකට ටිකක් වෙලාව යන නිසා)
-      await new Promise(resolve => setTimeout(resolve, 20000));
-
-      // 3. නිමැවුම් දත්ත ගබඩාවෙන් (Dataset) වීඩියෝ ලින්ක් එක ලබා ගැනීම
-      const datasetResult = await axios.get(
-        `https://apify.com{runId}/dataset/items?token=${APIFY_TOKEN}`
-      );
-
-      if (!datasetResult.data || datasetResult.data.length === 0) {
-        return reply("❌ *Apify හරහා දත්ත ලබා ගැනීමට අපොහොසත් විය. කරුණාකර නැවත උත්සාහ කරන්න.*");
-      }
-
-      // ඔයා එවපු ලින්ක් එකේ තියෙන දත්ත ව්‍යුහයෙන් කෙලින්ම ලින්ක් එක කියවීම
-      const videoDataItem = datasetResult.data[0];
-      const downloadUrl = videoDataItem ? (videoDataItem.downloadedFileUrl || videoDataItem.videoUrl || videoDataItem.downloadUrl || videoDataItem.url) : null;
-
-      if (!downloadUrl) {
-        return reply("❌ *වීඩියෝ බාගත කිරීමේ සබැඳිය (Direct MP4 Link) සොයාගත නොහැකි විය.*");
-      }
-
-      // 4. වට්සැප් එකට වීඩියෝ (MP4) එක සමඟ යන Caption එක
-      let videoCaption = `✅ *DOWNLOAD SUCCESS* ✅\n`;
-      videoCaption += `╭───────────────────.★*\n`;
-      videoCaption += `│  ◦ 👤 *User :* ${pushname || "User"}\n`;
-      videoCaption += `│  ◦ 🎬 *Video :* ${data.title}\n`;
-      videoCaption += `│  ◦ 🎞 *Status :* Video File Sent\n`;
-      videoCaption += `╰───────────────────.★*\n\n`;
-      videoCaption += `📢 *Channel:* https://whatsapp.com\n`;
-      videoCaption += `> *©⚡ POWERED by CYBER THENUVA* 🚀\n\n\n`; 
-
-      await danuwa.sendMessage(
-        targetJid,
-        {
-          video: { url: downloadUrl },
-          mimetype: "video/mp4",
-          caption: videoCaption,
-          contextInfo: {
-            forwardingScore: 999,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-                newsletterJid: '120363403804248705@newsletter',
-                newsletterName: 'THENUWA XMD',
-                serverMessageId: -1
-            }
-          }
-        },
-        { quoted: mek }
-      );
-
-    } catch (error) {
-      console.log(error);
-      reply(`❌ *Error:* ${error.message || error} 😞`);
+// Configure newsletter context
+const newsletterContext = {
+    mentionedJid: [], // Can add specific JIDs if needed
+    forwardingScore: 1000,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+        newsletterJid: '120363292876277898@newsletter',
+        newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        serverMessageId: 143,
     }
-  }
-);
+};
+
+// Utility: Send error reply helper
+function sendError(reply, message) {
+    return reply(`*❌ ${message}*`);
+}
+
+// VIDEO COMMAND - accepts a prompt (title or URL)
+cmd({
+    pattern: "video",
+    alias: ['ytdl', 'youtube'],
+    react: "🎥",
+    desc: "Download video from YouTube by prompt or URL",
+    category: "download",
+    filename: __filename
+}, async (conn, mek, m, { from, q, reply, sender }) => {
+    const retryLimit = 3;
+    let attempt = 0;
+
+    const fetchVideo = async () => {
+        try {
+            if (!q) return sendError(reply, "Please provide a video title or YouTube URL");
+
+            let videoUrl = q;
+
+            // If input is not a direct YouTube URL, search for video
+            if (!q.includes('youtu')) {
+                const search = await yts(q);
+                const video = search.videos[0];
+                if (!video) return sendError(reply, "No results found");
+                videoUrl = video.url;
+            }
+
+            const messageContext = {
+                ...newsletterContext,
+                mentionedJid: [sender]
+            };
+
+            // Fetch video info from new API
+            const apiUrl = `https://api.apify.com/v2/key-value-stores/MbbSpfx7dYwDJGenr/records/dQw4w9WgXcQ_RickAstley-NeverGonnaGiveYouUp(OfficialVideo)(4KRemaster).mp4${encodeURIComponent(videoUrl)}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            if (!data.success || !data.result) {
+                return sendError(reply, "Failed to get video download info");
+            }
+
+            const { title, thumbnail, video_url, audi_quality, video_quality } = data.result;
+
+            const infoMsg = `
+╭════════════⊷❍
+│
+│ *🎥 Video Downloader*
+│──────────────────────
+│ 📌 Title: ${title}
+│ 🎞️ Quality: ${video_quality}
+│ 🎧 Audio Quality: ${audi_quality}
+╰──────────●●►
+*📥 Downloaded via HANS BYTE MD*`.trim();
+
+            await conn.sendMessage(from, {
+                image: { url: thumbnail },
+                caption: infoMsg,
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+            // Send video
+            await conn.sendMessage(from, {
+                video: { url: video_url },
+                mimetype: 'video/mp4',
+                caption: "*🎥 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+            // Send as document
+            await conn.sendMessage(from, {
+                document: { url: video_url },
+                mimetype: 'video/mp4',
+                fileName: `${title}.mp4`,
+                caption: "*📁 HANS BYTE MD*",
+                contextInfo: messageContext
+            }, { quoted: mek });
+
+        } catch (error) {
+            console.error('Video Error:', error);
+            attempt++;
+            if (attempt < retryLimit) {
+                console.log(`Retrying... Attempt ${attempt + 1}`);
+                await fetchVideo();
+            } else {
+                return sendError(reply, error.message);
+            }
+        }
+    };
+
+    await fetchVideo();
+});
+
+
+// YTMP4 COMMAND - only accepts direct YouTube URL, downloads video (same API, but must be URL)
+cmd({
+    pattern: "ytmp4",
+    alias: ['youtube', 'ytvid'],
+    react: "🎧",
+    desc: "Download video from YouTube URL",
+    category: "download",
+    filename: __filename
+}, async (conn, mek, m, { from, q, reply, sender }) => {
+    if (!q || !q.includes("youtube.com/watch") && !q.includes("youtu.be")) {
+        return sendError(reply, "Please provide a valid YouTube video URL");
+    }
+
+    try {
+        const apiUrl = `https://api.apify.com/v2/key-value-stores/MbbSpfx7dYwDJGenr/records/dQw4w9WgXcQ_RickAstley-NeverGonnaGiveYouUp(OfficialVideo)(4KRemaster).mp4${encodeURIComponent(q)}`;
+        const response = await fetch(apiUrl);
+        const json = await response.json();
+
+        if (!json.success || !json.result) {
+            return sendError(reply, "Failed to retrieve video info");
+        }
+
+        const { title, thumbnail, video_url, audi_quality, video_quality } = json.result;
+
+        const messageContext = {
+            ...newsletterContext,
+            mentionedJid: [sender]
+        };
+
+        const infoMsg = `
+╭════════════⊷❍
+│
+│ *🎥 YT Video Downloader*
+│──────────────────────
+│ 📌 Title: ${title}
+│ 🎞️ Quality: ${video_quality}
+│ 🎧 Audio Quality: ${audi_quality}
+╰──────────●●►
+*📥 Powered by HANS BYTE MD*`.trim();
+
+        await conn.sendMessage(from, {
+            image: { url: thumbnail },
+            caption: infoMsg,
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+        // Send video
+        await conn.sendMessage(from, {
+            video: { url: video_url },
+            mimetype: 'video/mp4',
+            caption: "*🎥 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+        // Send as document
+        await conn.sendMessage(from, {
+            document: { url: video_url },
+            mimetype: 'video/mp4',
+            fileName: `${title}.mp4`,
+            caption: "*📁 HANS BYTE MD*",
+            contextInfo: messageContext
+        }, { quoted: mek });
+
+    } catch (err) {
+        console.error("YTMP4 Error:", err);
+        return sendError(reply, err.message);
+    }
+});
