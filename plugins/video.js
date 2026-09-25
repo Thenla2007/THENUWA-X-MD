@@ -17,7 +17,7 @@ serverMessageId: 143,
 
 // Utility: Send error reply helper
 function sendError(reply, message) {
-return reply(*❌ ${message}*);
+return reply(`*❌ ${message}*`);
 } 
 
 // Helper Function: Trigger Apify Actor and Extract Direct Download URL
