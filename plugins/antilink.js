@@ -13,7 +13,6 @@ cmd({
   isGroup,
   isAdmins,
   isBotAdmins,
-  reply,
   sender
 }) => {
   try {
@@ -37,7 +36,6 @@ cmd({
 });
 
 // ================= ANTI-LINK TOGGLE COMMAND =================
-// .antilink හෝ .anti_link ලෙස Group Admin ට මෙය On/Off කල හැක
 cmd({
   pattern: "antilink",
   alias: ["anti_link"],
@@ -87,7 +85,7 @@ cmd({
       /https?:\/\/(?:api\.whatsapp\.com|wa\.me)\/\S+/gi,
       /wa\.me\/\S+/gi,
       /https?:\/\/(?:t\.me|telegram\.me)\/\S+/gi,
-      /https?:\/\/(?:www\.)?\S+\.[a-z]{2,6}\/\S*/gi, // පොදු වෙබ් අඩවි ලින්ක් සඳහා
+      /https?:\/\/(?:www\.)?\S+\.[a-z]{2,6}\/\S*/gi, 
       /https?:\/\/(?:www\.)?twitter\.com\/\S+/gi,
       /https?:\/\/(?:www\.)?linkedin\.com\/\S+/gi,
       /https?:\/\/(?:whatsapp\.com|channel\.me)\/\S+/gi,
@@ -107,6 +105,9 @@ cmd({
       console.error("Failed to delete message:", err);
     }
 
+    // Number එකෙන් සැබෑ ID එක වෙන් කර ගැනීම (Fix: split කරන ක්‍රමය නිවැරදි කිරීම)
+    const userJid = sender.includes('@') ? sender.split('@')[0] : sender;
+
     // Warning ලබා දීමේ කොටස
     global.warnings[sender] = (global.warnings[sender] || 0) + 1;
     const warningCount = global.warnings[sender];
@@ -115,7 +116,7 @@ cmd({
       await conn.sendMessage(from, {
         text: `*⚠️LINKS ARE NOT ALLOWED⚠️*\n` +
               `*╭────⬡ WARNING ⬡────*\n` +
-              `*├▢ USER :* @${sender.split('@')[0]}\n` +
+              `*├▢ USER :* @${userJid}\n` +
               `*├▢ COUNT : ${warningCount} / 3*\n` +
               `*├▢ REASON : LINK SENDING*\n` +
               `*╰────────────────*`,
@@ -124,7 +125,7 @@ cmd({
     } else {
       // 4 වෙනි වතාවේදී සමූහයෙන් ඉවත් කිරීම (Kick)
       await conn.sendMessage(from, {
-        text: `*🚫 @${sender.split('@')[0]} HAS BEEN REMOVED - WARN LIMIT EXCEEDED!*`,
+        text: `*🚫 @${userJid} HAS BEEN REMOVED - WARN LIMIT EXCEEDED!*`,
         mentions: [sender]
       });
       await conn.groupParticipantsUpdate(from, [sender], "remove");
