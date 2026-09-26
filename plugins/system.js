@@ -12,14 +12,19 @@ cmd({
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
-let status = `
-❖ 𝐒𝐘𝐒𝐓𝐄𝐌 𝐈𝐍𝐅𝐎𝐑𝐌𝐀𝐓𝐈𝐎𝐍
+let status = `*👋 HELLOW...${pushname}* ❤️ welcome to CYBER THENULA...
 
-⏰ UPTIME: ${runtime(process.uptime())}
-📟 RAM USAGE: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-🖥️ HOST NAME: ${os.hostname()}
-👨‍💻 BOT OWNER: THENULA THISAN
-`
+
+*✅ CYBER THENUWA X MD ✅*
+
+*╭──────────●●►*
+*┋ ⏰ UPTIME:* ${runtime(process.uptime())}
+*┋ 📟 RAM USAGE:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB
+*┋ 🖥️ HOST NAME:* ${os.hostname()}
+*┋ 👨‍💻 BOT OWNER:* THENULA THISAN
+*╰──────────●●►*
+
+> ⚡powered by CYBER THENULA`
 return reply(`${status}`)
 }catch(e){
 console.log(e)
@@ -39,8 +44,9 @@ cmd({
 async(conn, mek, m,{from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 
-let status = `😇𝚁𝚄𝙽𝚃𝙸𝙼𝙴😇:  ${runtime(process.uptime())}`
+let status = `*👋 HELLOW...${pushname}* ❤️ welcome to CYBER THENULA...
 
+😇𝚁𝚄𝙽𝚃𝙸𝙼𝙴😇:  ${runtime(process.uptime())} > ⚡powered by CYBER THENUVA`
 
 return reply(`${status}`)
 }catch(e){
