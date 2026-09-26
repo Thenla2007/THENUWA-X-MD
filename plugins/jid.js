@@ -41,12 +41,11 @@ async (conn, mek, m, {
             from,
             {
                 text:
-`╭━━━〔 🆔 CYBER XMD JID 🆔 〕━━━╮
-┃
-┃ 👤 *JID:*
-┃ ${jid}
-┃
-╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯`,
+`✅ CYBER XMD ✅
+
+*╭──────────────●●►*
+*┋* 👤 *JID:* ${jid}
+*╰──────────────●●►*`,
                 contextInfo: {
 
                     mentionedJid: [
