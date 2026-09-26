@@ -57,11 +57,33 @@ cmd(
 
       reply("⬇️ *Downloading MP3 file...* ⏳");
 
-      // 🔄 High-stability Backend API Endpoint එක හරහා ඩවුන්ලෝඩ් කිරීම
-      const res = await axios.get(`https://vreden.web.id{encodeURIComponent(video.url)}`).catch(() => null);
-      const downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url || res?.data?.result?.url;
+      let downloadUrl = null;
 
-      if (!downloadUrl) return reply("❌ *සින්දුව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
+      // 🔄 API 1: Cobalt Engine API (High Speed)
+      try {
+        const res = await axios.post("https://cobalt.tools", {
+          url: video.url,
+          downloadMode: "audio",
+          audioFormat: "mp3"
+        }, {
+          headers: { "Accept": "application/json", "Content-Type": "application/json" }
+        });
+        downloadUrl = res?.data?.url;
+      } catch (e) {
+        console.log("Cobalt Audio API Failed, trying backup...");
+      }
+
+      // 🔄 API 2: Backup YTDL API
+      if (!downloadUrl) {
+        try {
+          const res = await axios.get(`https://giftedtech.my.id{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.download_url || res?.data?.url;
+        } catch (e) {
+          console.log("Backup Audio API Failed too.");
+        }
+      }
+
+      if (!downloadUrl) return reply("❌ *සින්දුව බාගත කිරීම අසාර්ථක විය! සර්වර් සියල්ලම කාර්යබහුලයි. කරුණාකර නැවත උත්සාහ කරන්න.*");
 
       await bot.sendMessage(
         from,
@@ -106,9 +128,30 @@ cmd(
 
       reply("⬇️ *Downloading Video file...* ⏳");
 
-      // 🔄 High-stability Backend API Endpoint එක හරහා වීඩියෝව බාගත කිරීම
-      const res = await axios.get(`https://vreden.web.id{encodeURIComponent(video.url)}`).catch(() => null);
-      const downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url || res?.data?.result?.url;
+      let downloadUrl = null;
+
+      // 🔄 API 1: Cobalt Video Engine (No-Watermark Direct Link)
+      try {
+        const res = await axios.post("https://cobalt.tools", {
+          url: video.url,
+          videoQuality: "360"
+        }, {
+          headers: { "Accept": "application/json", "Content-Type": "application/json" }
+        });
+        downloadUrl = res?.data?.url;
+      } catch (e) {
+        console.log("Cobalt Video API Failed, trying backup...");
+      }
+
+      // 🔄 API 2: Backup YTDL Video API
+      if (!downloadUrl) {
+        try {
+          const res = await axios.get(`https://giftedtech.my.id{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.download_url || res?.data?.url;
+        } catch (e) {
+          console.log("Backup Video API Failed too.");
+        }
+      }
 
       if (!downloadUrl) return reply("❌ *වීඩියෝව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
 
@@ -144,8 +187,29 @@ cmd(
 
       reply("⬇️ *Downloading TikTok video... Please wait!* ⏳");
 
-      const res = await axios.get(`https://vreden.web.id{encodeURIComponent(q)}`).catch(() => null);
-      const downloadUrl = res?.data?.result?.video || res?.data?.result?.nowatermark || res?.data?.url;
+      let downloadUrl = null;
+
+      // 🔄 API 1: Cobalt TikTok Downloader
+      try {
+        const res = await axios.post("https://cobalt.tools", {
+          url: q
+        }, {
+          headers: { "Accept": "application/json", "Content-Type": "application/json" }
+        });
+        downloadUrl = res?.data?.url;
+      } catch (e) {
+        console.log("Cobalt TikTok API Failed, trying backup...");
+      }
+
+      // 🔄 API 2: Backup TikTok API
+      if (!downloadUrl) {
+        try {
+          const res = await axios.get(`https://giftedtech.my.id{encodeURIComponent(q)}`);
+          downloadUrl = res?.data?.result?.video_hd || res?.data?.result?.video;
+        } catch (e) {
+          console.log("Backup TikTok API Failed.");
+        }
+      }
 
       if (!downloadUrl) return reply("❌ *TikTok වීඩියෝව බාගත කිරීම අසාර්ථක විය!*");
 
