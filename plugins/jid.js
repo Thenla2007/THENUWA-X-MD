@@ -41,10 +41,12 @@ async (conn, mek, m, {
             from,
             {
                 text:
-`✅CYBER THENUVA X MD✅
+`👋 Hi ${pushname}
 
+
+✅CYBER THENUVA X MD✅
 *╭──────────────●●►*
-*┋* 👤 *JID:* ${jid}
+*┋* 🆔 *JID:* ${jid}
 *╰──────────────●●►*`,
                 contextInfo: {
 
