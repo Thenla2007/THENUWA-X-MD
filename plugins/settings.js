@@ -10,8 +10,15 @@ cmd({
   filename: __filename
 }, async (conn, m, store, { from, isGroup, isAdmins, reply, sender }) => {
   try {
-    // ආරක්ෂක පියවර: Settings වෙනස් කළ හැක්කේ බොට් අයිතිකරුට (Owner) පමණි
-    const isOwner = sender.split('@')[0] === config.OWNER_NUMBER || sender.split('@')[0] === config.DEV;
+    // 🛠️ WhatsApp ID එකෙන් සැබෑ දුරකථන අංකය පමණක් වෙන් කර ගැනීම (උදා: 94783747285)
+    const senderNumber = sender.includes('@') ? sender.split('@')[0] : sender;
+    
+    // 🎯 ඔබ ලබා දුන් නිශ්චිත දුරකථන අංකය පරීක්ෂා කිරීම
+    const allowedNumber = "94783747285";
+    
+    // බොට් අයිතිකරු, ඩිවෙලොපර් හෝ ඔබ ලබා දුන් අංකය දැයි පරීක්ෂා කිරීම
+    const isOwner = senderNumber === allowedNumber || senderNumber === config.OWNER_NUMBER || senderNumber === config.DEV;
+    
     if (!isOwner) return reply("❌ *මෙම විධානය භාවිතා කළ හැක්කේ බොට් අයිතිකරුට (Owner) පමණි!*");
 
     // Config අගයන් අනුව ✅ හෝ ❌ ලකුණු සකස් කිරීම
@@ -59,10 +66,14 @@ cmd({
   filename: __filename
 }, async (conn, m, store, { from, q, reply, sender }) => {
   try {
-    const isOwner = sender.split('@')[0] === config.OWNER_NUMBER || sender.split('@')[0] === config.DEV;
+    // 🛠️ WhatsApp ID එකෙන් සැබෑ දුරකථන අංකය පමණක් වෙන් කර ගැනීම
+    const senderNumber = sender.includes('@') ? sender.split('@')[0] : sender;
+    const allowedNumber = "94783747285";
+    
+    const isOwner = senderNumber === allowedNumber || senderNumber === config.OWNER_NUMBER || senderNumber === config.DEV;
     if (!isOwner) return reply("❌ *මෙම විධානය භාවිතා කළ හැක්කේ බොට් අයිතිකරුට (Owner) පමණි!*");
 
-    if (!q) return reply(`💡 *භාවිතා කරන ආකාරය:*\n${config.PREFIX}set [Key] [true/false]\n\n*Example:* _${config.PREFIX}set antilink true_`);
+    if (!q) return reply(`💡 *💡 භාවිතා කරන ආකාරය:*\n${config.PREFIX}set [Key] [true/false]\n\n*Example:* _${config.PREFIX}set antilink true_`);
 
     const args = q.split(" ");
     if (args.length < 2) return reply("❌ කරුණාකර අගය (true හෝ false) ඇතුළත් කරන්න.");
@@ -77,7 +88,7 @@ cmd({
     let success = false;
     let settingName = "";
 
-    // Key එක අනුව config.js එකේ අගයන් වෙනස් කිරීම සිතියම් ගත කිරීම
+    // Key එක අනුව config.js එකේ අගයන් වෙනස් කිරීම
     switch (key) {
       case "antilink":
         config.ANTI_LINK = value;
@@ -140,7 +151,7 @@ cmd({
 
     if (success) {
       const displayStatus = value === "true" ? "✅ ON (Enabled)" : "❌ OFF (Disabled)";
-      return reply(`⚙️ *SUCCESS:* **${settingName}** සාර්ථකව ${displayStatus} කරන ලදී.`);
+      return reply(`⚙️ *SUCCESS:* *${settingName}* සාර්ථකව ${displayStatus} කරන ලදී.`);
     } else {
       return reply("❌ වැරදි Key එකක්. නිවැරදි Key එක බලාගැනීමට **.setting** ටයිප් කරන්න.");
     }
