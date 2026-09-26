@@ -10,25 +10,12 @@ cmd(
     filename: __filename,
   },
 
-  async (
-    robin,
-    mek,
-    m,
-    {
-      from,
-      q,
-      sender,
-      reply
-    }
-  ) => {
-
+  async (robin, mek, m, { from, q, sender, reply }) => {
     try {
-
       if (!q) {
         return reply("*Please provide an anime link.* 🎭");
       }
 
-      // Newsletter context
       const contextInfo = {
         mentionedJid: [sender],
         forwardingScore: 999,
@@ -40,73 +27,132 @@ cmd(
         }
       };
 
-      // Get anime details
       const data = await getep(q);
 
-      // Check API response
+      // IMPORTANT: See actual API response
+      console.log(
+        "================ ANIME API RESPONSE ================"
+      );
+      console.log(JSON.stringify(data, null, 2));
+      console.log(
+        "======================================================"
+      );
+
       if (!data) {
         return reply(
-          "❌ *Anime API Error*\n\n" +
-          "API එකෙන් response එකක් ලැබුණේ නැහැ."
+          "❌ Anime API එකෙන් response එකක් ලැබුණේ නැහැ."
         );
       }
 
-      const result = data.result;
-      const episodeList = data.results;
+      /*
+       * Try different possible response structures
+       */
 
-      // Check anime details
-      if (!result) {
-        console.log("Anime API Response:", data);
+      const result =
+        data.result ||
+        data.data ||
+        data.anime ||
+        data.info ||
+        data;
 
-        return reply(
-          "❌ *Anime Details Error*\n\n" +
-          "Anime details ලබාගන්න බැරි වුණා."
-        );
+      let episodes =
+        data.results ||
+        data.episodes ||
+        data.episode ||
+        result.episodes ||
+        [];
+
+      if (!Array.isArray(episodes)) {
+        episodes = [];
       }
 
-      // Make sure episode list is an array
-      const episodes = Array.isArray(episodeList)
-        ? episodeList
-        : [];
+      /*
+       * Get values from different possible field names
+       */
 
-      // Anime details
+      const title =
+        result.title ||
+        result.name ||
+        result.animeName ||
+        result.anime_name ||
+        "Unknown";
+
+      const date =
+        result.date ||
+        result.releaseDate ||
+        result.release_date ||
+        result.year ||
+        "Unknown";
+
+      const imdb =
+        result.imdb ||
+        result.rating ||
+        result.score ||
+        "N/A";
+
+      const totalEpisodes =
+        result.epishodes ||
+        result.episodes ||
+        result.totalEpisodes ||
+        result.total_episodes ||
+        episodes.length ||
+        "N/A";
+
+      const image =
+        result.image ||
+        result.img ||
+        result.thumbnail ||
+        result.poster ||
+        "N/A";
+
       let detailsMessage =
         `🎬 *ANIME DETAILS* 🎬\n\n` +
-        `📌 *Title:* ${result.title || "Unknown"}\n` +
-        `📅 *Release Date:* ${result.date || "Unknown"}\n` +
-        `⭐ *IMDb Rating:* ${result.imdb || "N/A"}\n` +
-        `🎥 *Total Episodes:* ${result.epishodes || episodes.length || "N/A"}\n` +
-        `🖼️ *Image:* ${result.image || "N/A"}\n\n`;
+        `📌 *Title:* ${title}\n` +
+        `📅 *Release Date:* ${date}\n` +
+        `⭐ *IMDb Rating:* ${imdb}\n` +
+        `🎥 *Total Episodes:* ${totalEpisodes}\n` +
+        `🖼️ *Image:* ${image}\n\n`;
 
-      // Episodes
       detailsMessage += `🎬 *EPISODES* 🎬\n\n`;
 
       if (episodes.length === 0) {
 
         detailsMessage +=
-          "❌ Episode list එකක් හම්බ වුණේ නැහැ.";
+          "❌ Episode list එකක් හම්බ වුණේ නැහැ.\n\n" +
+          "🔍 API response එක console එකේ check කරන්න.";
 
       } else {
 
         episodes.forEach((episode, index) => {
 
-          const epNumber =
-            episode.episode ||
-            episode.ep ||
-            index + 1;
+          if (typeof episode === "string") {
 
-          const epUrl =
-            episode.url ||
-            episode.link ||
-            "N/A";
+            detailsMessage +=
+              `📺 *Episode ${index + 1}*\n` +
+              `🔗 ${episode}\n\n`;
 
-          detailsMessage +=
-            `📺 *Episode ${epNumber}*\n` +
-            `🔗 ${epUrl}\n\n`;
+          } else {
+
+            const epNumber =
+              episode.episode ||
+              episode.ep ||
+              episode.number ||
+              index + 1;
+
+            const epUrl =
+              episode.url ||
+              episode.link ||
+              episode.href ||
+              episode.download ||
+              "N/A";
+
+            detailsMessage +=
+              `📺 *Episode ${epNumber}*\n` +
+              `🔗 ${epUrl}\n\n`;
+          }
         });
       }
 
-      // Send message
       await robin.sendMessage(
         from,
         {
@@ -120,11 +166,13 @@ cmd(
 
     } catch (e) {
 
-      console.error("ANIME DETAILS ERROR:", e);
+      console.error(
+        "❌ ANIME DETAILS ERROR:",
+        e
+      );
 
       return reply(
-        "❌ *Anime Details Error*\n\n" +
-        `${e.message || "Unknown error"}`
+        `❌ *Anime Details Error*\n\n${e.message || "Unknown error"}`
       );
     }
   }
