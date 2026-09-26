@@ -130,10 +130,7 @@ const port = process.env.PORT || 8000;
   });
   //============================== 
           
-  //=============readstatus=======
-        
-
-    conn.ev.on('messages.upsert', async(chatUpdate) => {
+    conn.ev.on('messages.upsert', async (chatUpdate) => {
         try {
             // 🎯 1. ලැබෙන මැසේජ් එක 'mek' ලෙස නිවැරදිව ලබා ගැනීම
             if (!chatUpdate.messages || chatUpdate.messages.length === 0) return;
@@ -168,6 +165,8 @@ const port = process.env.PORT || 8000;
             }
 
             // 📩 3. සාමාන්‍ය CHAT MESSAGES සඳහා වන කොටස
+            
+            // 🛠️ CRITICAL FIX: getContentType එක සාමාන්‍ය function එකක් ලෙස අර්ථ දැක්වීම
             const getContentType = (message) => {
                 if (!message) return undefined;
                 const keys = Object.keys(message);
@@ -182,6 +181,8 @@ const port = process.env.PORT || 8000;
                 ? mek.message.ephemeralMessage.message 
                 : mek.message;
 
+            // 🛠️ LINE 228 FIXED: දැන් මුළු messages.upsert එකම async(chatUpdate) තුළ පවතින නිසා 'await' එක නිවැරදිව ක්‍රියා කරයි!
+            const botNumber2 = await jidNormalizedUser(conn.user.id);
             const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : [];
 
             if (config.READ_MESSAGE === 'true' || config.READ_MESSAGE === true) {
@@ -208,7 +209,7 @@ const port = process.env.PORT || 8000;
             console.error("❌ Core Messages Upsert Error: ", err);
         }
     });
-}
+
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
   const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
