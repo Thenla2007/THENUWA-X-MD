@@ -205,9 +205,8 @@ const port = process.env.PORT || 8000;
             
             // 🚀 බොට්ගේ අනෙකුත් Plugins/Commands ක්‍රියාත්මක වන ප්‍රධාන handler එක මෙතැනට පැමිණේ
 
-        } catch (err) {
-            console.error("❌ Core Messages Upsert Error: ", err);
-        }
+        // catch ඉවත් කරන ලදී
+
   const type = getContentType(mek.message);
   const from = mek.key.remoteJid;	
   const quoted = type == 'extendedTextMessage' && mek.message?.extendedTextMessage?.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
