@@ -1,6 +1,8 @@
 const { cmd } = require('../command')
-const { downloadMediaMessage } = require('@whiskeysockets/baileys')
+const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
+const { generateWAMessageFromContent } = require('@whiskeysockets/baileys')
 const sharp = require('sharp')
+const fs = require('fs')
 
 cmd({
     pattern: 'sticker',
@@ -10,47 +12,85 @@ cmd({
     category: 'convert',
     filename: __filename
 },
-async (conn, mek, m, { from, quoted, reply }) => {
+async (conn, mek, m, { from, reply }) => {
 
     try {
 
-        // Reply message එක check කිරීම
+        let quoted = null
+
+        // Reply message detect
+        if (m.quoted) {
+            quoted = m.quoted
+        }
+
+        // Alternative quoted detect
+        if (!quoted && mek.quoted) {
+            quoted = mek.quoted
+        }
+
         if (!quoted) {
             return reply(
-                '🧩 *STICKER*\n\n' +
-                '📸 Image එකකට reply කරලා\n' +
-                '`.sticker` කියලා send කරන්න.'
+                '❌ *Image එකකට reply කරන්න.*\n\n' +
+                '📸 Image එකක් send කරලා ඒකට reply කර\n' +
+                '`.sticker` යවන්න.'
             )
         }
 
+        // MIME detect
         const mime =
             quoted.mimetype ||
             quoted.msg?.mimetype ||
+            quoted.message?.imageMessage?.mimetype ||
             ''
 
-        // Image only
-        if (!mime.startsWith('image/')) {
+        console.log('STICKER MIME:', mime)
+
+        if (!mime || !mime.startsWith('image/')) {
             return reply(
-                '❌ *Image එකකට reply කරන්න.*\n\n' +
-                '📸 Image → Reply → `.sticker`'
+                '❌ *Reply කරලා තියෙන්නේ Image එකක් නෙවෙයි.*\n\n' +
+                '📸 Image එකකට reply කරලා `.sticker` යවන්න.'
             )
         }
 
         await reply('⏳ *Sticker එක හදමින්...*')
 
+        let imageMessage = null
+
+        // Different Baileys message structures
+        if (quoted.message?.imageMessage) {
+            imageMessage = quoted.message.imageMessage
+        }
+
+        if (quoted.msg && quoted.msg.mimetype?.startsWith('image/')) {
+            imageMessage = quoted.msg
+        }
+
+        if (!imageMessage && quoted.imageMessage) {
+            imageMessage = quoted.imageMessage
+        }
+
+        if (!imageMessage) {
+            return reply(
+                '❌ Image message එක detect කරගන්න බැරි වුණා.'
+            )
+        }
+
         // Download image
-        const buffer = await downloadMediaMessage(
-            quoted,
-            'buffer',
-            {},
-            {
-                logger: undefined,
-                reuploadRequest: conn.updateMediaMessage
-            }
+        const stream = await downloadContentFromMessage(
+            imageMessage,
+            'image'
         )
 
-        if (!buffer) {
-            return reply('❌ Image එක download කරගන්න බැරි වුණා.')
+        let buffer = Buffer.from([])
+
+        for await (const chunk of stream) {
+            buffer = Buffer.concat([buffer, chunk])
+        }
+
+        if (!buffer.length) {
+            return reply(
+                '❌ Image එක download කරගන්න බැරි වුණා.'
+            )
         }
 
         // Convert to WebP
@@ -82,11 +122,19 @@ async (conn, mek, m, { from, quoted, reply }) => {
 
     } catch (error) {
 
-        console.error('STICKER ERROR:', error)
+        console.error(
+            '================ STICKER ERROR ================'
+        )
+
+        console.error(error)
+
+        console.error(
+            '================================================'
+        )
 
         return reply(
             '❌ *Sticker Error*\n\n' +
-            error.message
+            String(error.message || error)
         )
     }
 })
