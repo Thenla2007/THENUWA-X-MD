@@ -26,44 +26,6 @@ async function getYoutube(query) {
   }
 }
 
-// 📥 Y2Mate Direct Scraper Function (කිසිදා ක්‍රෑෂ් නොවන ස්ථාවර සිස්ටම් එක)
-async function y2mateScrape(youtubeUrl, type = "mp4", quality = "360p") {
-  try {
-    const analyzeRes = await axios.post("https://tomp3.cc", new URLSearchParams({
-      query: youtubeUrl,
-      vt: "home"
-    }), {
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" }
-    });
-
-    const vidId = analyzeRes.data?.vid;
-    const links = analyzeRes.data?.links?.[type];
-    if (!vidId || !links) return null;
-
-    // නිවැරදි Quality key එක සොයා ගැනීම (උදා: 'mp3128' හෝ '360p')
-    let k = Object.keys(links)[0];
-    if (type === "mp4") {
-      const match = Object.values(links).find(q => q.q === quality || q.q.includes(quality));
-      if (match) k = match.k;
-    } else {
-      const match = Object.values(links).find(q => q.q === "128kbps" || q.q.includes("128"));
-      if (match) k = match.k;
-    }
-
-    const convertRes = await axios.post("https://tomp3.cc", new URLSearchParams({
-      vid: vidId,
-      k: k
-    }), {
-      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" }
-    });
-
-    return convertRes.data?.dlink || null;
-  } catch (e) {
-    console.error("Y2Mate Scraping Error:", e);
-    return null;
-  }
-}
-
 // 🎵 YTMP3 (Song) Downloader Command
 cmd(
   {
@@ -95,20 +57,23 @@ cmd(
 
       reply("⬇️ *Downloading MP3 file...* ⏳");
 
-      // 🔄 1. Y2Mate Direct Scraper එක මඟින් උත්සාහ කිරීම
-      let downloadUrl = await y2mateScrape(video.url, "mp3");
+      let downloadUrl = null;
 
-      // 🔄 2. Backup Fallback: Cobalt API Engine
+      // 🔄 API 1: New Custom YTDL Server 2026
+      try {
+        const res = await axios.get(`https://bk9.fun{encodeURIComponent(video.url)}`);
+        downloadUrl = res?.data?.BK9?.audio || res?.data?.result?.audio;
+      } catch (e) {
+        console.log("BK9 Audio Engine Failed, trying next...");
+      }
+
+      // 🔄 API 2: Auto Backup Engine 2
       if (!downloadUrl) {
         try {
-          const res = await axios.post("https://cobalt.tools", {
-            url: video.url,
-            downloadMode: "audio",
-            audioFormat: "mp3"
-          }, { headers: { "Accept": "application/json" } });
-          downloadUrl = res?.data?.url;
+          const res = await axios.get(`https://agatz.xyz{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.data?.url;
         } catch (e) {
-          console.log("Cobalt Backup Failed.");
+          console.log("Agatz Audio Engine Failed.");
         }
       }
 
@@ -157,19 +122,23 @@ cmd(
 
       reply("⬇️ *Downloading Video file...* ⏳");
 
-      // 🔄 1. Y2Mate Direct Scraper එක මඟින් උත්සාහ කිරීම
-      let downloadUrl = await y2mateScrape(video.url, "mp4", "360p");
+      let downloadUrl = null;
 
-      // 🔄 2. Backup Fallback: Cobalt API Engine
+      // 🔄 API 1: New Custom YTDL Server 2026
+      try {
+        const res = await axios.get(`https://bk9.fun{encodeURIComponent(video.url)}`);
+        downloadUrl = res?.data?.BK9?.video || res?.data?.result?.video;
+      } catch (e) {
+        console.log("BK9 Video Engine Failed, trying next...");
+      }
+
+      // 🔄 API 2: Auto Backup Engine 2
       if (!downloadUrl) {
         try {
-          const res = await axios.post("https://cobalt.tools", {
-            url: video.url,
-            videoQuality: "360"
-          }, { headers: { "Accept": "application/json" } });
-          downloadUrl = res?.data?.url;
+          const res = await axios.get(`https://agatz.xyz{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.data?.url;
         } catch (e) {
-          console.log("Cobalt Backup Failed.");
+          console.log("Agatz Video Engine Failed.");
         }
       }
 
