@@ -41,7 +41,7 @@ async (conn, mek, m, {
             from,
             {
                 text:
-`👋 Hi ${pushname}
+`👋 HELLOW...*${pushname || 'User'}* ❤️ Welcome to CYBER X THENULA
 
 
 ✅CYBER THENUVA X MD✅
