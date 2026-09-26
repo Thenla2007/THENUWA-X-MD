@@ -28,35 +28,49 @@ async function getYoutube(query) {
   }
 }
 
-// 📥 Apify හරහා YouTube බාගත කිරීමේ පොදු Function එක
-async function downloadViaApify(videoUrl, mode = "video") {
+// 📥 Apify හරහා නිවැරදිව බලා සිට බාගත කරන Function එක
+async function downloadViaApify(videoUrl, mode = "audio") {
   try {
-    // Apify YouTube Downloader Actor එක Run කිරීම
+    // 1. Apify Actor එක Run කිරීම (epctex/youtube-video-downloader භාවිතා කර ඇත)
     const runResponse = await axios.post(
       `https://apify.com{APIFY_TOKEN}`,
       {
         urls: [videoUrl],
-        downloadMode: mode, // 'video' හෝ 'audio'
+        downloadMode: mode,
         videoQuality: "360p"
       },
       { headers: { "Content-Type": "application/json" } }
     );
 
+    const runId = runResponse?.data?.data?.id;
     const defaultDatasetId = runResponse?.data?.data?.defaultDatasetId;
-    if (!defaultDatasetId) return null;
+    if (!runId || !defaultDatasetId) return null;
 
-    // ඩවුන්ලෝඩ් එක ඉවර වෙනකම් තත්පර කිහිපයක් බලා සිටීම
-    await new Promise(resolve => setTimeout(resolve, 6000));
+    // 2. Loop එකක් මඟින් Apify Run එක ඉවර වනතුරු උපරිම තත්පර 30ක් බලා සිටීම (Polling)
+    let isFinished = false;
+    for (let i = 0; i < 10; i++) {
+      await new Promise(resolve => setTimeout(resolve, 3000)); // තත්පර 3ක් නවතී
+      const checkStatus = await axios.get(`https://apify.com{runId}?token=${APIFY_TOKEN}`);
+      if (checkStatus?.data?.data?.status === "SUCCEEDED") {
+        isFinished = true;
+        break;
+      }
+    }
 
-    // Dataset එකෙන් ඩවුන්ලෝඩ් ලින්ක් එක ලබා ගැනීම
+    if (!isFinished) return null;
+
+    // 3. Dataset එකෙන් ලින්ක් එක නිවැරදිව ලබා ගැනීම
     const datasetResponse = await axios.get(
       `https://apify.com{defaultDatasetId}/items?token=${APIFY_TOKEN}`
     );
 
-    const item = datasetResponse?.data?.[0];
-    return item?.downloadUrl || item?.url || null;
+    const items = datasetResponse?.data;
+    if (items && items.length > 0) {
+      return items[0].downloadUrl || items[0].url || items[0].fileUrl || null;
+    }
+    return null;
   } catch (error) {
-    console.error("Apify Download Error:", error);
+    console.error("Apify Downloader Error:", error);
     return null;
   }
 }
@@ -94,17 +108,17 @@ cmd(
 
       let downloadUrl = await downloadViaApify(video.url, "audio");
 
-      // 🔄 Fallback: Apify වැඩ නොකලොත් Cobalt සර්වර් එක භාවිතා කිරීම
+      // 🔄 Backup Fallback: Apify හි ගැටලුවක් වුවහොත් Cobalt API භාවිතා කිරීම
       if (!downloadUrl) {
         try {
           const res = await axios.post("https://cobalt.tools", {
             url: video.url,
             downloadMode: "audio",
             audioFormat: "mp3"
-          });
+          }, { headers: { "Accept": "application/json" } });
           downloadUrl = res?.data?.url;
         } catch (e) {
-          console.log("Cobalt Backup Failed.");
+          console.log("Cobalt Backup Audio Failed.");
         }
       }
 
@@ -155,16 +169,16 @@ cmd(
 
       let downloadUrl = await downloadViaApify(video.url, "video");
 
-      // 🔄 Fallback: Apify වැඩ නොකලොත් Cobalt සර්වර් එක භාවිතා කිරීම
+      // 🔄 Backup Fallback: Apify හි ගැටලුවක් වුවහොත් Cobalt API භාවිතා කිරීම
       if (!downloadUrl) {
         try {
           const res = await axios.post("https://cobalt.tools", {
             url: video.url,
             videoQuality: "360"
-          });
+          }, { headers: { "Accept": "application/json" } });
           downloadUrl = res?.data?.url;
         } catch (e) {
-          console.log("Cobalt Backup Failed.");
+          console.log("Cobalt Backup Video Failed.");
         }
       }
 
@@ -176,7 +190,7 @@ cmd(
           video: { url: downloadUrl },
           mimetype: "video/mp4",
           fileName: `${video.title}.mp4`,
-          caption: `🎬 *${video.title}* \n\n> *Successfully Downloaded via Apify!* ✅`,
+          caption: `🎬 *${video.title}* \n\n> *Successfully Downloaded!* ✅`,
         },
         { quoted: mek }
       );
