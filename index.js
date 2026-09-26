@@ -134,17 +134,17 @@ const port = process.env.PORT || 8000;
         
 conn.ev.on('messages.upsert', async(chatUpdate) => {
     try {
-        // 🎯 වැදගත්: ලැබෙන මැසේජ් එක 'mek' ලෙස නිවැරදිව අර්ථ දැක්වීම (Fixes Line 207 Error)
-        let mek = chatUpdate.messages[0];
+        // 🎯 1. ලැබෙන මැසේජ් එක 'mek' ලෙස නිවැරදිව ලබා ගැනීම
+        let mek = chatUpdate.messages;
         if (!mek || !mek.message) return;
 
-        // 🎯 1. AUTO STATUS SEEN, REACT & REPLY SYSTEM (Status Panel Settings)
+        // 🎯 2. AUTO STATUS SEEN, REACT & REPLY SYSTEM
         if (mek.key && mek.key.remoteJid === 'status@broadcast') {
             
             // A. Auto Status Seen (බැලීම)
             if (config.AUTO_STATUS_SEEN === "true" || config.AUTO_STATUS_SEEN === true) {
                 await conn.readMessages([mek.key]);
-                console.log(`👁️ Status Seen: ${mek.key.participant ? mek.key.participant.split('@')[0] : 'Unknown User'}`);
+                console.log(`👁️ Status Seen: ${mek.key.participant ? mek.key.participant.split('@') : 'Unknown User'}`);
 
                 // B. Auto Status React (ඉමෝජි දැමීම)
                 if (config.AUTO_STATUS_REACT === "true" || config.AUTO_STATUS_REACT === true) {
@@ -165,12 +165,18 @@ conn.ev.on('messages.upsert', async(chatUpdate) => {
             return; // Status එකක් නම් මෙතනින් නවතී
         }
 
-        // 📩 2. සාමාන්‍ය CHAT MESSAGES සඳහා වන කොටස
-        const from = mek.key.remoteJid; // 👈 දැන් 'mek' නිවැරදිව අර්ථ දක්වා ඇති නිසා 207 පේළියේ Error එක එන්නේ නැත!
+        // 📩 3. සාමාන්‍ය CHAT MESSAGES සඳහා වන කොටස
         
-        mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
+        // 🛠️ FIX (Line 201): 'type' variable එක 201 පේළියට ඉහළින් මුලින්ම අර්ථ දැක්වීම
+        const type = getContentType(mek.message);
+        const from = mek.key.remoteJid;
+        
+        mek.message = (type === 'ephemeralMessage') 
             ? mek.message.ephemeralMessage.message 
             : mek.message;
+
+        // 🛠️ Line 201 කේතය: දැන් 'type' සහ 'mek' දෙකම නිවැරදිව ක්‍රියා කරයි
+        const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : [];
 
         if (config.READ_MESSAGE === 'true' || config.READ_MESSAGE === true) {
             await conn.readMessages([mek.key]);
@@ -188,7 +194,6 @@ conn.ev.on('messages.upsert', async(chatUpdate) => {
         ]);
 
         const m = sms(conn, mek);
-        const type = getContentType(mek.message);
         const content = JSON.stringify(mek.message);
         
         // 🚀 ඔබේ බොට්ගේ අනෙකුත් Plugins/Commands ක්‍රියාත්මක වන කොටස මෙතැන් සිට පහළට පවතී...
