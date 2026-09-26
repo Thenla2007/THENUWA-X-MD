@@ -2,6 +2,8 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const axios = require("axios");
 
+const APIFY_TOKEN = "apify_api_Ch0IOvo9qabGqAt4RaSnmhYJuFXKbk0soR3M";
+
 // 🎥 යූටියුබ් වීඩියෝ තොරතුරු සෙවීමේ පහසුකම
 async function getYoutube(query) {
   try {
@@ -22,6 +24,60 @@ async function getYoutube(query) {
     return search.videos[0];
   } catch (err) {
     console.error("GetYoutube Function Error:", err);
+    return null;
+  }
+}
+
+// 📥 Apify streamers/youtube-video-downloader හරහා බාගත කිරීම
+async function downloadViaApify(videoUrl, format = "mp4", quality = "360p") {
+  try {
+    // 1. Apify Console එකේ තියෙන සෙටින්ග්ස් වලට අනුව Actor එක Run කිරීම
+    const runResponse = await axios.post(
+      `https://apify.com{APIFY_TOKEN}`,
+      {
+        "videos": [videoUrl],
+        "downloadToApifyStorage": true,
+        "preferredQuality": quality,
+        "preferredFormat": format,
+        "nameFileWith": "Title"
+      },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    const runId = runResponse?.data?.data?.id;
+    const defaultDatasetId = runResponse?.data?.data?.defaultDatasetId;
+    if (!runId || !defaultDatasetId) return null;
+
+    // 2. Actor එක වැඩ කරලා ඉවර වනතුරු උපරිම තත්පර 45ක් Polling ක්‍රමයට බලා සිටීම
+    let isFinished = false;
+    for (let i = 0; i < 15; i++) {
+      await new Promise(resolve => setTimeout(resolve, 3000)); // තත්පර 3ක් නවතී
+      const checkStatus = await axios.get(`https://apify.com{runId}?token=${APIFY_TOKEN}`);
+      const status = checkStatus?.data?.data?.status;
+      
+      if (status === "SUCCEEDED") {
+        isFinished = true;
+        break;
+      } else if (status === "FAILED" || status === "ABORTED") {
+        break;
+      }
+    }
+
+    if (!isFinished) return null;
+
+    // 3. Dataset එකෙන් Output එක ලබා ගැනීම
+    const datasetResponse = await axios.get(
+      `https://apify.com{defaultDatasetId}/items?token=${APIFY_TOKEN}`
+    );
+
+    const items = datasetResponse?.data;
+    if (items && items.length > 0) {
+      // Actor එකෙන් ලැබෙන බාගත කිරීමේ ලින්ක් එක වෙන් කර ගැනීම
+      return items[0].downloadUrl || items[0].fileUrl || items[0].url || null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Apify Streamers Downloader Error:", error);
     return null;
   }
 }
@@ -55,27 +111,10 @@ cmd(
         { quoted: mek }
       );
 
-      reply("⬇️ *Downloading MP3 file...* ⏳");
+      reply("⬇️ *Downloading MP3 via Apify Private Storage...* ⏳");
 
-      let downloadUrl = null;
-
-      // 🔄 API 1: New Custom YTDL Server 2026
-      try {
-        const res = await axios.get(`https://bk9.fun{encodeURIComponent(video.url)}`);
-        downloadUrl = res?.data?.BK9?.audio || res?.data?.result?.audio;
-      } catch (e) {
-        console.log("BK9 Audio Engine Failed, trying next...");
-      }
-
-      // 🔄 API 2: Auto Backup Engine 2
-      if (!downloadUrl) {
-        try {
-          const res = await axios.get(`https://agatz.xyz{encodeURIComponent(video.url)}`);
-          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.data?.url;
-        } catch (e) {
-          console.log("Agatz Audio Engine Failed.");
-        }
-      }
+      // Apify එකෙන් mp3/audio විදියට ඉල්ලීම
+      let downloadUrl = await downloadViaApify(video.url, "mp3", "128kbps");
 
       if (!downloadUrl) return reply("❌ *සින්දුව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
 
@@ -120,27 +159,10 @@ cmd(
         { quoted: mek }
       );
 
-      reply("⬇️ *Downloading Video file...* ⏳");
+      reply("⬇️ *Downloading Video via Apify Private Storage...* ⏳");
 
-      let downloadUrl = null;
-
-      // 🔄 API 1: New Custom YTDL Server 2026
-      try {
-        const res = await axios.get(`https://bk9.fun{encodeURIComponent(video.url)}`);
-        downloadUrl = res?.data?.BK9?.video || res?.data?.result?.video;
-      } catch (e) {
-        console.log("BK9 Video Engine Failed, trying next...");
-      }
-
-      // 🔄 API 2: Auto Backup Engine 2
-      if (!downloadUrl) {
-        try {
-          const res = await axios.get(`https://agatz.xyz{encodeURIComponent(video.url)}`);
-          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.data?.url;
-        } catch (e) {
-          console.log("Agatz Video Engine Failed.");
-        }
-      }
+      // Apify එකෙන් mp4/360p විදියට ඉල්ලීම (ලොකු ෆයිල් වට්ස්ඇප් යවන්න බැරි නිසා 360p දමා ඇත)
+      let downloadUrl = await downloadViaApify(video.url, "mp4", "360p");
 
       if (!downloadUrl) return reply("❌ *වීඩියෝව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
 
@@ -150,7 +172,7 @@ cmd(
           video: { url: downloadUrl },
           mimetype: "video/mp4",
           fileName: `${video.title}.mp4`,
-          caption: `🎬 *${video.title}* \n\n> *Successfully Downloaded!* ✅`,
+          caption: `🎬 *${video.title}* \n\n> *Successfully Downloaded via Apify!* ✅`,
         },
         { quoted: mek }
       );
