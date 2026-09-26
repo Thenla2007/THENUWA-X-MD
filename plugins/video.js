@@ -11,7 +11,7 @@ async function getYoutube(query) {
     if (isUrl) {
       let id;
       if (query.includes("v=")) {
-        id = query.split("v=")[1]?.split("&")[0];
+        id = query.split("v=")?.split("&")[0];
       } else {
         id = query.split("/").pop()?.split("?")[0];
       }
@@ -28,18 +28,14 @@ async function getYoutube(query) {
   }
 }
 
-// 📥 Apify streamers/youtube-video-downloader හරහා බාගත කිරීම
-async function downloadViaApify(videoUrl, format = "mp4", quality = "360p") {
+// 📥 Apify andryerica/all-video-downloader හරහා බාගත කිරීමේ පද්ධතිය
+async function downloadViaAllVideoDownloader(targetUrl) {
   try {
-    // 1. Apify Console එකේ තියෙන සෙටින්ග්ස් වලට අනුව Actor එක Run කිරීම
+    // 1. Apify Actor එක නිවැරදි API URL එක සහ Input එක සමඟින් Run කිරීම
     const runResponse = await axios.post(
       `https://apify.com{APIFY_TOKEN}`,
       {
-        "videos": [videoUrl],
-        "downloadToApifyStorage": true,
-        "preferredQuality": quality,
-        "preferredFormat": format,
-        "nameFileWith": "Title"
+        "url": targetUrl
       },
       { headers: { "Content-Type": "application/json" } }
     );
@@ -48,9 +44,9 @@ async function downloadViaApify(videoUrl, format = "mp4", quality = "360p") {
     const defaultDatasetId = runResponse?.data?.data?.defaultDatasetId;
     if (!runId || !defaultDatasetId) return null;
 
-    // 2. Actor එක වැඩ කරලා ඉවර වනතුරු උපරිම තත්පර 45ක් Polling ක්‍රමයට බලා සිටීම
+    // 2. වීඩියෝව සර්වර් එක ඇතුළත සකස් කර නිම වන තෙක් උපරිම තත්පර 30ක් Polling ක්‍රමයට බලා සිටීම
     let isFinished = false;
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 10; i++) {
       await new Promise(resolve => setTimeout(resolve, 3000)); // තත්පර 3ක් නවතී
       const checkStatus = await axios.get(`https://apify.com{runId}?token=${APIFY_TOKEN}`);
       const status = checkStatus?.data?.data?.status;
@@ -65,19 +61,20 @@ async function downloadViaApify(videoUrl, format = "mp4", quality = "360p") {
 
     if (!isFinished) return null;
 
-    // 3. Dataset එකෙන් Output එක ලබා ගැනීම
+    // 3. Dataset එකෙන් වීඩියෝවේ නිවැරදි Download Link එක ලබා ගැනීම
     const datasetResponse = await axios.get(
       `https://apify.com{defaultDatasetId}/items?token=${APIFY_TOKEN}`
     );
 
     const items = datasetResponse?.data;
-    if (items && items.length > 0) {
-      // Actor එකෙන් ලැබෙන බාගත කිරීමේ ලින්ක් එක වෙන් කර ගැනීම
-      return items[0].downloadUrl || items[0].fileUrl || items[0].url || null;
+    if (Array.isArray(items) && items.length > 0) {
+      const data = items[0];
+      // Actor එකෙන් ලැබෙන විවිධ දත්ත ව්‍යුහයන් අනුව වීඩියෝ ලින්ක් එක වෙන් කර ගැනීම
+      return data.downloadUrl || data.url || data.videoUrl || data.mediaUrl || null;
     }
     return null;
   } catch (error) {
-    console.error("Apify Streamers Downloader Error:", error);
+    console.error("All Video Downloader Actor Error:", error);
     return null;
   }
 }
@@ -111,10 +108,9 @@ cmd(
         { quoted: mek }
       );
 
-      reply("⬇️ *Downloading MP3 via Apify Private Storage...* ⏳");
+      reply("⬇️ *Downloading MP3 via All-Video Private Server...* ⏳");
 
-      // Apify එකෙන් mp3/audio විදියට ඉල්ලීම
-      let downloadUrl = await downloadViaApify(video.url, "mp3", "128kbps");
+      let downloadUrl = await downloadViaAllVideoDownloader(video.url);
 
       if (!downloadUrl) return reply("❌ *සින්දුව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
 
@@ -159,10 +155,9 @@ cmd(
         { quoted: mek }
       );
 
-      reply("⬇️ *Downloading Video via Apify Private Storage...* ⏳");
+      reply("⬇️ *Downloading Video via All-Video Private Server...* ⏳");
 
-      // Apify එකෙන් mp4/360p විදියට ඉල්ලීම (ලොකු ෆයිල් වට්ස්ඇප් යවන්න බැරි නිසා 360p දමා ඇත)
-      let downloadUrl = await downloadViaApify(video.url, "mp4", "360p");
+      let downloadUrl = await downloadViaAllVideoDownloader(video.url);
 
       if (!downloadUrl) return reply("❌ *වීඩියෝව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
 
