@@ -132,85 +132,83 @@ const port = process.env.PORT || 8000;
           
   //=============readstatus=======
         
-conn.ev.on('messages.upsert', async(chatUpdate) => {
-    try {
-        // 🎯 1. ලැබෙන මැසේජ් එක 'mek' ලෙස නිවැරදිව ලබා ගැනීම
-        if (!chatUpdate.messages || chatUpdate.messages.length === 0) return;
-        let mek = chatUpdate.messages[0];
-        if (!mek.message) return;
 
-        // 🎯 2. AUTO STATUS SEEN, REACT & REPLY SYSTEM (Status settings පාලනය)
-        if (mek.key && mek.key.remoteJid === 'status@broadcast') {
-            
-            // A. Auto Status Seen (බැලීම)
-            if (config.AUTO_STATUS_SEEN === "true" || config.AUTO_STATUS_SEEN === true) {
-                await conn.readMessages([mek.key]);
-                console.log(`👁️ Status Seen: ${mek.key.participant ? mek.key.participant.split('@')[0] : 'Unknown User'}`);
+    conn.ev.on('messages.upsert', async(chatUpdate) => {
+        try {
+            // 🎯 1. ලැබෙන මැසේජ් එක 'mek' ලෙස නිවැරදිව ලබා ගැනීම
+            if (!chatUpdate.messages || chatUpdate.messages.length === 0) return;
+            let mek = chatUpdate.messages[0];
+            if (!mek.message) return;
 
-                // B. Auto Status React (ඉමෝජි දැමීම)
-                if (config.AUTO_STATUS_REACT === "true" || config.AUTO_STATUS_REACT === true) {
-                    const emojis = ['❤️', '💸', '😇', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🥰', '💐', '😎', '✅', '🫀', '🌸'];
-                    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-                    await conn.sendMessage(mek.key.remoteJid, {
-                        react: { text: randomEmoji, key: mek.key }
-                    }, { statusJidList: [mek.key.participant, conn.user.id] });
-                }                       
+            // 🎯 2. AUTO STATUS SEEN, REACT & REPLY SYSTEM (Status settings පාලනය)
+            if (mek.key && mek.key.remoteJid === 'status@broadcast') {
+                
+                // A. Auto Status Seen (බැලීම)
+                if (config.AUTO_STATUS_SEEN === "true" || config.AUTO_STATUS_SEEN === true) {
+                    await conn.readMessages([mek.key]);
+                    console.log(`👁️ Status Seen: ${mek.key.participant ? mek.key.participant.split('@')[0] : 'Unknown User'}`);
 
-                // C. Auto Status Reply (Inbox එකට මැසේජ් යැවීම)
-                if (config.AUTO_STATUS_REPLY === "true" || config.AUTO_STATUS_REPLY === true) {
-                    const user = mek.key.participant || mek.key.remoteJid;
-                    const replyText = config.AUTO_STATUS_MSG || "*SEEN YOUR STATUS BY DARK-SHADOW -MD 🤍*";
-                    await conn.sendMessage(user, { text: replyText }, { quoted: mek });
+                    // B. Auto Status React (ඉමෝජි දැමීම)
+                    if (config.AUTO_STATUS_REACT === "true" || config.AUTO_STATUS_REACT === true) {
+                        const emojis = ['❤️', '💸', '😇', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🥰', '💐', '😎', '✅', '🫀', '🌸'];
+                        const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+                        await conn.sendMessage(mek.key.remoteJid, {
+                            react: { text: randomEmoji, key: mek.key }
+                        }, { statusJidList: [mek.key.participant, conn.user.id] });
+                    }                       
+
+                    // C. Auto Status Reply (Inbox එකට මැසේජ් යැවීම)
+                    if (config.AUTO_STATUS_REPLY === "true" || config.AUTO_STATUS_REPLY === true) {
+                        const user = mek.key.participant || mek.key.remoteJid;
+                        const replyText = config.AUTO_STATUS_MSG || "*SEEN YOUR STATUS BY DARK-SHADOW -MD 🤍*";
+                        await conn.sendMessage(user, { text: replyText }, { quoted: mek });
+                    }
                 }
+                return; // Status එකක් නම් මෙතනින් කේතය ක්‍රියාත්මක වීම නවතී
             }
-            return; // Status එකක් නම් මෙතනින් කේතය ක්‍රියාත්මක වීම නවතී
-        }
 
-        // 📩 3. සාමාන්‍ය CHAT MESSAGES සඳහා වන කොටස
-        
-        // 🛠️ CRITICAL FIX: 'type' හඳුන්වා දීමේ කේතය Line 206 ට ඉහළින්ම තැබීම
-        const getContentType = (message) => {
-            if (!message) return undefined;
-            const keys = Object.keys(message);
-            const key = keys.find(k => k !== 'senderKeyDistributionMessage' && k !== 'messageContextInfo');
-            return key;
-        };
+            // 📩 3. සාමාන්‍ය CHAT MESSAGES සඳහා වන කොටස
+            const getContentType = (message) => {
+                if (!message) return undefined;
+                const keys = Object.keys(message);
+                const key = keys.find(k => k !== 'senderKeyDistributionMessage' && k !== 'messageContextInfo');
+                return key;
+            };
 
-        const type = getContentType(mek.message);
-        const from = mek.key.remoteJid;
-        
-        mek.message = (type === 'ephemeralMessage') 
-            ? mek.message.ephemeralMessage.message 
-            : mek.message;
-
-        // 🛠️ Line 206 FIX: දැන් 'type' සහ 'mek' යන Variables දෙකම Node.js වලට නිවැරදිව හඳුනාගත හැක
-        const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : [];
-
-        if (config.READ_MESSAGE === 'true' || config.READ_MESSAGE === true) {
-            await conn.readMessages([mek.key]);
-            console.log(`Marked message from ${from} as read.`);
-        }
-
-        if (mek.message.viewOnceMessageV2) {
-            mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
+            const type = getContentType(mek.message);
+            const from = mek.key.remoteJid;
+            
+            mek.message = (type === 'ephemeralMessage') 
                 ? mek.message.ephemeralMessage.message 
                 : mek.message;
+
+            const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : [];
+
+            if (config.READ_MESSAGE === 'true' || config.READ_MESSAGE === true) {
+                await conn.readMessages([mek.key]);
+                console.log(`Marked message from ${from} as read.`);
+            }
+
+            if (mek.message.viewOnceMessageV2) {
+                mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
+                    ? mek.message.ephemeralMessage.message 
+                    : mek.message;
+            }
+
+            await Promise.all([
+                saveMessage(mek),
+            ]);
+
+            const m = sms(conn, mek);
+            const content = JSON.stringify(mek.message);
+            
+            // 🚀 බොට්ගේ අනෙකුත් Plugins/Commands ක්‍රියාත්මක වන ප්‍රධාන handler එක මෙතැනට පැමිණේ
+
+        } catch (err) {
+            console.error("❌ Core Messages Upsert Error: ", err);
         }
-
-        await Promise.all([
-            saveMessage(mek),
-        ]);
-
-        const m = sms(conn, mek);
-        const content = JSON.stringify(mek.message);
-        
-        // 🚀 ඔබේ බොට්ගේ අනෙකුත් Plugins/Commands ක්‍රියාත්මක වන කොටස මෙතැන් සිට පහළට පවතී...
-
-    } catch (err) {
-        console.error("❌ Core Messages Upsert Error: ", err);
-    }
-});
-
+    });
+}
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
   const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
