@@ -132,30 +132,26 @@ const port = process.env.PORT || 8000;
           
   //=============readstatus=======
         
-conn.ev.on('messages.upsert', async(mek) => {
+conn.ev.on('messages.upsert', async(chatUpdate) => {
     try {
+        // 🎯 වැදගත්: ලැබෙන මැසේජ් එක 'mek' ලෙස නිවැරදිව අර්ථ දැක්වීම (Fixes Line 207 Error)
         let mek = chatUpdate.messages[0];
         if (!mek || !mek.message) return;
 
-        // 🎯 1. AUTO STATUS SEEN, REACT & REPLY SYSTEM (මඟනොහැරී ක්‍රියාත්මක වීමට මුලින්ම යොදා ඇත)
+        // 🎯 1. AUTO STATUS SEEN, REACT & REPLY SYSTEM (Status Panel Settings)
         if (mek.key && mek.key.remoteJid === 'status@broadcast') {
             
             // A. Auto Status Seen (බැලීම)
             if (config.AUTO_STATUS_SEEN === "true" || config.AUTO_STATUS_SEEN === true) {
                 await conn.readMessages([mek.key]);
-                // Console එකේ පැහැදිලිව සටහන් කිරීම
                 console.log(`👁️ Status Seen: ${mek.key.participant ? mek.key.participant.split('@')[0] : 'Unknown User'}`);
 
                 // B. Auto Status React (ඉමෝජි දැමීම)
                 if (config.AUTO_STATUS_REACT === "true" || config.AUTO_STATUS_REACT === true) {
-                    const emojis = ['❤️', '💸', '😇', '🍂', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🙌', '🙆', '🚩', '🥰', '💐', '😎', '🤎', '✅', '🫀', '🧡', '😁', '😄', '🌸', '🕊️', '🌷', '⛅', '🌟', '🗿', '💜', '💙', '🌝', '💚'];
+                    const emojis = ['❤️', '💸', '😇', '💥', '💯', '🔥', '💫', '💎', '💗', '🤍', '🖤', '👀', '🥰', '💐', '😎', '✅', '🫀', '🌸'];
                     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-                    
                     await conn.sendMessage(mek.key.remoteJid, {
-                        react: {
-                            text: randomEmoji,
-                            key: mek.key,
-                        } 
+                        react: { text: randomEmoji, key: mek.key }
                     }, { statusJidList: [mek.key.participant, conn.user.id] });
                 }                       
 
@@ -163,33 +159,30 @@ conn.ev.on('messages.upsert', async(mek) => {
                 if (config.AUTO_STATUS_REPLY === "true" || config.AUTO_STATUS_REPLY === true) {
                     const user = mek.key.participant || mek.key.remoteJid;
                     const replyText = config.AUTO_STATUS_MSG || "*SEEN YOUR STATUS BY DARK-SHADOW -MD 🤍*";
-                    
-                    // Inbox එකට මැසේජ් එක යැවීම
                     await conn.sendMessage(user, { text: replyText }, { quoted: mek });
                 }
             }
-            return; // Status එකක් නම් මෙතනින් ඉදිරියට සාමාන්‍ය මැසේජ් Logic ක්‍රියාත්මක නොවේ
+            return; // Status එකක් නම් මෙතනින් නවතී
         }
 
-        // 📩 සාමාන්‍ය Chat Messages සඳහා පවතින Logic කොටස
+        // 📩 2. සාමාන්‍ය CHAT MESSAGES සඳහා වන කොටස
+        const from = mek.key.remoteJid; // 👈 දැන් 'mek' නිවැරදිව අර්ථ දක්වා ඇති නිසා 207 පේළියේ Error එක එන්නේ නැත!
+        
         mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
             ? mek.message.ephemeralMessage.message 
             : mek.message;
 
-        // Auto Read Message Setting
         if (config.READ_MESSAGE === 'true' || config.READ_MESSAGE === true) {
             await conn.readMessages([mek.key]);
-            console.log(`Marked message from ${mek.key.remoteJid} as read.`);
+            console.log(`Marked message from ${from} as read.`);
         }
 
-        // View Once Message handling
         if (mek.message.viewOnceMessageV2) {
             mek.message = (getContentType(mek.message) === 'ephemeralMessage') 
                 ? mek.message.ephemeralMessage.message 
                 : mek.message;
         }
 
-        // Background Tasks (Message ඉතිහාසය සුරැකීම සහ formatting)
         await Promise.all([
             saveMessage(mek),
         ]);
@@ -204,7 +197,7 @@ conn.ev.on('messages.upsert', async(mek) => {
         console.error("❌ Core Messages Upsert Error: ", err);
     }
 });
-  const from = mek.key.remoteJid
+
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
   const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
   const isCmd = body.startsWith(prefix)
