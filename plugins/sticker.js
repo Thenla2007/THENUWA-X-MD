@@ -2,14 +2,23 @@ const config = require('../config');
 const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 const { cmd } = require('../command');
 const { getRandom } = require('../lib/functions');
+const fs = require('fs');
 
-var imgmsg = '';
-if (config.LANG === 'SI') imgmsg = 'ඡායාරූපයකට mention දෙන්න!';
-else imgmsg = 'ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴘʜᴏᴛᴏ ғᴏʀ sᴛɪᴄᴋᴇʀ!';
+let imgmsg = '';
 
-var descg = '';
-if (config.LANG === 'SI') descg = 'එය ඔබගේ mention දුන් ඡායාරූපය ස්ටිකර් බවට පරිවර්තනය කරයි.';
-else descg = 'ɪᴛ ᴄᴏɴᴠᴇʀᴛs ʏᴏᴜʀ ʀᴇᴘʟɪᴇᴅ ᴘʜᴏᴛᴏ ᴛᴏ sᴛɪᴄᴋᴇʀ.';
+if (config.LANG === 'SI') {
+    imgmsg = '❌ ඡායාරූපයකට reply කරලා .sticker යවන්න!';
+} else {
+    imgmsg = '❌ REPLY TO A PHOTO FOR STICKER!';
+}
+
+let descg = '';
+
+if (config.LANG === 'SI') {
+    descg = 'Reply කරන photo එක sticker එකක් බවට convert කරයි.';
+} else {
+    descg = 'Converts your replied photo to sticker.';
+}
 
 cmd({
     pattern: 'sticker',
@@ -17,52 +26,202 @@ cmd({
     alias: ['s', 'stic'],
     desc: descg,
     category: 'convert',
-    use: '.sticker <Reply to image>',
+    use: '.sticker',
     filename: __filename
-}, async (conn, mek, m, { from, reply, isCmd, command, args, q, isGroup, pushname }) => {
+},
+
+async (conn, mek, m, {
+    from,
+    reply,
+    q,
+    pushname
+}) => {
+
+    let tempFile = null;
+
     try {
-        const isQuotedImage = m.quoted && (m.quoted.type === 'imageMessage' || (m.quoted.type === 'viewOnceMessage' && m.quoted.msg.type === 'imageMessage'));
-        const isQuotedSticker = m.quoted && m.quoted.type === 'stickerMessage';
 
-        if ((m.type === 'imageMessage') || isQuotedImage) {
-            const nameJpg = getRandom('.jpg');
-            const imageBuffer = isQuotedImage ? await m.quoted.download() : await m.download();
-            await require('fs').promises.writeFile(nameJpg, imageBuffer);
+        /*
+         * --------------------------------
+         * CHECK REPLIED MESSAGE
+         * --------------------------------
+         */
 
-            let sticker = new Sticker(nameJpg, {
-                pack: pushname, // The pack name
-                author: '', // The author name
-                type: q.includes('--crop') || q.includes('-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
-                categories: ['🤩', '🎉'], // The sticker category
-                id: '12345', // The sticker id
-                quality: 75, // The quality of the output file
-                background: 'transparent', // The sticker background color (only for full stickers)
-            });
+        const quoted = m.quoted;
 
-            const buffer = await sticker.toBuffer();
-            return conn.sendMessage(from, { sticker: buffer }, { quoted: mek });
-        } else if (isQuotedSticker) {
-            const nameWebp = getRandom('.webp');
-            const stickerBuffer = await m.quoted.download();
-            await require('fs').promises.writeFile(nameWebp, stickerBuffer);
+        let imageBuffer = null;
 
-            let sticker = new Sticker(nameWebp, {
-                pack: pushname, // The pack name
-                author: '', // The author name
-                type: q.includes('--crop') || q.includes('-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
-                categories: ['🤩', '🎉'], // The sticker category
-                id: '12345', // The sticker id
-                quality: 75, // The quality of the output file
-                background: 'transparent', // The sticker background color (only for full stickers)
-            });
+        // 1. Reply කරපු message එක තියෙනවා නම්
+        if (quoted) {
 
-            const buffer = await sticker.toBuffer();
-            return conn.sendMessage(from, { sticker: buffer }, { quoted: mek });
-        } else {
-            return await reply(imgmsg);
+            // MIME type check කරන්න try කරනවා
+            const mime =
+                quoted.mimetype ||
+                quoted.msg?.mimetype ||
+                quoted.message?.imageMessage?.mimetype ||
+                '';
+
+            console.log('STICKER QUOTED MIME:', mime);
+            console.log('STICKER QUOTED TYPE:', quoted.type);
+            console.log('STICKER QUOTED MTYPE:', quoted.mtype);
+
+            /*
+             * Type එක imageMessage නොවුනත්
+             * download() තියෙනවා නම් download කරන්න.
+             */
+            if (typeof quoted.download === 'function') {
+
+                try {
+                    imageBuffer = await quoted.download();
+                } catch (err) {
+                    console.log(
+                        'Quoted download failed:',
+                        err.message
+                    );
+                }
+            }
         }
+
+        /*
+         * --------------------------------
+         * IF CURRENT MESSAGE IS IMAGE
+         * --------------------------------
+         */
+
+        if (!imageBuffer) {
+
+            const currentType =
+                m.type ||
+                m.mtype ||
+                m.messageType ||
+                '';
+
+            const currentMime =
+                m.mimetype ||
+                m.msg?.mimetype ||
+                '';
+
+            if (
+                currentType === 'imageMessage' ||
+                currentMime.startsWith('image/')
+            ) {
+
+                if (typeof m.download === 'function') {
+                    imageBuffer = await m.download();
+                }
+            }
+        }
+
+        /*
+         * --------------------------------
+         * IMAGE NOT FOUND
+         * --------------------------------
+         */
+
+        if (
+            !imageBuffer ||
+            !Buffer.isBuffer(imageBuffer) ||
+            imageBuffer.length === 0
+        ) {
+
+            return reply(imgmsg);
+        }
+
+        /*
+         * --------------------------------
+         * CREATE TEMP JPG
+         * --------------------------------
+         */
+
+        tempFile = getRandom('.jpg');
+
+        await fs.promises.writeFile(
+            tempFile,
+            imageBuffer
+        );
+
+        /*
+         * --------------------------------
+         * CREATE STICKER
+         * --------------------------------
+         */
+
+        const sticker = new Sticker(tempFile, {
+
+            pack: 'THENUWA X MD',
+
+            author: pushname || 'THENUWA X MD',
+
+            type:
+                String(q || '').includes('--crop') ||
+                String(q || '').includes('-c')
+                    ? StickerTypes.CROPPED
+                    : StickerTypes.FULL,
+
+            categories: [
+                '🤩',
+                '🔥'
+            ],
+
+            id: 'thenuwa-x-md',
+
+            quality: 85,
+
+            background: 'transparent'
+        });
+
+        const buffer = await sticker.toBuffer();
+
+        /*
+         * --------------------------------
+         * SEND STICKER
+         * --------------------------------
+         */
+
+        await conn.sendMessage(
+            from,
+            {
+                sticker: buffer
+            },
+            {
+                quoted: mek
+            }
+        );
+
+        /*
+         * --------------------------------
+         * DELETE TEMP FILE
+         * --------------------------------
+         */
+
+        try {
+            await fs.promises.unlink(tempFile);
+        } catch (e) {}
+
+        tempFile = null;
+
     } catch (e) {
-        reply('Error !!');
+
+        console.error(
+            '========== STICKER ERROR =========='
+        );
+
         console.error(e);
+
+        console.error(
+            '==================================='
+        );
+
+        if (tempFile) {
+            try {
+                await fs.promises.unlink(tempFile);
+            } catch (err) {}
+        }
+
+        return reply(
+            '❌ Sticker හදන්න බැරි වුණා!\n\n' +
+            'Error: ' +
+            (e.message || e)
+        );
     }
 });
