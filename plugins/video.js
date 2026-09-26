@@ -1,179 +1,148 @@
-const { cmd } = require("../command");
-const yts = require("yt-search");
-const axios = require("axios");
+const { cmd } = require('../command')
+const fetch = require('node-fetch')
 
-const APIFY_TOKEN = "apify_api_Ch0IOvo9qabGqAt4RaSnmhYJuFXKbk0soR3M";
+cmd({
+    pattern: 'dl',
+    alias: ['download', 'video'],
+    react: '⬇️',
+    desc: 'Download video from URL',
+    category: 'download',
+    filename: __filename
+},
+async (conn, mek, m, { from, q, reply }) => {
 
-// 🎥 යූටියුබ් වීඩියෝ තොරතුරු සෙවීමේ පහසුකම
-async function getYoutube(query) {
-  try {
-    const isUrl = /(youtube\.com|youtu\.be)/i.test(query);
-    if (isUrl) {
-      let id;
-      if (query.includes("v=")) {
-        id = query.split("v=")?.split("&")[0];
-      } else {
-        id = query.split("/").pop()?.split("?")[0];
-      }
-      if (!id) return null;
-      const info = await yts({ videoId: id });
-      return info;
-    }
-    const search = await yts(query);
-    if (!search || !search.videos || !search.videos.length) return null;
-    return search.videos[0];
-  } catch (err) {
-    console.error("GetYoutube Function Error:", err);
-    return null;
-  }
-}
-
-// 📥 Apify andryerica/all-video-downloader හරහා බාගත කිරීමේ පද්ධතිය
-async function downloadViaAllVideoDownloader(targetUrl) {
-  try {
-    // 1. Apify Actor එක නිවැරදි API URL එක සහ Input එක සමඟින් Run කිරීම
-    const runResponse = await axios.post(
-      `https://apify.com{APIFY_TOKEN}`,
-      {
-        "url": targetUrl
-      },
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    const runId = runResponse?.data?.data?.id;
-    const defaultDatasetId = runResponse?.data?.data?.defaultDatasetId;
-    if (!runId || !defaultDatasetId) return null;
-
-    // 2. වීඩියෝව සර්වර් එක ඇතුළත සකස් කර නිම වන තෙක් උපරිම තත්පර 30ක් Polling ක්‍රමයට බලා සිටීම
-    let isFinished = false;
-    for (let i = 0; i < 10; i++) {
-      await new Promise(resolve => setTimeout(resolve, 3000)); // තත්පර 3ක් නවතී
-      const checkStatus = await axios.get(`https://apify.com{runId}?token=${APIFY_TOKEN}`);
-      const status = checkStatus?.data?.data?.status;
-      
-      if (status === "SUCCEEDED") {
-        isFinished = true;
-        break;
-      } else if (status === "FAILED" || status === "ABORTED") {
-        break;
-      }
-    }
-
-    if (!isFinished) return null;
-
-    // 3. Dataset එකෙන් වීඩියෝවේ නිවැරදි Download Link එක ලබා ගැනීම
-    const datasetResponse = await axios.get(
-      `https://apify.com{defaultDatasetId}/items?token=${APIFY_TOKEN}`
-    );
-
-    const items = datasetResponse?.data;
-    if (Array.isArray(items) && items.length > 0) {
-      const data = items[0];
-      // Actor එකෙන් ලැබෙන විවිධ දත්ත ව්‍යුහයන් අනුව වීඩියෝ ලින්ක් එක වෙන් කර ගැනීම
-      return data.downloadUrl || data.url || data.videoUrl || data.mediaUrl || null;
-    }
-    return null;
-  } catch (error) {
-    console.error("All Video Downloader Actor Error:", error);
-    return null;
-  }
-}
-
-// 🎵 YTMP3 (Song) Downloader Command
-cmd(
-  {
-    pattern: "ytmp3",
-    alias: ["yta", "song"],
-    desc: "Download YouTube MP3 by name or link",
-    category: "download",
-    filename: __filename,
-  },
-  async (bot, mek, m, { from, q, reply }) => {
     try {
-      if (!q) return reply("🎵 *කරුණාකර සින්දුවේ නම හෝ YouTube ලින්ක් එකක් ලබා දෙන්න!*");
 
-      reply("🔎 *Searching YouTube... Please wait!*");
-      const video = await getYoutube(q);
-      if (!video) return reply("❌ *කිසිදු ප්‍රතිඵලයක් හමු නොවීය!*");
+        if (!q) {
+            return reply(
+                '❌ *URL එකක් දෙන්න.*\n\n' +
+                'Example:\n' +
+                '.dl https://www.youtube.com/watch?v=xxxx'
+            )
+        }
 
-      const caption =
-        `🎵 *${video.title}*\n\n` +
-        `👤 *Channel:* ${video.author?.name || 'Unknown'}\n` +
-        `⏱ *Duration:* ${video.timestamp}\n` +
-        `🔗 *Link:* ${video.url}`;
+        const token = process.env.APIFY_TOKEN
 
-      await bot.sendMessage(
-        from,
-        { image: { url: video.thumbnail || "https://catbox.moe" }, caption },
-        { quoted: mek }
-      );
+        if (!token) {
+            return reply(
+                '❌ APIFY_TOKEN GitHub Secret එක හම්බ වුණේ නැහැ.'
+            )
+        }
 
-      reply("⬇️ *Downloading MP3 via All-Video Private Server...* ⏳");
+        await reply('⏳ *Video එක process කරමින්...*')
 
-      let downloadUrl = await downloadViaAllVideoDownloader(video.url);
+        const apiUrl =
+            'https://api.apify.com/v2/actors/' +
+            'andryerica~all-video-downloader/' +
+            'run-sync-get-dataset-items?token=' +
+            encodeURIComponent(token)
 
-      if (!downloadUrl) return reply("❌ *සින්දුව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                url: q,
+                max_formats: 5
+            })
+        })
 
-      await bot.sendMessage(
-        from,
-        { audio: { url: downloadUrl }, mimetype: "audio/mpeg" },
-        { quoted: mek }
-      );
-    } catch (e) {
-      console.error("YTMP3 COMMAND ERROR:", e);
-      reply("❌ *Error while downloading MP3!*");
+        if (!response.ok) {
+            const errorText = await response.text()
+
+            console.log('APIFY ERROR:', errorText)
+
+            return reply(
+                '❌ *Apify Error*\n\n' +
+                'Video එක ලබාගන්න බැරි වුණා.'
+            )
+        }
+
+        const data = await response.json()
+
+        console.log(
+            'APIFY RESULT:',
+            JSON.stringify(data, null, 2)
+        )
+
+        const items = Array.isArray(data)
+            ? data
+            : (data.items || data.data || [])
+
+        if (!items.length) {
+            return reply(
+                '❌ Video result එකක් හම්බ වුණේ නැහැ.'
+            )
+        }
+
+        const result = items[0]
+
+        const formats = result.formats || []
+
+        if (!formats.length) {
+            return reply(
+                '❌ Download format එකක් හම්බ වුණේ නැහැ.'
+            )
+        }
+
+        // MP4 video එකක් මුලින් තෝරන්න
+        const format =
+            formats.find(f =>
+                f.url &&
+                (
+                    f.ext === 'mp4' ||
+                    String(f.mime_type || '').includes('video/mp4')
+                )
+            ) ||
+            formats.find(f => f.url)
+
+        if (!format || !format.url) {
+            return reply(
+                '❌ Direct video URL එකක් හම්බ වුණේ නැහැ.'
+            )
+        }
+
+        const title =
+            result.title ||
+            'CYBER THENUWA X MD'
+
+        await reply(
+            '📥 *Downloading video...*\n\n' +
+            '🎬 ' + title
+        )
+
+        const videoResponse = await fetch(format.url)
+
+        if (!videoResponse.ok) {
+            return reply(
+                '❌ Video file එක download කරන්න බැරි වුණා.'
+            )
+        }
+
+        const videoBuffer = await videoResponse.buffer()
+
+        await conn.sendMessage(
+            from,
+            {
+                video: videoBuffer,
+                mimetype: 'video/mp4',
+                caption:
+                    '🎬 *' + title + '*\n\n' +
+                    '⚡ Powered by CYBER THENUWA X MD'
+            },
+            {
+                quoted: mek
+            }
+        )
+
+    } catch (error) {
+
+        console.error('DL ERROR:', error)
+
+        return reply(
+            '❌ *Download Error*\n\n' +
+            error.message
+        )
     }
-  }
-);
-
-// 🎬 YTMP4 (Video) Downloader Command
-cmd(
-  {
-    pattern: "ytmp4",
-    alias: ["ytv", "video"],
-    desc: "Download YouTube MP4 by name or link",
-    category: "download",
-    filename: __filename,
-  },
-  async (bot, mek, m, { from, q, reply }) => {
-    try {
-      if (!q) return reply("🎬 *කරුණාකර වීඩියෝවේ නම හෝ YouTube ලින්ක් එකක් ලබා දෙන්න!*");
-
-      reply("🔎 *Searching YouTube... Please wait!*");
-      const video = await getYoutube(q);
-      if (!video) return reply("❌ *කිසිදු ප්‍රතිඵලයක් හමු නොවීය!*");
-
-      const caption =
-        `🎬 *${video.title}*\n\n` +
-        `👤 *Channel:* ${video.author?.name || 'Unknown'}\n` +
-        `⏱ *Duration:* ${video.timestamp}\n` +
-        `🔗 *Link:* ${video.url}`;
-
-      await bot.sendMessage(
-        from,
-        { image: { url: video.thumbnail || "https://catbox.moe" }, caption },
-        { quoted: mek }
-      );
-
-      reply("⬇️ *Downloading Video via All-Video Private Server...* ⏳");
-
-      let downloadUrl = await downloadViaAllVideoDownloader(video.url);
-
-      if (!downloadUrl) return reply("❌ *වීඩියෝව බාගත කිරීම අසාර්ථක විය! කරුණාකර නැවත උත්සාහ කරන්න.*");
-
-      await bot.sendMessage(
-        from,
-        {
-          video: { url: downloadUrl },
-          mimetype: "video/mp4",
-          fileName: `${video.title}.mp4`,
-          caption: `🎬 *${video.title}* \n\n> *Successfully Downloaded via Apify!* ✅`,
-        },
-        { quoted: mek }
-      );
-    } catch (e) {
-      console.error("YTMP4 COMMAND ERROR:", e);
-      reply("❌ *Error while downloading video!*");
-    }
-  }
-);
+})
