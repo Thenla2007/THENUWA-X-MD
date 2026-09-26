@@ -41,7 +41,7 @@ async (conn, mek, m, {
             from,
             {
                 text:
-`✅ CYBER XMD ✅
+`✅CYBER THENUVA X MD✅
 
 *╭──────────────●●►*
 *┋* 👤 *JID:* ${jid}
