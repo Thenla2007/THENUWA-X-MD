@@ -208,7 +208,7 @@ const port = process.env.PORT || 8000;
         } catch (err) {
             console.error("❌ Core Messages Upsert Error: ", err);
         }
-    };
+    }
 
   const from = mek.key.remoteJid
   const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
