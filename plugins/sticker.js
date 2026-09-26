@@ -12,46 +12,57 @@ cmd({
   from,
   reply,
   quoted,
-  mime,
   isGroup
 }) => {
   try {
-    // 1. මැසේජ් එක හෝ Quoted මැසේජ් එක පරීක්ෂා කිරීම (Image/Video ද කියා)
-    if (!m.message && !quoted) return reply("⚠️ කරුණාකර ඡායාරූපයකට (Image) හෝ වීඩියෝවකට (Video/GIF) `.sticker` ලෙස *Reply* කරන්න.");
-    
-    // Mime Type එක නිවැරදිව හඳුනා ගැනීම
-    const targetMime = mime || quoted?.mime || '';
-    
-    if (!/image|video|gif/g.test(targetMime)) {
+    // 1. Quoted හෝ ප්‍රධාන මැසේජ් එකෙන් මීඩියා වර්ගය (Mime Type) නිවැරදිව ලබා ගැනීම
+    let mimeType = "";
+    let msgType = "";
+
+    if (quoted) {
+      mimeType = quoted.mime || "";
+      msgType = quoted.type || "";
+    } else if (m.message) {
+      // ප්‍රධාන මැසේජ් එකේ වර්ගය සෙවීම
+      const types = Object.keys(m.message);
+      msgType = types.find(t => t.includes('Message')) || "";
+      mimeType = m.message[msgType]?.mime || "";
+    }
+
+    // බාහිරින් mime type එක හරියටම ආවේ නැත්නම් msgType එකෙන් force check කිරීම
+    const isImage = /image/g.test(mimeType) || msgType === 'imageMessage';
+    const isVideo = /video/g.test(mimeType) || msgType === 'videoMessage';
+
+    if (!isImage && !isVideo) {
       return reply("❌ අලංගු Format එකක්! ස්ටිකර් සෑදිය හැක්කේ Images, Videos හෝ GIFs වලින් පමණි.");
     }
 
-    // 2. වීඩියෝ එකක් නම් තත්පර 10කට වඩා අඩුදැයි බැලීම (WhatsApp සීමාවන් නිසා)
-    if (/video/g.test(targetMime) && (quoted?.seconds || m.message?.videoMessage?.seconds) > 10) {
+    // 2. වීඩියෝ එකක් නම් තත්පර 10 සීමාව බැලීම
+    const seconds = quoted?.seconds || m.message?.videoMessage?.seconds || 0;
+    if (isVideo && seconds > 10) {
       return reply("⚠️ වීඩියෝ ස්ටිකර් සඳහා වීඩියෝවේ ධාවන කාලය *තත්පර 10 කට වඩා අඩු* විය යුතුය.");
     }
 
     // Processing මැසේජ් එකක් යැවීම
     await conn.sendMessage(from, { text: "⏳ *ස්ටිකරය සකසමින් පවතී, කරුණාකර රැඳී සිටින්න...*" }, { quoted: m });
 
-    // 3. මීඩියා ෆයිල් එක ඩවුන්ලෝඩ් කර ගැනීම
+    // 3. මීඩියා එක ඩවුන්ලෝඩ් කිරීම
     const mediaBuffer = await (quoted ? quoted.download() : m.download());
     if (!mediaBuffer) return reply("❌ මීඩියා ෆයිල් එක බාගත කිරීමට (Download) නොහැකි විය. නැවත උත්සාහ කරන්න.");
 
-    // 4. ස්ටිකර් එක නිර්මාණය කිරීම සහ Pack/Author විස්තර ඇතුළත් කිරීම
-    // (ඔයාගේ බොට්ගේ නම වන DENETH-MD හෝ QUEEN ELISA-MD මෙතනට දාන්න පුළුවන්)
+    // 4. ස්ටිකර් එක නිර්මාණය කිරීම
     const sticker = new Sticker(mediaBuffer, {
-      pack: 'DARK SHADOW-MD 🛡️', // Pack Name
-      author: 'DARK SHADOW 👤',     // Author Name
-      type: StickerTypes.FULL,    // Sticker Type: FULL හෝ CROPPED
+      pack: 'DARK SHADOW-MD 🛡️', 
+      author: 'DARK SHADOW 👤',     
+      type: StickerTypes.FULL,    
       categories: ['🤩', '🎉'],
       id: m.key.id,
-      quality: 70                 // High Quality Output
+      quality: 70                 
     });
 
     const stickerBuffer = await sticker.toBuffer();
 
-    // 5. සාර්ථකව නිම වූ ස්ටිකරය සමූහයට හෝ චැට් එකට යැවීම
+    // 5. ස්ටිකරය යැවීම
     await conn.sendMessage(from, { 
       sticker: stickerBuffer 
     }, { quoted: m });
