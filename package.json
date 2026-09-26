@@ -61,7 +61,8 @@
     "@xaviabot/fb-downloader": "^1.0.14",
     "darksadasyt-anime": "^1.0.0",
     "@google/genai": "latest",
-    "sadaslk-dlcore": "^1.0.0"
+    "sadaslk-dlcore": "^1.0.0",
+    "sharp": "^0.34.3"
 
 
   }
