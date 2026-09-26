@@ -41,7 +41,7 @@ READ_MESSAGE: process.env.READ_MESSAGE || "false",
 // Turn true or false for automatic read msgs
 AUTO_REACT: process.env.AUTO_REACT || "false",
 // make this true or false for auto react on all msgs
-ANTI_BAD: process.env.ANTI_BAD || "false",
+ANTI_BAD: process.env.ANTI_BAD || "true",
 // false or true for anti bad words  
 MODE: process.env.MODE || "public",
 // make bot public-private-inbox-group 
@@ -69,7 +69,6 @@ ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || "log",
 // change it to 'same' if you want to resend deleted message in same chat 
 AUTO_RECORDING: process.env.AUTO_RECORDING || "false",
 APIFY_API_TOKEN: process.env.APIFY_API_TOKEN || 'apify_api_Ch0IOvo9qabGqAt4RaSnmhYJuFXKbk0soR3M',
-ANTI_BAD_WORD: process.env.ANTI_BAD_WORD || "true",
     
 // make it true for auto recoding 
 };
