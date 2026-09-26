@@ -26,6 +26,44 @@ async function getYoutube(query) {
   }
 }
 
+// 📥 Y2Mate Direct Scraper Function (කිසිදා ක්‍රෑෂ් නොවන ස්ථාවර සිස්ටම් එක)
+async function y2mateScrape(youtubeUrl, type = "mp4", quality = "360p") {
+  try {
+    const analyzeRes = await axios.post("https://tomp3.cc", new URLSearchParams({
+      query: youtubeUrl,
+      vt: "home"
+    }), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" }
+    });
+
+    const vidId = analyzeRes.data?.vid;
+    const links = analyzeRes.data?.links?.[type];
+    if (!vidId || !links) return null;
+
+    // නිවැරදි Quality key එක සොයා ගැනීම (උදා: 'mp3128' හෝ '360p')
+    let k = Object.keys(links)[0];
+    if (type === "mp4") {
+      const match = Object.values(links).find(q => q.q === quality || q.q.includes(quality));
+      if (match) k = match.k;
+    } else {
+      const match = Object.values(links).find(q => q.q === "128kbps" || q.q.includes("128"));
+      if (match) k = match.k;
+    }
+
+    const convertRes = await axios.post("https://tomp3.cc", new URLSearchParams({
+      vid: vidId,
+      k: k
+    }), {
+      headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" }
+    });
+
+    return convertRes.data?.dlink || null;
+  } catch (e) {
+    console.error("Y2Mate Scraping Error:", e);
+    return null;
+  }
+}
+
 // 🎵 YTMP3 (Song) Downloader Command
 cmd(
   {
@@ -57,33 +95,20 @@ cmd(
 
       reply("⬇️ *Downloading MP3 file...* ⏳");
 
-      let downloadUrl = null;
+      // 🔄 1. Y2Mate Direct Scraper එක මඟින් උත්සාහ කිරීම
+      let downloadUrl = await y2mateScrape(video.url, "mp3");
 
-      // 🔄 API 1: Direct High-Speed Bot API
-      try {
-        const res = await axios.get(`https://dreaded.site{encodeURIComponent(video.url)}`);
-        downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
-      } catch (e) {
-        console.log("API 1 Audio Failed, trying API 2...");
-      }
-
-      // 🔄 API 2: Auto Backup Bot API
+      // 🔄 2. Backup Fallback: Cobalt API Engine
       if (!downloadUrl) {
         try {
-          const res = await axios.get(`https://giftedtech.my.id{encodeURIComponent(video.url)}`);
-          downloadUrl = res?.data?.result?.download_url || res?.data?.url;
+          const res = await axios.post("https://cobalt.tools", {
+            url: video.url,
+            downloadMode: "audio",
+            audioFormat: "mp3"
+          }, { headers: { "Accept": "application/json" } });
+          downloadUrl = res?.data?.url;
         } catch (e) {
-          console.log("API 2 Audio Failed, trying API 3...");
-        }
-      }
-
-      // 🔄 API 3: Auto Backup 3
-      if (!downloadUrl) {
-        try {
-          const res = await axios.get(`https://vreden.web.id{encodeURIComponent(video.url)}`);
-          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
-        } catch (e) {
-          console.log("All Audio APIs Failed.");
+          console.log("Cobalt Backup Failed.");
         }
       }
 
@@ -132,33 +157,19 @@ cmd(
 
       reply("⬇️ *Downloading Video file...* ⏳");
 
-      let downloadUrl = null;
+      // 🔄 1. Y2Mate Direct Scraper එක මඟින් උත්සාහ කිරීම
+      let downloadUrl = await y2mateScrape(video.url, "mp4", "360p");
 
-      // 🔄 API 1: Direct High-Speed Bot API
-      try {
-        const res = await axios.get(`https://dreaded.site{encodeURIComponent(video.url)}`);
-        downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
-      } catch (e) {
-        console.log("API 1 Video Failed, trying API 2...");
-      }
-
-      // 🔄 API 2: Auto Backup Bot API
+      // 🔄 2. Backup Fallback: Cobalt API Engine
       if (!downloadUrl) {
         try {
-          const res = await axios.get(`https://giftedtech.my.id{encodeURIComponent(video.url)}`);
-          downloadUrl = res?.data?.result?.download_url || res?.data?.url;
+          const res = await axios.post("https://cobalt.tools", {
+            url: video.url,
+            videoQuality: "360"
+          }, { headers: { "Accept": "application/json" } });
+          downloadUrl = res?.data?.url;
         } catch (e) {
-          console.log("API 2 Video Failed, trying API 3...");
-        }
-      }
-
-      // 🔄 API 3: Auto Backup 3
-      if (!downloadUrl) {
-        try {
-          const res = await axios.get(`https://vreden.web.id{encodeURIComponent(video.url)}`);
-          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
-        } catch (e) {
-          console.log("All Video APIs Failed.");
+          console.log("Cobalt Backup Failed.");
         }
       }
 
