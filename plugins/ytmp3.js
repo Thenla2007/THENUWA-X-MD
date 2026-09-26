@@ -8,8 +8,8 @@ const newsletterContext = {
     forwardingScore: 1000,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-        newsletterJid: '120363292876277898@newsletter',
-        newsletterName: "𝐇𝐀𝐍𝐒 𝐁𝐘𝐓𝐄 𝐌𝐃",
+        newsletterJid: '120363403804248705@newsletter',
+        newsletterName: "THENUWA XMD",
         serverMessageId: 143,
     }
 };
@@ -43,7 +43,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
 ⫸ ⏱️ *Duration:* ${video.timestamp}
 ⫸ 👁️ *Views:* ${video.views.toLocaleString()} views
 
-╚══ ⸨ 𝙃𝘼𝙉𝙎 𝘽𝙔𝙏𝙀 𝙈𝘿 ⸩ ═══╝`.trim();
+╚══ ⸨ THENUWA XMD ⸩ ═══╝`.trim();
 
         await conn.sendMessage(from, {
             image: { url: video.thumbnail },
@@ -122,7 +122,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
 ⫸ 📁 *Format:* MP3
 ⫸ 🛰️ *Source:* YouTube
 
-╚═━「 𝙃𝘼𝙉𝙎 𝘽𝙔𝙏𝙀 𝙈𝘿 」━═╝
+╚═━「 THENUWA XMD 」━═╝
 `.trim();
 
         await conn.sendMessage(from, {
@@ -145,7 +145,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
             document: { url: data.data.downloadUrl },
             mimetype: 'audio/mp4',
             fileName: `${data.data.title}.mp3`,
-            caption: "*📁 HANS BYTE MD*",
+            caption: "*📁 THENUWA XMD*",
             contextInfo: messageContext
         }, { quoted: mek });
 
@@ -190,7 +190,7 @@ async (conn, mek, m, { from, q, reply, sender }) => {
 ⫸ 👁️ *Views:* ${video.views.toLocaleString()}
 ⫸ 🔗 *Link:* ${video.url}
 
-╚═━「 💡 𝙃𝘼𝙉𝙎 𝘽𝙔𝙏𝙀 𝙈𝘿 」━═╝`.trim();
+╚═━「 💡 THENUWA XMD 」━═╝`.trim();
 
         // Send the search result details back to the user
         await conn.sendMessage(from, {
