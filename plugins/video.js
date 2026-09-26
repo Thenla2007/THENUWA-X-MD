@@ -2,8 +2,6 @@ const { cmd } = require("../command");
 const yts = require("yt-search");
 const axios = require("axios");
 
-const APIFY_TOKEN = "apify_api_Ch0IOvo9qabGqAt4RaSnmhYJuFXKbk0soR3M";
-
 // 🎥 යූටියුබ් වීඩියෝ තොරතුරු සෙවීමේ පහසුකම
 async function getYoutube(query) {
   try {
@@ -24,53 +22,6 @@ async function getYoutube(query) {
     return search.videos[0];
   } catch (err) {
     console.error("GetYoutube Function Error:", err);
-    return null;
-  }
-}
-
-// 📥 Apify හරහා නිවැරදිව බලා සිට බාගත කරන Function එක
-async function downloadViaApify(videoUrl, mode = "audio") {
-  try {
-    // 1. Apify Actor එක Run කිරීම (epctex/youtube-video-downloader භාවිතා කර ඇත)
-    const runResponse = await axios.post(
-      `https://apify.com{APIFY_TOKEN}`,
-      {
-        urls: [videoUrl],
-        downloadMode: mode,
-        videoQuality: "360p"
-      },
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    const runId = runResponse?.data?.data?.id;
-    const defaultDatasetId = runResponse?.data?.data?.defaultDatasetId;
-    if (!runId || !defaultDatasetId) return null;
-
-    // 2. Loop එකක් මඟින් Apify Run එක ඉවර වනතුරු උපරිම තත්පර 30ක් බලා සිටීම (Polling)
-    let isFinished = false;
-    for (let i = 0; i < 10; i++) {
-      await new Promise(resolve => setTimeout(resolve, 3000)); // තත්පර 3ක් නවතී
-      const checkStatus = await axios.get(`https://apify.com{runId}?token=${APIFY_TOKEN}`);
-      if (checkStatus?.data?.data?.status === "SUCCEEDED") {
-        isFinished = true;
-        break;
-      }
-    }
-
-    if (!isFinished) return null;
-
-    // 3. Dataset එකෙන් ලින්ක් එක නිවැරදිව ලබා ගැනීම
-    const datasetResponse = await axios.get(
-      `https://apify.com{defaultDatasetId}/items?token=${APIFY_TOKEN}`
-    );
-
-    const items = datasetResponse?.data;
-    if (items && items.length > 0) {
-      return items[0].downloadUrl || items[0].url || items[0].fileUrl || null;
-    }
-    return null;
-  } catch (error) {
-    console.error("Apify Downloader Error:", error);
     return null;
   }
 }
@@ -104,21 +55,35 @@ cmd(
         { quoted: mek }
       );
 
-      reply("⬇️ *Downloading MP3 via Apify Private Server...* ⏳");
+      reply("⬇️ *Downloading MP3 file...* ⏳");
 
-      let downloadUrl = await downloadViaApify(video.url, "audio");
+      let downloadUrl = null;
 
-      // 🔄 Backup Fallback: Apify හි ගැටලුවක් වුවහොත් Cobalt API භාවිතා කිරීම
+      // 🔄 API 1: Direct High-Speed Bot API
+      try {
+        const res = await axios.get(`https://dreaded.site{encodeURIComponent(video.url)}`);
+        downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
+      } catch (e) {
+        console.log("API 1 Audio Failed, trying API 2...");
+      }
+
+      // 🔄 API 2: Auto Backup Bot API
       if (!downloadUrl) {
         try {
-          const res = await axios.post("https://cobalt.tools", {
-            url: video.url,
-            downloadMode: "audio",
-            audioFormat: "mp3"
-          }, { headers: { "Accept": "application/json" } });
-          downloadUrl = res?.data?.url;
+          const res = await axios.get(`https://giftedtech.my.id{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.download_url || res?.data?.url;
         } catch (e) {
-          console.log("Cobalt Backup Audio Failed.");
+          console.log("API 2 Audio Failed, trying API 3...");
+        }
+      }
+
+      // 🔄 API 3: Auto Backup 3
+      if (!downloadUrl) {
+        try {
+          const res = await axios.get(`https://vreden.web.id{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
+        } catch (e) {
+          console.log("All Audio APIs Failed.");
         }
       }
 
@@ -165,20 +130,35 @@ cmd(
         { quoted: mek }
       );
 
-      reply("⬇️ *Downloading Video via Apify Private Server...* ⏳");
+      reply("⬇️ *Downloading Video file...* ⏳");
 
-      let downloadUrl = await downloadViaApify(video.url, "video");
+      let downloadUrl = null;
 
-      // 🔄 Backup Fallback: Apify හි ගැටලුවක් වුවහොත් Cobalt API භාවිතා කිරීම
+      // 🔄 API 1: Direct High-Speed Bot API
+      try {
+        const res = await axios.get(`https://dreaded.site{encodeURIComponent(video.url)}`);
+        downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
+      } catch (e) {
+        console.log("API 1 Video Failed, trying API 2...");
+      }
+
+      // 🔄 API 2: Auto Backup Bot API
       if (!downloadUrl) {
         try {
-          const res = await axios.post("https://cobalt.tools", {
-            url: video.url,
-            videoQuality: "360"
-          }, { headers: { "Accept": "application/json" } });
-          downloadUrl = res?.data?.url;
+          const res = await axios.get(`https://giftedtech.my.id{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.download_url || res?.data?.url;
         } catch (e) {
-          console.log("Cobalt Backup Video Failed.");
+          console.log("API 2 Video Failed, trying API 3...");
+        }
+      }
+
+      // 🔄 API 3: Auto Backup 3
+      if (!downloadUrl) {
+        try {
+          const res = await axios.get(`https://vreden.web.id{encodeURIComponent(video.url)}`);
+          downloadUrl = res?.data?.result?.downloadUrl || res?.data?.url;
+        } catch (e) {
+          console.log("All Video APIs Failed.");
         }
       }
 
