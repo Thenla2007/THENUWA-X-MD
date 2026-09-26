@@ -12,7 +12,8 @@ async (conn, mek, m, {
     from,
     quoted,
     mentionedJid,
-    reply
+    reply,
+    pushname
 }) => {
     try {
         let jid;
@@ -36,13 +37,43 @@ async (conn, mek, m, {
             return reply("❌ JID එක හොයාගන්න බැරි වුණා.");
         }
 
-        return reply(
-`╭━━━〔 🆔 DILA-MD JID 〕━━━╮
-
+        return conn.sendMessage(
+            from,
+            {
+                text:
+`╭━━━〔 🆔 CYBER XMD JID 🆔 〕━━━╮
+┃
 ┃ 👤 *JID:*
 ┃ ${jid}
+┃
+╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯`,
+                contextInfo: {
 
-╰━━━━━━━━━━━━━━━━━━╯`
+                    mentionedJid: [
+                        mek.sender || from
+                    ],
+
+                    forwardingScore: 999,
+
+                    isForwarded: true,
+
+                    forwardedNewsletterMessageInfo: {
+
+                        newsletterJid:
+                            '120363403804248705@newsletter',
+
+                        newsletterName:
+                            'CYBER XMD',
+
+                        serverMessageId: 143
+
+                    }
+
+                }
+            },
+            {
+                quoted: mek
+            }
         );
 
     } catch (error) {
