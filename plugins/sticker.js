@@ -1,91 +1,63 @@
-/*_______________________________________________________________________________________________________________________________________________________________________________________________________________________
-──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
-─██████████████──██████████──██████──────────██████████████──██████──────────██████──██████████████──██████──────────██████████████──██████──██████──██████████████──████████████████─── 
-─██░░░░░░░░░░██──██░░░░░░██──██░░██──────────██░░░░░░░░░░██──██░░██████████──██░░██──██░░░░░░░░░░██──██░░██──────────██░░░░░░░░░░██──██░░██──██░░██──██░░░░░░░░░░██──██░░░░░░░░░░░░██─── 
-─██░░██████████──████░░████──██░░██──────────██░░██████████──██░░░░░░░░░░██──██░░██──██████░░██████──██░░██──────────██░░██████░░██──██░░██──██░░██──██░░██████████──██░░████████░░██─── 
-─██░░██────────────██░░██────██░░██──────────██░░██──────────██░░██████░░██──██░░██──────██░░██──────██░░██──────────██░░██──██░░██──██░░██──██░░██──██░░██──────────██░░██────██░░██─── 
-─██░░██████████────██░░██────██░░██──────────██░░██████████──██░░██──██░░██──██░░██──────██░░██──────██░░██──────────██░░██──██░░██──██░░██──██░░██──██░░██████████──██░░████████░░██─── 
-─██░░░░░░░░░░██────██░░██────██░░██──────────██░░░░░░░░░░██──██░░██──██░░██──██░░██──────██░░██──────██░░██──────────██░░██──██░░██──██░░██──██░░██──██░░░░░░░░░░██──██░░░░░░░░░░░░██─── 
-─██████████░░██────██░░██────██░░██──────────██░░██████████──██░░██──██░░██──██░░██──────██░░██──────██░░██──────────██░░██──██░░██──██░░██──██░░██──██░░██████████──██░░██████░░████─── 
-─────────██░░██────██░░██────██░░██──────────██░░██──────────██░░██──██░░██████░░██──────██░░██──────██░░██──────────██░░██──██░░██──██░░░░██░░░░██──██░░██──────────██░░██──██░░██───── 
-─██████████░░██──████░░████──██░░██████████──██░░██████████──██░░██──██░░░░░░░░░░██──────██░░██──────██░░██████████──██░░██████░░██──████░░░░░░████──██░░██████████──██░░██──██░░██████─ 
-─██░░░░░░░░░░██──██░░░░░░██──██░░░░░░░░░░██──██░░░░░░░░░░██──██░░██──██████████░░██──────██░░██──────██░░░░░░░░░░██──██░░░░░░░░░░██────████░░████────██░░░░░░░░░░██──██░░██──██░░░░░░██─ 
-─██████████████──██████████──██████████████──██████████████──██████──────────██████──────██████──────██████████████──██████████████──────██████──────██████████████──██████──██████████─ 
-──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── 
-created by Silent_lover432 🕵
-contact me 923096287432 ♻️
-© Copy coder alert ⚠
-*/
-
-
-
-
-
-const config = require('../config');
-const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 const { cmd } = require('../command');
-const { getRandom } = require('../lib/functions');
-
-var imgmsg = '';
-if (config.LANG === 'SI') imgmsg = 'ඡායාරූපයකට mention දෙන්න!';
-else imgmsg = 'ʀᴇᴘʟʏ ᴛᴏ ᴀ ᴘʜᴏᴛᴏ ғᴏʀ sᴛɪᴄᴋᴇʀ!';
-
-var descg = '';
-if (config.LANG === 'SI') descg = 'එය ඔබගේ mention දුන් ඡායාරූපය ස්ටිකර් බවට පරිවර්තනය කරයි.';
-else descg = 'ɪᴛ ᴄᴏɴᴠᴇʀᴛs ʏᴏᴜʀ ʀᴇᴘʟɪᴇᴅ ᴘʜᴏᴛᴏ ᴛᴏ sᴛɪᴄᴋᴇʀ.';
+const config = require("../config");
+const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 
 cmd({
-    pattern: 'sticker',
-    react: '🤹‍♀️',
-    alias: ['s', 'stic'],
-    desc: descg,
-    category: 'convert',
-    use: '.sticker <Reply to image>',
-    filename: __filename
-}, async (conn, mek, m, { from, reply, isCmd, command, args, q, isGroup, pushname }) => {
-    try {
-        const isQuotedImage = m.quoted && (m.quoted.type === 'imageMessage' || (m.quoted.type === 'viewOnceMessage' && m.quoted.msg.type === 'imageMessage'));
-        const isQuotedSticker = m.quoted && m.quoted.type === 'stickerMessage';
-
-        if ((m.type === 'imageMessage') || isQuotedImage) {
-            const nameJpg = getRandom('.jpg');
-            const imageBuffer = isQuotedImage ? await m.quoted.download() : await m.download();
-            await require('fs').promises.writeFile(nameJpg, imageBuffer);
-
-            let sticker = new Sticker(nameJpg, {
-                pack: pushname, // The pack name
-                author: '', // The author name
-                type: q.includes('--crop') || q.includes('-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
-                categories: ['🤩', '🎉'], // The sticker category
-                id: '12345', // The sticker id
-                quality: 75, // The quality of the output file
-                background: 'transparent', // The sticker background color (only for full stickers)
-            });
-
-            const buffer = await sticker.toBuffer();
-            return conn.sendMessage(from, { sticker: buffer }, { quoted: mek });
-        } else if (isQuotedSticker) {
-            const nameWebp = getRandom('.webp');
-            const stickerBuffer = await m.quoted.download();
-            await require('fs').promises.writeFile(nameWebp, stickerBuffer);
-
-            let sticker = new Sticker(nameWebp, {
-                pack: pushname, // The pack name
-                author: '', // The author name
-                type: q.includes('--crop') || q.includes('-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
-                categories: ['🤩', '🎉'], // The sticker category
-                id: '12345', // The sticker id
-                quality: 75, // The quality of the output file
-                background: 'transparent', // The sticker background color (only for full stickers)
-            });
-
-            const buffer = await sticker.toBuffer();
-            return conn.sendMessage(from, { sticker: buffer }, { quoted: mek });
-        } else {
-            return await reply(imgmsg);
-        }
-    } catch (e) {
-        reply('Error !!');
-        console.error(e);
+  pattern: "sticker",
+  alias: ["s", "wm"],
+  desc: "Convert image or video/gif to a high-quality WhatsApp sticker",
+  category: "convert",
+  filename: __filename
+}, async (conn, m, store, {
+  from,
+  reply,
+  quoted,
+  mime,
+  isGroup
+}) => {
+  try {
+    // 1. මැසේජ් එක හෝ Quoted මැසේජ් එක පරීක්ෂා කිරීම (Image/Video ද කියා)
+    if (!m.message && !quoted) return reply("⚠️ කරුණාකර ඡායාරූපයකට (Image) හෝ වීඩියෝවකට (Video/GIF) `.sticker` ලෙස *Reply* කරන්න.");
+    
+    // Mime Type එක නිවැරදිව හඳුනා ගැනීම
+    const targetMime = mime || quoted?.mime || '';
+    
+    if (!/image|video|gif/g.test(targetMime)) {
+      return reply("❌ අලංගු Format එකක්! ස්ටිකර් සෑදිය හැක්කේ Images, Videos හෝ GIFs වලින් පමණි.");
     }
+
+    // 2. වීඩියෝ එකක් නම් තත්පර 10කට වඩා අඩුදැයි බැලීම (WhatsApp සීමාවන් නිසා)
+    if (/video/g.test(targetMime) && (quoted?.seconds || m.message?.videoMessage?.seconds) > 10) {
+      return reply("⚠️ වීඩියෝ ස්ටිකර් සඳහා වීඩියෝවේ ධාවන කාලය *තත්පර 10 කට වඩා අඩු* විය යුතුය.");
+    }
+
+    // Processing මැසේජ් එකක් යැවීම
+    await conn.sendMessage(from, { text: "⏳ *ස්ටිකරය සකසමින් පවතී, කරුණාකර රැඳී සිටින්න...*" }, { quoted: m });
+
+    // 3. මීඩියා ෆයිල් එක ඩවුන්ලෝඩ් කර ගැනීම
+    const mediaBuffer = await (quoted ? quoted.download() : m.download());
+    if (!mediaBuffer) return reply("❌ මීඩියා ෆයිල් එක බාගත කිරීමට (Download) නොහැකි විය. නැවත උත්සාහ කරන්න.");
+
+    // 4. ස්ටිකර් එක නිර්මාණය කිරීම සහ Pack/Author විස්තර ඇතුළත් කිරීම
+    // (ඔයාගේ බොට්ගේ නම වන DENETH-MD හෝ QUEEN ELISA-MD මෙතනට දාන්න පුළුවන්)
+    const sticker = new Sticker(mediaBuffer, {
+      pack: 'DARK SHADOW-MD 🛡️', // Pack Name
+      author: 'DARK SHADOW 👤',     // Author Name
+      type: StickerTypes.FULL,    // Sticker Type: FULL හෝ CROPPED
+      categories: ['🤩', '🎉'],
+      id: m.key.id,
+      quality: 70                 // High Quality Output
+    });
+
+    const stickerBuffer = await sticker.toBuffer();
+
+    // 5. සාර්ථකව නිම වූ ස්ටිකරය සමූහයට හෝ චැට් එකට යැවීම
+    await conn.sendMessage(from, { 
+      sticker: stickerBuffer 
+    }, { quoted: m });
+
+  } catch (error) {
+    console.error("Sticker Plugin Error:", error);
+    return reply("❌ ස්ටිකරය සෑදීමේදී දෝෂයක් ඇති විය: " + error.message);
+  }
 });
