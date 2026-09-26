@@ -132,7 +132,7 @@ const port = process.env.PORT || 8000;
           
   //=============readstatus=======
         
-conn.ev.on('messages.upsert', async(chatUpdate) => {
+conn.ev.on('messages.upsert', async(mek) => {
     try {
         let mek = chatUpdate.messages[0];
         if (!mek || !mek.message) return;
