@@ -1,8 +1,5 @@
 const { cmd } = require('../command')
-const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
-const { generateWAMessageFromContent } = require('@whiskeysockets/baileys')
 const sharp = require('sharp')
-const fs = require('fs')
 
 cmd({
     pattern: 'sticker',
@@ -12,22 +9,11 @@ cmd({
     category: 'convert',
     filename: __filename
 },
-async (conn, mek, m, { from, reply }) => {
+async (conn, mek, m, { from, quoted, reply }) => {
 
     try {
 
-        let quoted = null
-
-        // Reply message detect
-        if (m.quoted) {
-            quoted = m.quoted
-        }
-
-        // Alternative quoted detect
-        if (!quoted && mek.quoted) {
-            quoted = mek.quoted
-        }
-
+        // Check replied message
         if (!quoted) {
             return reply(
                 '❌ *Image එකකට reply කරන්න.*\n\n' +
@@ -36,16 +22,19 @@ async (conn, mek, m, { from, reply }) => {
             )
         }
 
-        // MIME detect
+        console.log('STICKER QUOTED:', {
+            mimetype: quoted.mimetype,
+            type: quoted.type,
+            mtype: quoted.mtype
+        })
+
+        // Check image
         const mime =
             quoted.mimetype ||
             quoted.msg?.mimetype ||
-            quoted.message?.imageMessage?.mimetype ||
             ''
 
-        console.log('STICKER MIME:', mime)
-
-        if (!mime || !mime.startsWith('image/')) {
+        if (!mime.startsWith('image/')) {
             return reply(
                 '❌ *Reply කරලා තියෙන්නේ Image එකක් නෙවෙයි.*\n\n' +
                 '📸 Image එකකට reply කරලා `.sticker` යවන්න.'
@@ -54,46 +43,16 @@ async (conn, mek, m, { from, reply }) => {
 
         await reply('⏳ *Sticker එක හදමින්...*')
 
-        let imageMessage = null
+        // Download quoted image
+        const buffer = await quoted.download()
 
-        // Different Baileys message structures
-        if (quoted.message?.imageMessage) {
-            imageMessage = quoted.message.imageMessage
-        }
-
-        if (quoted.msg && quoted.msg.mimetype?.startsWith('image/')) {
-            imageMessage = quoted.msg
-        }
-
-        if (!imageMessage && quoted.imageMessage) {
-            imageMessage = quoted.imageMessage
-        }
-
-        if (!imageMessage) {
+        if (!buffer) {
             return reply(
-                '❌ Image message එක detect කරගන්න බැරි වුණා.'
+                '❌ *Image එක download කරගන්න බැරි වුණා.*'
             )
         }
 
-        // Download image
-        const stream = await downloadContentFromMessage(
-            imageMessage,
-            'image'
-        )
-
-        let buffer = Buffer.from([])
-
-        for await (const chunk of stream) {
-            buffer = Buffer.concat([buffer, chunk])
-        }
-
-        if (!buffer.length) {
-            return reply(
-                '❌ Image එක download කරගන්න බැරි වුණා.'
-            )
-        }
-
-        // Convert to WebP
+        // Convert image → WebP
         const sticker = await sharp(buffer)
             .resize(512, 512, {
                 fit: 'contain',
@@ -122,15 +81,7 @@ async (conn, mek, m, { from, reply }) => {
 
     } catch (error) {
 
-        console.error(
-            '================ STICKER ERROR ================'
-        )
-
-        console.error(error)
-
-        console.error(
-            '================================================'
-        )
+        console.error('STICKER ERROR:', error)
 
         return reply(
             '❌ *Sticker Error*\n\n' +
