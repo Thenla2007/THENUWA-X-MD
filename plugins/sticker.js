@@ -54,7 +54,6 @@ async (conn, mek, m, {
         // 1. Reply කරපු message එක තියෙනවා නම්
         if (quoted) {
 
-            // MIME type check කරන්න try කරනවා
             const mime =
                 quoted.mimetype ||
                 quoted.msg?.mimetype ||
@@ -69,15 +68,20 @@ async (conn, mek, m, {
              * Type එක imageMessage නොවුනත්
              * download() තියෙනවා නම් download කරන්න.
              */
+
             if (typeof quoted.download === 'function') {
 
                 try {
+
                     imageBuffer = await quoted.download();
+
                 } catch (err) {
+
                     console.log(
                         'Quoted download failed:',
                         err.message
                     );
+
                 }
             }
         }
@@ -107,7 +111,9 @@ async (conn, mek, m, {
             ) {
 
                 if (typeof m.download === 'function') {
+
                     imageBuffer = await m.download();
+
                 }
             }
         }
@@ -125,6 +131,7 @@ async (conn, mek, m, {
         ) {
 
             return reply(imgmsg);
+
         }
 
         /*
@@ -168,6 +175,7 @@ async (conn, mek, m, {
             quality: 85,
 
             background: 'transparent'
+
         });
 
         const buffer = await sticker.toBuffer();
@@ -184,7 +192,32 @@ async (conn, mek, m, {
                 sticker: buffer
             },
             {
-                quoted: mek
+                quoted: mek,
+
+                contextInfo: {
+
+                    mentionedJid: [
+                        mek.sender || from
+                    ],
+
+                    forwardingScore: 999,
+
+                    isForwarded: true,
+
+                    forwardedNewsletterMessageInfo: {
+
+                        newsletterJid:
+                            '120363403804248705@newsletter',
+
+                        newsletterName:
+                            'CYBER XMD',
+
+                        serverMessageId: 143
+
+                    }
+
+                }
+
             }
         );
 
@@ -195,7 +228,9 @@ async (conn, mek, m, {
          */
 
         try {
+
             await fs.promises.unlink(tempFile);
+
         } catch (e) {}
 
         tempFile = null;
@@ -213,9 +248,13 @@ async (conn, mek, m, {
         );
 
         if (tempFile) {
+
             try {
+
                 await fs.promises.unlink(tempFile);
+
             } catch (err) {}
+
         }
 
         return reply(
@@ -223,5 +262,7 @@ async (conn, mek, m, {
             'Error: ' +
             (e.message || e)
         );
+
     }
+
 });
